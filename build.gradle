@@ -48,3 +48,6 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.7.14'
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
