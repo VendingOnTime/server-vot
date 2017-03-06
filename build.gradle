@@ -8,8 +8,7 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'war'
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+apply plugin: 'jetty'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -51,9 +50,8 @@ dependencies {
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
 
-gretty {
+jettyRun {
     httpPort = (System.getenv("PORT") ?: "8080") as Integer
-    contextPath = '/'
 }
 
 task stage(dependsOn: ['build', 'clean'])
