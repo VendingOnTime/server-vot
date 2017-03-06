@@ -51,5 +51,10 @@ dependencies {
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
 
+gretty {
+    httpPort = (System.getenv("PORT") ?: "8080") as Integer
+    contextPath = '/'
+}
+
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
