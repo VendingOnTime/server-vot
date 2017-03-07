@@ -1,5 +1,6 @@
-package com.vendingontime.backend;
+package unit.com.vendingontime.backend;
 
+import com.vendingontime.backend.TestClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
