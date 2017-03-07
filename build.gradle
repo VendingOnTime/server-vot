@@ -8,7 +8,9 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'jetty'
+apply plugin: 'application'
+
+mainClassName = "com.vendingontime.backend.Application"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -16,26 +18,17 @@ targetCompatibility = 1.8
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
     maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
 }
 
 
 dependencies {
     // The production code uses the SLF4J logging API at compile time
-    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
 
-    // JAX-RS
-    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-
-    // Servlet deployment
-    compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.25.1'
-
-    //JSON generation
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
-
-    // Jetty dependencies
-    compile 'org.eclipse.jetty:jetty-server:9.4.2.v20170220'
-    compile 'org.eclipse.jetty:jetty-webapp:9.4.2.v20170220'
+    // Spark Framework
+    compile "com.sparkjava:spark-core:2.5.5"
 
     // Embedded database
     compile 'org.apache.derby:derby:10.13.1.1'
@@ -50,9 +43,5 @@ dependencies {
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
 
-jettyRun {
-    httpPort = (System.getenv("PORT") ?: "8080") as Integer
-}
-
-task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
+task stage(dependsOn: ['installDist', 'clean'])
+installDist.mustRunAfter clean
