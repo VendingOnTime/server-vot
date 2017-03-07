@@ -1,1 +1,1 @@
-web: ./gradlew jettyRun
+web: ./build/install/server-vot/bin/server-vot
