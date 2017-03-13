@@ -1,7 +1,10 @@
 package com.vendingontime.backend;
 
+import com.vendingontime.backend.config.ServerConfig;
+import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.repositories.PersonJPA;
+import spark.servlet.SparkApplication;
 
 import javax.persistence.Persistence;
 
@@ -15,12 +18,18 @@ import static spark.Spark.*;
 public class Application {
 
     public static void main(String[] args) {
-        Persistence.generateSchema("dataSource", new HashMap());
+        Application app = new Application();
+        app.initialConfig();
 
-        String envPort = System.getenv("PORT");
-        int port = Integer.parseInt(envPort != null ? envPort : "8080");
-        port(port);
+        app.generateRoutes();
+    }
 
+    private void initialConfig() {
+        InitDB.generateSchemas();
+        ServerConfig.config();
+    }
+
+    private void generateRoutes() {
         get("/api", (req, res) -> "Hello World");
         post("/person/create", (req, res) -> {
             Person person = new Person(1, "Alberto");
@@ -31,7 +40,6 @@ public class Application {
             } else {
                 return "Could not create new person";
             }
-
         });
     }
 }
