@@ -39,4 +39,14 @@ public class Person {
         this.surnames = pp.getSurnames();
         this.role = pp.getRole();
     }
+
+    public void update(Person p) {
+        this.email = p.getEmail();
+        this.username = p.getUsername();
+        this.password = p.getPassword();
+        this.dni = p.getDni();
+        this.name = p.getName();
+        this.surnames = p.getSurnames();
+        this.role = p.getRole();
+    }
 }
