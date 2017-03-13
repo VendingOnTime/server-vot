@@ -32,7 +32,7 @@ public class Application {
     private void generateRoutes() {
         get("/api", (req, res) -> "Hello World");
         post("/person/create", (req, res) -> {
-            Person person = new Person(1, "Alberto");
+            Person person = new Person();
             PersonJPA pJPA = new PersonJPA();
 
             if (pJPA.create(person)) {

@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Created by miguel on 7/3/17.
  */
 public class PersonJPA implements PersonStorage {
-    private final static Person NOT_FOUND = new Person(-1, "Not found");
+    private final static Person NOT_FOUND = new Person();
     private static EntityManager em = Persistence.createEntityManagerFactory("dataSource").createEntityManager();
 
     @Override
@@ -36,7 +36,7 @@ public class PersonJPA implements PersonStorage {
     public Person update(Person person) {
         Person found = em.find(Person.class, person.getId());
         em.getTransaction().begin();
-            found.update(person);
+//            found.update(person);
         em.getTransaction().commit();
         return found;
     }
