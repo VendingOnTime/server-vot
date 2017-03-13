@@ -28,7 +28,7 @@ dependencies {
     compile 'org.slf4j:slf4j-simple:1.7.21'
 
     // Spark Framework
-    compile "com.sparkjava:spark-core:2.5.5"
+    compile 'com.sparkjava:spark-core:2.5.5'
 
     // Embedded database
     compile 'org.apache.derby:derby:10.13.1.1'
@@ -36,6 +36,8 @@ dependencies {
     // ORM
     compile 'org.eclipse.persistence:eclipselink:2.6.4'
 
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.16.14'
 
     // Testing dependencies
     testCompile 'junit:junit:4.12'
