@@ -39,6 +39,11 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.16.14'
 
+    // Jackson JSON Parser
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.7'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
+
     // Testing dependencies
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.14'
