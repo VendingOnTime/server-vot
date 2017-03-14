@@ -14,7 +14,10 @@ import javax.persistence.*;
 @Data
 @UuidGenerator(name = "PER_ID_GEN")
 @NamedQueries({
-        @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id")
+        @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
+        @NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
+        @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM Person p WHERE p.username = :username"),
+        @NamedQuery(name = "Person.findByDni", query = "SELECT p FROM Person p WHERE p.dni = :dni")
 })
 public class Person {
     @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;

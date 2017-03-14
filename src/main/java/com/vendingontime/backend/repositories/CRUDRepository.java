@@ -9,7 +9,7 @@ import java.util.Optional;
  */
 public interface CRUDRepository<ID, MODEL> {
     MODEL create(MODEL model);
-    Optional<MODEL> retrieve(ID id);
+    Optional<MODEL> findById(ID id);
     Optional<MODEL> update(MODEL model);
     Optional<MODEL> delete(ID id);
 }

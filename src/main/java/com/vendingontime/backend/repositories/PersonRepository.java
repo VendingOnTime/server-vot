@@ -1,6 +1,8 @@
 package com.vendingontime.backend.repositories;
 
 import com.vendingontime.backend.models.Person;
+import com.vendingontime.backend.models.PersonCollisionException;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -14,7 +16,9 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     private static EntityManager em = Persistence.createEntityManagerFactory("dataSource").createEntityManager();
 
     @Override
-    public Person create(Person person) {
+    public Person create(@NonNull Person person) throws PersonCollisionException {
+        checkIfCollides(person);
+
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         em.persist(person);
@@ -23,18 +27,24 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     @Override
-    public Optional<Person> retrieve(String id) {
-        TypedQuery<Person> query = em.createNamedQuery("Person.findById", Person.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+    public Optional<Person> findById(String id) {
+        return findByQuery("findById", "id", id);
+    }
+
+    public Optional<Person> findByEmail(String email) {
+        return findByQuery("findByEmail", "email", email);
+    }
+
+    public Optional<Person> findByUsername(String username) {
+        return findByQuery("findByUsername", "username", username);
+    }
+
+    public Optional<Person> findByDni(String dni) {
+        return findByQuery("findByDni", "dni", dni);
     }
 
     @Override
-    public Optional<Person> update(Person person) {
+    public Optional<Person> update(@NonNull Person person) {
         Person found = em.find(Person.class, person.getId());
         if (found == null) {
             return Optional.empty();
@@ -58,5 +68,26 @@ public class PersonRepository implements CRUDRepository<String, Person> {
         em.remove(found);
         tr.commit();
         return Optional.of(found);
+    }
+
+    private Optional<Person> findByQuery(String queryName, String paramName, Object param) {
+        if (param == null) return Optional.empty();
+
+        TypedQuery<Person> query = em.createNamedQuery("Person." + queryName, Person.class);
+        query.setParameter(paramName, param);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    private void checkIfCollides(Person person) throws PersonCollisionException {
+        if (findByEmail(person.getEmail()).isPresent())
+            throw new PersonCollisionException(PersonCollisionException.Cause.EMAIL);
+        if (findByUsername(person.getUsername()).isPresent())
+            throw new PersonCollisionException(PersonCollisionException.Cause.USERNAME);
+        if (findByDni(person.getDni()).isPresent())
+            throw new PersonCollisionException(PersonCollisionException.Cause.DNI);
     }
 }
