@@ -3,12 +3,7 @@ package com.vendingontime.backend;
 import com.vendingontime.backend.config.ServerConfig;
 import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.repositories.PersonJPA;
-import spark.servlet.SparkApplication;
-
-import javax.persistence.Persistence;
-
-import java.util.HashMap;
+import com.vendingontime.backend.repositories.PersonRepository;
 
 import static spark.Spark.*;
 
@@ -33,9 +28,9 @@ public class Application {
         get("/api", (req, res) -> "Hello World");
         post("/person/create", (req, res) -> {
             Person person = new Person();
-            PersonJPA pJPA = new PersonJPA();
+            PersonRepository pJPA = new PersonRepository();
 
-            if (pJPA.create(person)) {
+            if (pJPA.create(person) != null) {
                 return person.getName() + " (" + person.getId() + ") created";
             } else {
                 return "Could not create new person";
