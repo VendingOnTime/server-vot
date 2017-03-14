@@ -17,12 +17,14 @@ public class PersonRepository implements CRUDRepository<String, Person> {
 
     @Override
     public Person create(@NonNull Person person) throws PersonCollisionException {
-        checkIfCollides(person);
-
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(person);
-        tx.commit();
+        try {
+            tx.begin();
+            checkIfCollides(person);
+            em.persist(person);
+        } finally {
+            tx.commit();
+        }
         return person;
     }
 
@@ -44,27 +46,35 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     @Override
-    public Optional<Person> update(@NonNull Person person) {
+    public Optional<Person> update(@NonNull Person person) throws PersonCollisionException {
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+
         Person found = em.find(Person.class, person.getId());
         if (found == null) {
+            tr.commit();
             return Optional.empty();
         }
 
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        found.update(person);
-        tr.commit();
+        try {
+            checkIfCollides(person);
+            found.update(person);
+        } finally {
+            tr.commit();
+        }
+
         return Optional.of(found);
     }
 
     @Override
-    public Optional<Person> delete(String id) {
-        Person found = em.find(Person.class, id);
-        if (found == null) {
-            return Optional.empty();
-        }
+    public Optional<Person> delete(@NonNull String id) {
         EntityTransaction tr = em.getTransaction();
         tr.begin();
+        Person found = em.find(Person.class, id);
+        if (found == null) {
+            tr.commit();
+            return Optional.empty();
+        }
         em.remove(found);
         tr.commit();
         return Optional.of(found);
@@ -83,11 +93,19 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     private void checkIfCollides(Person person) throws PersonCollisionException {
-        if (findByEmail(person.getEmail()).isPresent())
+        boolean isNew = person.getId() == null;
+
+        Optional<Person> byEmail = findByEmail(person.getEmail());
+        if (byEmail.isPresent() && (isNew || !byEmail.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.EMAIL);
-        if (findByUsername(person.getUsername()).isPresent())
+        }
+        Optional<Person> byUsername = findByUsername(person.getUsername());
+        if (byUsername.isPresent() && (isNew || !byUsername.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.USERNAME);
-        if (findByDni(person.getDni()).isPresent())
+        }
+        Optional<Person> byDni = findByDni(person.getDni());
+        if (byDni.isPresent() && (isNew || !byDni.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.DNI);
+        }
     }
 }
