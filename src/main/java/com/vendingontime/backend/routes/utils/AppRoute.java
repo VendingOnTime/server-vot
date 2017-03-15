@@ -5,4 +5,4 @@ import spark.Route;
 /**
  * Created by miguel on 13/3/17.
  */
-public interface ResponseCreator extends Route {}
+public interface AppRoute extends Route {}

@@ -1,7 +1,5 @@
 package com.vendingontime.backend.repositories;
 
-import com.vendingontime.backend.models.Person;
-
 import java.util.Optional;
 
 /**
