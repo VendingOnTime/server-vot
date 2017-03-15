@@ -1,4 +1,4 @@
-package com.vendingontime.backend.models.viewmodels;
+package com.vendingontime.backend.models.bodymodels;
 
 /**
  * Created by Alberto on 13/03/2017.

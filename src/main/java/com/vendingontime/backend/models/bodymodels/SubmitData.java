@@ -1,4 +1,4 @@
-package com.vendingontime.backend.models.viewmodels;
+package com.vendingontime.backend.models.bodymodels;
 
 import com.vendingontime.backend.models.PersonRole;
 import lombok.Data;
@@ -9,7 +9,7 @@ import static com.vendingontime.backend.utils.StringUtils.isEmpty;
  * Created by Alberto on 13/03/2017.
  */
 @Data
-public class PersonPayload implements Validable {
+public class SubmitData implements Validable {
 
     private String email;
     private String username;
@@ -42,14 +42,15 @@ public class PersonPayload implements Validable {
     }
 
     private boolean validateTechnician() {
-        return validateCommon();
+        if (!validateCommon()) return false;
+        if (isEmpty(dni)) return false;
+        return true;
     }
 
     private boolean validateCommon() {
         if (isEmpty(email)) return false;
         if (isEmpty(username)) return false;
         if (isEmpty(password)) return false;
-        if (isEmpty(dni)) return false;
         if (isEmpty(name)) return false;
         if (isEmpty(surnames)) return false;
         return true;
