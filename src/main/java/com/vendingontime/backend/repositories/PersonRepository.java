@@ -17,14 +17,16 @@ public class PersonRepository implements CRUDRepository<String, Person> {
 
     @Override
     public Person create(@NonNull Person person) throws PersonCollisionException {
+        if (person.getId() != null) return person;
+        checkIfCollides(person);
+
         EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            checkIfCollides(person);
-            em.persist(person);
-        } finally {
-            tx.commit();
-        }
+
+        tx.begin();
+        em.persist(person);
+        tx.commit();
+
+        em.detach(person);
         return person;
     }
 
@@ -47,37 +49,34 @@ public class PersonRepository implements CRUDRepository<String, Person> {
 
     @Override
     public Optional<Person> update(@NonNull Person person) throws PersonCollisionException {
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
+        Optional<Person> possiblePerson = findById(person.getId());
 
-        Person found = em.find(Person.class, person.getId());
-        if (found == null) {
-            tr.commit();
-            return Optional.empty();
-        }
-
-        try {
+        possiblePerson.ifPresent(found -> {
             checkIfCollides(person);
-            found.update(person);
-        } finally {
-            tr.commit();
-        }
 
-        return Optional.of(found);
+            EntityTransaction tr = em.getTransaction();
+            tr.begin();
+            found.update(person);
+            tr.commit();
+
+            em.detach(found);
+        });
+
+        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
     }
 
     @Override
     public Optional<Person> delete(@NonNull String id) {
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        Person found = em.find(Person.class, id);
-        if (found == null) {
+
+        Optional<Person> possiblePerson = findById(id);
+        possiblePerson.ifPresent(found -> {
+            EntityTransaction tr = em.getTransaction();
+            tr.begin();
+            em.remove(found);
             tr.commit();
-            return Optional.empty();
-        }
-        em.remove(found);
-        tr.commit();
-        return Optional.of(found);
+        });
+
+        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
     }
 
     private Optional<Person> findByQuery(String queryName, String paramName, Object param) {

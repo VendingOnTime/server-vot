@@ -239,6 +239,63 @@ public class PersonRepositoryTest {
     }
 
     @Test
+    public void update_withEmailCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setEmail(EMAIL2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(EMAIL_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
+    public void update_withUsernameCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setUsername(USERNAME2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(USERNAME_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
+    public void update_withDniCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setDni(DNI2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(DNI_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
     public void delete() throws Exception {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
