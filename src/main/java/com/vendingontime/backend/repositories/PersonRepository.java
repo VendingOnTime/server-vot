@@ -17,12 +17,16 @@ public class PersonRepository implements CRUDRepository<String, Person> {
 
     @Override
     public Person create(@NonNull Person person) throws PersonCollisionException {
+        if (person.getId() != null) return person;
         checkIfCollides(person);
 
         EntityTransaction tx = em.getTransaction();
+
         tx.begin();
         em.persist(person);
         tx.commit();
+
+        em.detach(person);
         return person;
     }
 
@@ -44,30 +48,35 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     @Override
-    public Optional<Person> update(@NonNull Person person) {
-        Person found = em.find(Person.class, person.getId());
-        if (found == null) {
-            return Optional.empty();
-        }
+    public Optional<Person> update(@NonNull Person person) throws PersonCollisionException {
+        Optional<Person> possiblePerson = findById(person.getId());
 
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        found.update(person);
-        tr.commit();
-        return Optional.of(found);
+        possiblePerson.ifPresent(found -> {
+            checkIfCollides(person);
+
+            EntityTransaction tr = em.getTransaction();
+            tr.begin();
+            found.update(person);
+            tr.commit();
+
+            em.detach(found);
+        });
+
+        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
     }
 
     @Override
-    public Optional<Person> delete(String id) {
-        Person found = em.find(Person.class, id);
-        if (found == null) {
-            return Optional.empty();
-        }
-        EntityTransaction tr = em.getTransaction();
-        tr.begin();
-        em.remove(found);
-        tr.commit();
-        return Optional.of(found);
+    public Optional<Person> delete(@NonNull String id) {
+
+        Optional<Person> possiblePerson = findById(id);
+        possiblePerson.ifPresent(found -> {
+            EntityTransaction tr = em.getTransaction();
+            tr.begin();
+            em.remove(found);
+            tr.commit();
+        });
+
+        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
     }
 
     private Optional<Person> findByQuery(String queryName, String paramName, Object param) {
@@ -83,11 +92,19 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     private void checkIfCollides(Person person) throws PersonCollisionException {
-        if (findByEmail(person.getEmail()).isPresent())
+        boolean isNew = person.getId() == null;
+
+        Optional<Person> byEmail = findByEmail(person.getEmail());
+        if (byEmail.isPresent() && (isNew || !byEmail.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.EMAIL);
-        if (findByUsername(person.getUsername()).isPresent())
+        }
+        Optional<Person> byUsername = findByUsername(person.getUsername());
+        if (byUsername.isPresent() && (isNew || !byUsername.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.USERNAME);
-        if (findByDni(person.getDni()).isPresent())
+        }
+        Optional<Person> byDni = findByDni(person.getDni());
+        if (byDni.isPresent() && (isNew || !byDni.get().getId().equals(person.getId()))) {
             throw new PersonCollisionException(PersonCollisionException.Cause.DNI);
+        }
     }
 }

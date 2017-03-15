@@ -27,6 +27,11 @@ public class PersonRepositoryTest {
     private static final String PASSWORD = "PASSWORD";
     private static final PersonRole ROLE = PersonRole.SUPERVISOR;
 
+    private static final String DNI2 = "DNI2";
+    private static final String USERNAME2 = "USERNAME2";
+    private static final String EMAIL2 = "EMAIL2";
+
+
     private PersonRepository repository;
     private Person personOne;
     private Person personTwo;
@@ -51,6 +56,10 @@ public class PersonRepositoryTest {
 
         personOne = new Person(payload);
         personTwo = new Person(payload);
+
+        personTwo.setDni(DNI2);
+        personTwo.setEmail(EMAIL2);
+        personTwo.setUsername(USERNAME2);
     }
 
     @After
@@ -72,16 +81,27 @@ public class PersonRepositoryTest {
     }
 
     @Test
+    public void create_twoWithoutCollisions() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        Optional<Person> possiblePersonOne = repository.findById(personOneId);
+        assertEquals(personOne, possiblePersonOne.get());
+        Optional<Person> possiblePersonTwo = repository.findById(personTwoId);
+        assertEquals(personTwo, possiblePersonTwo.get());
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
     public void create_withEmailCollision() throws Exception {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        String EMAIL2 = EMAIL;
-        String USERNAME2 = "USERNAME2";
-        String DNI2 = "DNI2";
-        personTwo.setDni(DNI2);
-        personTwo.setUsername(USERNAME2);
-        personTwo.setEmail(EMAIL2);
+        personTwo.setEmail(EMAIL);
 
         try {
             repository.create(personTwo);
@@ -98,12 +118,7 @@ public class PersonRepositoryTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        String EMAIL2 = "EMAIL2";
-        String USERNAME2 = USERNAME;
-        String DNI2 = "DNI2";
-        personTwo.setDni(DNI2);
-        personTwo.setUsername(USERNAME2);
-        personTwo.setEmail(EMAIL2);
+        personTwo.setUsername(USERNAME);
 
         try {
             repository.create(personTwo);
@@ -120,12 +135,7 @@ public class PersonRepositoryTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        String EMAIL2 = "EMAIL2";
-        String USERNAME2 = "USERNAME2";
-        String DNI2 = DNI;
-        personTwo.setDni(DNI2);
-        personTwo.setUsername(USERNAME2);
-        personTwo.setEmail(EMAIL2);
+        personTwo.setDni(DNI);
 
         try {
             repository.create(personTwo);
@@ -214,13 +224,75 @@ public class PersonRepositoryTest {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
 
-        String newDni = "DNI2";
-        person.setDni(newDni);
+        person.setDni(DNI2);
+        repository.update(person);
 
         Optional<Person> possiblePerson = repository.findById(personId);
-        assertEquals(newDni, possiblePerson.get().getDni());
+        assertEquals(DNI2, possiblePerson.get().getDni());
 
         repository.delete(personId);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void update_null_returnsEmpty() throws Exception {
+        repository.update(null);
+    }
+
+    @Test
+    public void update_withEmailCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setEmail(EMAIL2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(EMAIL_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
+    public void update_withUsernameCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setUsername(USERNAME2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(USERNAME_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
+    public void update_withDniCollision() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setDni(DNI2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertEquals(DNI_EXISTS, e.getMessage());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
     }
 
     @Test
@@ -234,4 +306,8 @@ public class PersonRepositoryTest {
         assertFalse(possiblePerson.isPresent());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void delete_null_returnsEmpty() throws Exception {
+        repository.delete(null);
+    }
 }
