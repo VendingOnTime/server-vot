@@ -14,6 +14,7 @@ import static com.vendingontime.backend.models.PersonCollisionException.DNI_EXIS
 import static com.vendingontime.backend.models.PersonCollisionException.EMAIL_EXISTS;
 import static com.vendingontime.backend.models.PersonCollisionException.USERNAME_EXISTS;
 import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Created by Alberto on 13/03/2017.
@@ -107,7 +108,7 @@ public class PersonRepositoryTest {
             repository.create(personTwo);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(EMAIL_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
         }
 
         repository.delete(personId);
@@ -124,7 +125,7 @@ public class PersonRepositoryTest {
             repository.create(personTwo);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(USERNAME_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{USERNAME_EXISTS}, e.getCauses());
         }
 
         repository.delete(personId);
@@ -141,7 +142,26 @@ public class PersonRepositoryTest {
             repository.create(personTwo);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(DNI_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{DNI_EXISTS}, e.getCauses());
+        }
+
+        repository.delete(personId);
+    }
+
+    @Test
+    public void create_withAllCollisions() throws Exception {
+        Person person = repository.create(personOne);
+        String personId = person.getId();
+
+        personTwo.setEmail(EMAIL);
+        personTwo.setUsername(USERNAME);
+        personTwo.setDni(DNI);
+
+        try {
+            repository.create(personTwo);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertArrayEquals(new String[]{EMAIL_EXISTS, USERNAME_EXISTS, DNI_EXISTS}, e.getCauses());
         }
 
         repository.delete(personId);
@@ -250,7 +270,7 @@ public class PersonRepositoryTest {
             repository.update(personOne);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(EMAIL_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
         }
 
         repository.delete(personOneId);
@@ -269,7 +289,7 @@ public class PersonRepositoryTest {
             repository.update(personOne);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(USERNAME_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{USERNAME_EXISTS}, e.getCauses());
         }
 
         repository.delete(personOneId);
@@ -288,7 +308,28 @@ public class PersonRepositoryTest {
             repository.update(personOne);
             fail();
         } catch (PersonCollisionException e) {
-            assertEquals(DNI_EXISTS, e.getMessage());
+            assertArrayEquals(new String[]{DNI_EXISTS}, e.getCauses());
+        }
+
+        repository.delete(personOneId);
+        repository.delete(personTwoId);
+    }
+
+    @Test
+    public void update_withAllCollisions() throws Exception {
+        Person personOne = repository.create(this.personOne);
+        String personOneId = personOne.getId();
+        Person personTwo = repository.create(this.personTwo);
+        String personTwoId = personTwo.getId();
+
+        personOne.setEmail(EMAIL2);
+        personOne.setUsername(USERNAME2);
+        personOne.setDni(DNI2);
+        try {
+            repository.update(personOne);
+            fail();
+        } catch (PersonCollisionException e) {
+            assertArrayEquals(new String[]{EMAIL_EXISTS, USERNAME_EXISTS, DNI_EXISTS}, e.getCauses());
         }
 
         repository.delete(personOneId);
