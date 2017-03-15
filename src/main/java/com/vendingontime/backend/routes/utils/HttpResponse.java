@@ -2,41 +2,41 @@ package com.vendingontime.backend.routes.utils;
 
 import spark.ResponseTransformer;
 
-import static com.vendingontime.backend.routes.utils.Result.Type;
-
 /**
  * Created by miguel on 13/3/17.
  */
-public class HttpResponse {
-    private static final String UNAUTHORIZED = "UNAUTHORIZED";
-    private static final String NOT_FOUND = "NOT_FOUND";
+public class HttpResponse implements Response {
+    public static final String UNAUTHORIZED = "UNAUTHORIZED";
+    public static final String NOT_FOUND = "NOT_FOUND";
 
     private final String contentType;
     private final ResponseTransformer transformer;
+    private final ResultFactory resultFactory;
 
-    public HttpResponse(String contentType, ResponseTransformer transformer) {
+    public HttpResponse(String contentType, ResponseTransformer transformer, ResultFactory resultFactory) {
         this.contentType = contentType;
         this.transformer = transformer;
+        this.resultFactory = resultFactory;
     }
 
     public AppRoute ok(Object body) {
-        return response(new Result(Type.OK, body), StatusCode.OK);
+        return response(resultFactory.ok(body), StatusCode.OK);
     }
 
     public AppRoute created(Object body) {
-        return response(new Result(Type.OK, body), StatusCode.CREATED);
+        return response(resultFactory.ok(body), StatusCode.CREATED);
     }
 
     public AppRoute badRequest(Object cause) {
-        return response(new Result(Type.ERROR, cause), StatusCode.BAD_REQUEST);
+        return response(resultFactory.error(cause), StatusCode.BAD_REQUEST);
     }
 
     public AppRoute unauthorized() {
-        return response(new Result(Type.ERROR, UNAUTHORIZED), StatusCode.UNAUTHORIZED);
+        return response(resultFactory.error(UNAUTHORIZED), StatusCode.UNAUTHORIZED);
     }
 
     public AppRoute notFound() {
-        return response(new Result(Type.ERROR, NOT_FOUND), StatusCode.NOT_FOUND);
+        return response(resultFactory.error(NOT_FOUND), StatusCode.NOT_FOUND);
     }
 
     private AppRoute response(Object body, int status) {

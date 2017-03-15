@@ -3,7 +3,8 @@ package unit.com.vendingontime.backend.routes.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.routes.utils.JSONTransformer;
 import com.vendingontime.backend.routes.utils.HttpResponse;
-import com.vendingontime.backend.routes.utils.Result;
+import com.vendingontime.backend.routes.utils.RESTResult;
+import com.vendingontime.backend.routes.utils.RESTResultFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class HttpResponseTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new HttpResponse(CONTENT_TYPE, new JSONTransformer());
+        generator = new HttpResponse(CONTENT_TYPE, new JSONTransformer(), new RESTResultFactory());
         req = mock(Request.class);
         res = mock(Response.class);
     }
@@ -48,7 +49,7 @@ public class HttpResponseTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        Result wrapper = om.readValue(generated, Result.class);
+        RESTResult wrapper = om.readValue(generated, RESTResult.class);
 
         assertTrue(wrapper.getSuccess());
         assertEquals(OK, wrapper.getData());
@@ -65,7 +66,7 @@ public class HttpResponseTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        Result wrapper = om.readValue(generated, Result.class);
+        RESTResult wrapper = om.readValue(generated, RESTResult.class);
 
         assertTrue(wrapper.getSuccess());
         assertEquals(CREATED, wrapper.getData());
@@ -82,7 +83,7 @@ public class HttpResponseTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        Result wrapper = om.readValue(generated, Result.class);
+        RESTResult wrapper = om.readValue(generated, RESTResult.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());
@@ -99,7 +100,7 @@ public class HttpResponseTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        Result wrapper = om.readValue(generated, Result.class);
+        RESTResult wrapper = om.readValue(generated, RESTResult.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());
@@ -116,7 +117,7 @@ public class HttpResponseTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        Result wrapper = om.readValue(generated, Result.class);
+        RESTResult wrapper = om.readValue(generated, RESTResult.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());
