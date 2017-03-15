@@ -2,41 +2,41 @@ package com.vendingontime.backend.routes.utils;
 
 import spark.ResponseTransformer;
 
-import static com.vendingontime.backend.routes.utils.ResponseWrapper.Type;
+import static com.vendingontime.backend.routes.utils.Result.Type;
 
 /**
  * Created by miguel on 13/3/17.
  */
-public class ResponseGenerator {
+public class HttpResponse {
     private static final String UNAUTHORIZED = "UNAUTHORIZED";
     private static final String NOT_FOUND = "NOT_FOUND";
 
     private final String contentType;
     private final ResponseTransformer transformer;
 
-    public ResponseGenerator(String contentType, ResponseTransformer transformer) {
+    public HttpResponse(String contentType, ResponseTransformer transformer) {
         this.contentType = contentType;
         this.transformer = transformer;
     }
 
     public AppRoute ok(Object body) {
-        return response(new ResponseWrapper(Type.OK, body), StatusCode.OK);
+        return response(new Result(Type.OK, body), StatusCode.OK);
     }
 
     public AppRoute created(Object body) {
-        return response(new ResponseWrapper(Type.OK, body), StatusCode.CREATED);
+        return response(new Result(Type.OK, body), StatusCode.CREATED);
     }
 
     public AppRoute badRequest(Object cause) {
-        return response(new ResponseWrapper(Type.ERROR, cause), StatusCode.BAD_REQUEST);
+        return response(new Result(Type.ERROR, cause), StatusCode.BAD_REQUEST);
     }
 
     public AppRoute unauthorized() {
-        return response(new ResponseWrapper(Type.ERROR, UNAUTHORIZED), StatusCode.UNAUTHORIZED);
+        return response(new Result(Type.ERROR, UNAUTHORIZED), StatusCode.UNAUTHORIZED);
     }
 
     public AppRoute notFound() {
-        return response(new ResponseWrapper(Type.ERROR, NOT_FOUND), StatusCode.NOT_FOUND);
+        return response(new Result(Type.ERROR, NOT_FOUND), StatusCode.NOT_FOUND);
     }
 
     private AppRoute response(Object body, int status) {

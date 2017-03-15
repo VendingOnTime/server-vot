@@ -2,8 +2,8 @@ package unit.com.vendingontime.backend.routes.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.routes.utils.JSONTransformer;
-import com.vendingontime.backend.routes.utils.ResponseGenerator;
-import com.vendingontime.backend.routes.utils.ResponseWrapper;
+import com.vendingontime.backend.routes.utils.HttpResponse;
+import com.vendingontime.backend.routes.utils.Result;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,16 +17,16 @@ import static org.mockito.Mockito.*;
 /**
  * Created by Alberto on 13/03/2017.
  */
-public class ResponseGeneratorTest {
+public class HttpResponseTest {
     private static final String CONTENT_TYPE = "CONTENT_TYPE";
 
-    private ResponseGenerator generator;
+    private HttpResponse generator;
     private Request req;
     private Response res;
 
     @Before
     public void setUp() throws Exception {
-        generator = new ResponseGenerator(CONTENT_TYPE, new JSONTransformer());
+        generator = new HttpResponse(CONTENT_TYPE, new JSONTransformer());
         req = mock(Request.class);
         res = mock(Response.class);
     }
@@ -48,7 +48,7 @@ public class ResponseGeneratorTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        ResponseWrapper wrapper = om.readValue(generated, ResponseWrapper.class);
+        Result wrapper = om.readValue(generated, Result.class);
 
         assertTrue(wrapper.getSuccess());
         assertEquals(OK, wrapper.getData());
@@ -65,7 +65,7 @@ public class ResponseGeneratorTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        ResponseWrapper wrapper = om.readValue(generated, ResponseWrapper.class);
+        Result wrapper = om.readValue(generated, Result.class);
 
         assertTrue(wrapper.getSuccess());
         assertEquals(CREATED, wrapper.getData());
@@ -82,7 +82,7 @@ public class ResponseGeneratorTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        ResponseWrapper wrapper = om.readValue(generated, ResponseWrapper.class);
+        Result wrapper = om.readValue(generated, Result.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());
@@ -99,7 +99,7 @@ public class ResponseGeneratorTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        ResponseWrapper wrapper = om.readValue(generated, ResponseWrapper.class);
+        Result wrapper = om.readValue(generated, Result.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());
@@ -116,7 +116,7 @@ public class ResponseGeneratorTest {
         verify(res, times(1)).type(CONTENT_TYPE);
 
         ObjectMapper om = new ObjectMapper();
-        ResponseWrapper wrapper = om.readValue(generated, ResponseWrapper.class);
+        Result wrapper = om.readValue(generated, Result.class);
 
         assertFalse(wrapper.getSuccess());
         assertNull(wrapper.getData());

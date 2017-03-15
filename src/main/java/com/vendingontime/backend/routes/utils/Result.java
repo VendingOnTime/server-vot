@@ -6,16 +6,16 @@ import lombok.Data;
  * Created by Alberto on 13/03/2017.
  */
 @Data
-public class ResponseWrapper {
+public class Result {
     private Boolean success;
     private Object data;
     private Object error;
 
-    public ResponseWrapper() {
+    public Result() {
         super();
     }
 
-    public ResponseWrapper(Type type, Object obj) {
+    public Result(Type type, Object obj) {
         switch (type) {
             case OK:
                 initializeOk(obj);
