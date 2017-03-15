@@ -19,27 +19,27 @@ public class ResponseGenerator {
         this.transformer = transformer;
     }
 
-    public ResponseCreator ok(Object body) {
+    public AppRoute ok(Object body) {
         return response(new ResponseWrapper(Type.OK, body), StatusCode.OK);
     }
 
-    public ResponseCreator created(Object body) {
+    public AppRoute created(Object body) {
         return response(new ResponseWrapper(Type.OK, body), StatusCode.CREATED);
     }
 
-    public ResponseCreator badRequest(Object cause) {
+    public AppRoute badRequest(Object cause) {
         return response(new ResponseWrapper(Type.ERROR, cause), StatusCode.BAD_REQUEST);
     }
 
-    public ResponseCreator unauthorized() {
+    public AppRoute unauthorized() {
         return response(new ResponseWrapper(Type.ERROR, UNAUTHORIZED), StatusCode.UNAUTHORIZED);
     }
 
-    public ResponseCreator notFound() {
+    public AppRoute notFound() {
         return response(new ResponseWrapper(Type.ERROR, NOT_FOUND), StatusCode.NOT_FOUND);
     }
 
-    private ResponseCreator response(Object body, int status) {
+    private AppRoute response(Object body, int status) {
         return (req, res) -> {
             res.status(status);
             res.type(contentType);
