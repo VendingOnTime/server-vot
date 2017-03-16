@@ -1,5 +1,6 @@
 package com.vendingontime.backend.models.viewmodels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.PersonRole;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class PersonPayload implements Validable {
     private PersonRole role;
 
     @Override
+    @JsonIgnore
     public boolean isValid() {
         switch (role) {
             case CUSTOMER:
