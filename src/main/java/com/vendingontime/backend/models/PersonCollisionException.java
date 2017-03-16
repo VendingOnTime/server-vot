@@ -1,7 +1,5 @@
 package com.vendingontime.backend.models;
 
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -13,7 +11,7 @@ public class PersonCollisionException extends RuntimeException {
     public static final String USERNAME_EXISTS = "USERNAME_EXISTS";
     public static final String DNI_EXISTS = "DNI_EXISTS";
 
-    private final @Getter String[] causes;
+    private final String[] causes;
 
     public PersonCollisionException(Cause[] errors) {
         super();
@@ -33,5 +31,9 @@ public class PersonCollisionException extends RuntimeException {
         Cause(String cause) {
             this.cause = cause;
         }
+    }
+
+    public String[] getCauses() {
+        return causes;
     }
 }
