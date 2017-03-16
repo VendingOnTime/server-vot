@@ -3,6 +3,7 @@ package unit.com.vendingontime.backend.routes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
+import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.viewmodels.PersonPayload;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -13,16 +14,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Optional;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static com.vendingontime.backend.models.PersonCollisionException.*;
 
 /**
  * Created by miguel on 13/3/17.
  */
 public class SignUpRouteTest {
-    private static final String ID = "ID";
     private static final String DNI = "DNI";
     private static final String USERNAME = "USERNAME";
     private static final String EMAIL = "EMAIL";
@@ -75,12 +76,54 @@ public class SignUpRouteTest {
     }
 
     @Test
-    //FIXME pls :(
-    public void createUser() {
+    public void post() {
         signUp.post(stringifiedPerson);
 
         verify(response, times(1)).created(person);
         verify(repository, times(1)).create(person);
-        verify()
+    }
+
+    @Test
+    public void post_withEmptyJSON() {
+        stringifiedPerson = "";
+
+        signUp.post(stringifiedPerson);
+
+        verify(response, never()).created(person);
+        verify(response, times(1)).badRequest(any());
+        verify(repository, never()).create(person);
+    }
+
+    @Test
+    public void post_withInvalidJSONField() {
+        stringifiedPerson = "{\"id\":\"1234\"}";
+
+        signUp.post(stringifiedPerson);
+
+        verify(response, never()).created(person);
+        verify(response, times(1)).badRequest(any());
+        verify(repository, never()).create(person);
+    }
+
+    //TODO incorrect data tests?
+
+    @Test
+    public void post_withExistingUniqueData() {
+        List<Cause> causes = new LinkedList<>();
+        causes.add(Cause.DNI);
+        causes.add(Cause.EMAIL);
+        causes.add(Cause.USERNAME);
+
+        String[] stringCauses = new String[] {DNI_EXISTS, EMAIL_EXISTS, USERNAME_EXISTS};
+
+        signUp.post(stringifiedPerson);
+
+        doThrow(new PersonCollisionException(causes.toArray(new Cause[causes.size()]))).when(repository).create(person);
+
+        signUp.post(stringifiedPerson);
+
+        verify(response, times(1)).created(person);
+        verify(response, times(1)).badRequest(stringCauses);
+        verify(repository, times(2)).create(person);
     }
 }

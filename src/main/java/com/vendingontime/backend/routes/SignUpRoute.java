@@ -1,12 +1,16 @@
 package com.vendingontime.backend.routes;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.viewmodels.PersonPayload;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
+
+import java.io.IOException;
 
 /**
  * Created by miguel on 13/3/17.
@@ -26,9 +30,12 @@ public class SignUpRoute {
             PersonPayload personCandidate = mapper.readValue(requestBody, PersonPayload.class);
 
             return createUser(personCandidate);
-        } catch (Exception ex) {
+        } catch (JsonMappingException ex) {
+            //FIXME Change cause?
+            return response.badRequest(ex.getCause());
+        } catch (IOException ex) {
             ex.printStackTrace();
-            //FIXME
+
             return null;
         }
     }
@@ -43,8 +50,7 @@ public class SignUpRoute {
         try {
             repository.create(person);
         } catch (PersonCollisionException ex) {
-            // TODO Error
-            response.badRequest()
+            return response.badRequest(ex.getCauses());
         }
 
         return response.created(person);
