@@ -1,6 +1,6 @@
 package com.vendingontime.backend.models;
 
-import com.vendingontime.backend.models.bodymodels.SubmitData;
+import com.vendingontime.backend.models.bodymodels.SignUpData;
 import lombok.Data;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
@@ -33,7 +33,7 @@ public class Person {
         super();
     }
 
-    public Person(SubmitData sd) {
+    public Person(SignUpData sd) {
         this.email = sd.getEmail();
         this.username = sd.getUsername();
         this.password = sd.getPassword();

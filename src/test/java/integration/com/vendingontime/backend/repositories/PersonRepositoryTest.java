@@ -4,7 +4,7 @@ import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SubmitData;
+import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import org.junit.*;
 
@@ -46,7 +46,7 @@ public class PersonRepositoryTest {
     public void setUp() throws Exception {
         repository = new PersonRepository();
 
-        SubmitData payload = new SubmitData();
+        SignUpData payload = new SignUpData();
         payload.setDni(DNI);
         payload.setUsername(USERNAME);
         payload.setEmail(EMAIL);
