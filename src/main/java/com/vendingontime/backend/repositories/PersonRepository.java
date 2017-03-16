@@ -57,14 +57,16 @@ public class PersonRepository implements CRUDRepository<String, Person> {
         Optional<Person> possiblePerson = findById(person.getId());
 
         possiblePerson.ifPresent(found -> {
-            checkIfCollides(person);
+            try {
+                checkIfCollides(person);
 
-            EntityTransaction tr = em.getTransaction();
-            tr.begin();
-            found.update(person);
-            tr.commit();
-
-            em.detach(found);
+                EntityTransaction tr = em.getTransaction();
+                tr.begin();
+                found.update(person);
+                tr.commit();
+            } finally {
+                em.detach(found);
+            }
         });
 
         return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
