@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
+
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.SignUpRoute;
 import com.vendingontime.backend.routes.utils.Response;
+
 import org.junit.*;
 
 import java.util.LinkedList;
@@ -16,6 +18,11 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static com.vendingontime.backend.models.PersonCollisionException.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Created by miguel on 13/3/17.
