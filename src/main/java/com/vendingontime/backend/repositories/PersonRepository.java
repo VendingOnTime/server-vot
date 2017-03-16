@@ -5,7 +5,12 @@ import com.vendingontime.backend.models.PersonCollisionException;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+
+import static com.vendingontime.backend.models.PersonCollisionException.Cause.*;
+import static com.vendingontime.backend.models.PersonCollisionException.Cause;
 
 /**
  * Created by miguel on 7/3/17.
@@ -52,14 +57,16 @@ public class PersonRepository implements CRUDRepository<String, Person> {
         Optional<Person> possiblePerson = findById(person.getId());
 
         possiblePerson.ifPresent(found -> {
-            checkIfCollides(person);
+            try {
+                checkIfCollides(person);
 
-            EntityTransaction tr = em.getTransaction();
-            tr.begin();
-            found.update(person);
-            tr.commit();
-
-            em.detach(found);
+                EntityTransaction tr = em.getTransaction();
+                tr.begin();
+                found.update(person);
+                tr.commit();
+            } finally {
+                em.detach(found);
+            }
         });
 
         return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
@@ -94,17 +101,21 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     private void checkIfCollides(Person person) throws PersonCollisionException {
         boolean isNew = person.getId() == null;
 
+        List<Cause> causes = new LinkedList<>();
+
         Optional<Person> byEmail = findByEmail(person.getEmail());
         if (byEmail.isPresent() && (isNew || !byEmail.get().getId().equals(person.getId()))) {
-            throw new PersonCollisionException(PersonCollisionException.Cause.EMAIL);
+            causes.add(EMAIL);
         }
         Optional<Person> byUsername = findByUsername(person.getUsername());
         if (byUsername.isPresent() && (isNew || !byUsername.get().getId().equals(person.getId()))) {
-            throw new PersonCollisionException(PersonCollisionException.Cause.USERNAME);
+            causes.add(USERNAME);
         }
         Optional<Person> byDni = findByDni(person.getDni());
         if (byDni.isPresent() && (isNew || !byDni.get().getId().equals(person.getId()))) {
-            throw new PersonCollisionException(PersonCollisionException.Cause.DNI);
+            causes.add(DNI);
         }
+
+        if (causes.size() > 0) throw new PersonCollisionException(causes.toArray(new Cause[causes.size()]));
     }
 }
