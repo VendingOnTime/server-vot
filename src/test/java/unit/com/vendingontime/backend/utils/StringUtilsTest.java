@@ -74,4 +74,49 @@ public class StringUtilsTest {
     public void isEmail_wordDotWordAtWordDotWord_true() throws Exception {
         assertTrue(StringUtils.isEmail("user.name@example.co"));
     }
+
+    @Test
+    public void isDni_null_false() throws Exception {
+        assertFalse(StringUtils.isDni(null));
+    }
+
+    @Test
+    public void isDni_empty_false() throws Exception {
+        assertFalse(StringUtils.isDni(""));
+    }
+
+    @Test
+    public void isDni_blankSpaces_false() throws Exception {
+        assertFalse(StringUtils.isDni(" "));
+    }
+
+    @Test
+    public void isDni_word_false() throws Exception {
+        assertFalse(StringUtils.isDni("user"));
+    }
+
+    @Test
+    public void isDni_number_false() throws Exception {
+        assertFalse(StringUtils.isDni("98998"));
+    }
+
+    @Test
+    public void isDni_short_false() throws Exception {
+        assertFalse(StringUtils.isDni("98998X"));
+    }
+
+    @Test
+    public void isDni_long_true() throws Exception {
+        assertFalse(StringUtils.isDni("999999999Z"));
+    }
+
+    @Test
+    public void isDni_legal_true() throws Exception {
+        assertTrue(StringUtils.isDni("99999999Z"));
+    }
+
+    @Test
+    public void isDni_foreign_true() throws Exception {
+        assertTrue(StringUtils.isDni("X88888888W"));
+    }
 }
