@@ -1,6 +1,5 @@
 package com.vendingontime.backend.routes;
 
-
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

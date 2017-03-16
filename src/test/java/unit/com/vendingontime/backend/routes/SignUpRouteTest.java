@@ -28,9 +28,9 @@ import org.junit.Test;
  * Created by miguel on 13/3/17.
  */
 public class SignUpRouteTest {
-    private static final String DNI = "11111111A";
+    private static final String DNI = "12345678B";
     private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "user@example.com";
+    private static final String EMAIL = "username@test.com";
     private static final String NAME = "NAME";
     private static final String SURNAME = "SURNAME";
     private static final String PASSWORD = "PASSWORD";
@@ -127,7 +127,6 @@ public class SignUpRouteTest {
 
         signUp.post(stringifiedPerson);
 
-        verify(response, times(1)).created(person);
         verify(response, times(1)).badRequest(stringCauses);
         verify(repository, times(2)).create(person);
     }
