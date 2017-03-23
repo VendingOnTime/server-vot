@@ -2,7 +2,6 @@ package com.vendingontime.backend.repositories;
 
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
-import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -21,7 +20,8 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     private static EntityManager em = Persistence.createEntityManagerFactory("dataSource").createEntityManager();
 
     @Override
-    public Person create(@NonNull Person person) throws PersonCollisionException {
+    public Person create(Person person) throws PersonCollisionException {
+        if (person == null) throw new NullPointerException("person");
         if (person.getId() != null) return person;
         checkIfCollides(person);
 
@@ -53,9 +53,10 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     @Override
-    public Optional<Person> update(@NonNull Person person) throws PersonCollisionException {
-        Optional<Person> possiblePerson = findById(person.getId());
+    public Optional<Person> update(Person person) throws PersonCollisionException {
+        if (person == null) throw new NullPointerException("person");
 
+        Optional<Person> possiblePerson = findById(person.getId());
         possiblePerson.ifPresent(found -> {
             try {
                 checkIfCollides(person);
@@ -73,7 +74,8 @@ public class PersonRepository implements CRUDRepository<String, Person> {
     }
 
     @Override
-    public Optional<Person> delete(@NonNull String id) {
+    public Optional<Person> delete(String id) {
+        if (id == null) throw new NullPointerException("id");
 
         Optional<Person> possiblePerson = findById(id);
         possiblePerson.ifPresent(found -> {

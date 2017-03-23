@@ -1,7 +1,6 @@
 package com.vendingontime.backend.models.bodymodels;
 
 import com.vendingontime.backend.models.PersonRole;
-import lombok.Data;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -12,7 +11,6 @@ import static com.vendingontime.backend.utils.StringUtils.*;
 /**
  * Created by Alberto on 13/03/2017.
  */
-@Data
 public class SignUpData implements Validable {
 
     public static final int MIN_USERNAME_LENGTH = 4;
@@ -105,5 +103,109 @@ public class SignUpData implements Validable {
         if (!isEmpty(password) && isShort(password, MIN_PASSWORD_LENGTH)) causes.add(SHORT_PASSWORD);
         if (!isEmpty(dni) && !isDni(dni)) causes.add(INVALID_DNI);
         return causes;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public SignUpData setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public SignUpData setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public SignUpData setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public SignUpData setDni(String dni) {
+        this.dni = dni;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public SignUpData setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getSurnames() {
+        return surnames;
+    }
+
+    public SignUpData setSurnames(String surnames) {
+        this.surnames = surnames;
+        return this;
+    }
+
+    public PersonRole getRole() {
+        return role;
+    }
+
+    public SignUpData setRole(PersonRole role) {
+        this.role = role;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SignUpData that = (SignUpData) o;
+
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (dni != null ? !dni.equals(that.dni) : that.dni != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (surnames != null ? !surnames.equals(that.surnames) : that.surnames != null) return false;
+        return role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (dni != null ? dni.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (surnames != null ? surnames.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SignUpData{" +
+                "email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", dni='" + dni + '\'' +
+                ", name='" + name + '\'' +
+                ", surnames='" + surnames + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
