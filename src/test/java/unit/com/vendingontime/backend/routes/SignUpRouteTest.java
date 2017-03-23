@@ -35,6 +35,7 @@ public class SignUpRouteTest {
     private Response response;
     private SignUpRoute signUp;
     private SignUpData payload;
+
     private Person person;
     private String stringifiedPerson;
 
@@ -50,6 +51,7 @@ public class SignUpRouteTest {
         signUp = new SignUpRoute(repository, response);
 
         payload = new SignUpData();
+
         payload.setDni(DNI);
         payload.setUsername(USERNAME);
         payload.setEmail(EMAIL);
@@ -119,6 +121,7 @@ public class SignUpRouteTest {
         doThrow(new PersonCollisionException(causes.toArray(new Cause[causes.size()]))).when(repository).create(person);
 
         signUp.post(stringifiedPerson);
+
 
 //        verify(response, times(1)).created(person);
         verify(response, times(1)).badRequest(stringCauses);
