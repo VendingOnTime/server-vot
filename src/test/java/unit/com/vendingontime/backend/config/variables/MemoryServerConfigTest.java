@@ -1,8 +1,8 @@
-package unit.com.vendingontime.backend.config;
+package unit.com.vendingontime.backend.config.variables;
 
-import com.vendingontime.backend.config.Environment;
-import com.vendingontime.backend.config.MemoryServerConfig;
-import com.vendingontime.backend.config.ServerVariable;
+import com.vendingontime.backend.config.variables.Environment;
+import com.vendingontime.backend.config.variables.MemoryServerConfig;
+import com.vendingontime.backend.config.variables.ServerVariable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

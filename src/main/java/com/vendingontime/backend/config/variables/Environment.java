@@ -1,4 +1,4 @@
-package com.vendingontime.backend.config;
+package com.vendingontime.backend.config.variables;
 
 /**
  * Created by alberto on 27/3/17.

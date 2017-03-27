@@ -1,4 +1,4 @@
-package com.vendingontime.backend.config;
+package com.vendingontime.backend.config.variables;
 
 import java.util.HashMap;
 import java.util.Map;
