@@ -19,9 +19,4 @@ public class Application {
         RouteInitializer initializer = injector.getInstance(RouteInitializer.class);
         initializer.setUp();
     }
-
-    private void initialConfig() {
-//        InitDB.generateSchemas();
-//        MemoryServerConfig.config();
-    }
 }

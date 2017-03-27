@@ -17,7 +17,7 @@ import static com.vendingontime.backend.models.PersonCollisionException.Cause;
 public class PersonRepository implements CRUDRepository<String, Person> {
 
     // FIXME: 13/03/2017 Make data source parameterizable
-    private static EntityManager em = Persistence.createEntityManagerFactory("dataSource").createEntityManager();
+    private static EntityManager em = Persistence.createEntityManagerFactory("derby_in_memory").createEntityManager();
 
     @Override
     public Person create(Person person) throws PersonCollisionException {

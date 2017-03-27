@@ -1,6 +1,6 @@
 package integration.com.vendingontime.backend.repositories;
 
-import com.vendingontime.backend.initializers.InitDB;
+import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
@@ -36,11 +36,6 @@ public class PersonRepositoryTest {
     private PersonRepository repository;
     private Person personOne;
     private Person personTwo;
-
-    @BeforeClass
-    public static void mainSetUp() {
-        InitDB.generateSchemas();
-    }
 
     @Before
     public void setUp() throws Exception {

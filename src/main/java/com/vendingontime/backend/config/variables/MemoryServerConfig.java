@@ -58,7 +58,8 @@ public class MemoryServerConfig implements ServerConfig {
     */
 
     private void addDefaultVariables(HashMap<ServerVariable, String> defaults) {
-        defaults.put(ServerVariable.PORT, "8080");
-        defaults.put(ServerVariable.ENV, Environment.DEVELOPMENT.toString());
+        for (ServerVariable serverVariable : ServerVariable.values()) {
+            defaults.put(serverVariable, serverVariable.getDefaultValue());
+        }
     }
 }

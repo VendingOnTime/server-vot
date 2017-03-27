@@ -3,7 +3,10 @@ package com.vendingontime.backend.config.inject;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.vendingontime.backend.RESTContext;
+import com.vendingontime.backend.config.variables.ServerVariable;
+import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerConfig;
@@ -21,6 +24,8 @@ public class ConfigModule extends AbstractModule {
     }
 
     private void bindCoreComponents() {
+        install(new JpaPersistModule(new MemoryServerConfig().getString(ServerVariable.DATA_SOURCE)));
+        bind(DBInitializer.class).asEagerSingleton();
         bind(ServerConfig.class).to(MemoryServerConfig.class).in(Singleton.class);
         bind(RESTContext.class).in(Singleton.class);
         bind(RouteInitializer.class).in(Singleton.class);
