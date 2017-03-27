@@ -1,6 +1,6 @@
 package com.vendingontime.backend;
 
-import com.vendingontime.backend.config.ServerConfig;
+import com.vendingontime.backend.config.MemoryServerConfig;
 import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -21,7 +21,7 @@ public class Application {
 
     private void initialConfig() {
         InitDB.generateSchemas();
-        ServerConfig.config();
+//        MemoryServerConfig.config();
     }
 
     private void generateRoutes() {
