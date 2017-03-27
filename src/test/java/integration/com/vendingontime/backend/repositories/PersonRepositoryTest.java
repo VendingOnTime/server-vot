@@ -1,5 +1,9 @@
 package integration.com.vendingontime.backend.repositories;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.vendingontime.backend.config.inject.ConfigModule;
 import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
@@ -32,14 +36,15 @@ public class PersonRepositoryTest {
     private static final String USERNAME2 = "USERNAME2";
     private static final String EMAIL2 = "EMAIL2";
 
-
+    @Inject
     private PersonRepository repository;
     private Person personOne;
     private Person personTwo;
 
     @Before
     public void setUp() throws Exception {
-        repository = new PersonRepository();
+        Injector injector = Guice.createInjector(new ConfigModule());
+        injector.injectMembers(this);
 
         SignUpData payload = new SignUpData();
         payload.setDni(DNI);

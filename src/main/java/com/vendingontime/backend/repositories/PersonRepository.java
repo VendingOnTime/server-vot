@@ -1,5 +1,6 @@
 package com.vendingontime.backend.repositories;
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 
@@ -14,10 +15,14 @@ import static com.vendingontime.backend.models.PersonCollisionException.Cause;
 /**
  * Created by miguel on 7/3/17.
  */
-public class PersonRepository implements CRUDRepository<String, Person> {
+public class PersonRepository implements Repository<String, Person> {
 
-    // FIXME: 13/03/2017 Make data source parameterizable
-    private static EntityManager em = Persistence.createEntityManagerFactory("derby_in_memory").createEntityManager();
+    private final EntityManager em;
+
+    @Inject
+    public PersonRepository(EntityManager entityManager) {
+        this.em = entityManager;
+    }
 
     @Override
     public Person create(Person person) throws PersonCollisionException {
