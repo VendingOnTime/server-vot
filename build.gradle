@@ -41,6 +41,9 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
 
+    // JSON Web Token
+    compile 'com.auth0:java-jwt:3.1.0'
+
     // Testing dependencies
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.14'
