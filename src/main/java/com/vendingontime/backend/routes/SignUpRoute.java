@@ -9,6 +9,7 @@ import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.services.BusinessLogicException;
 
 import java.io.IOException;
 
@@ -16,6 +17,8 @@ import java.io.IOException;
  * Created by miguel on 13/3/17.
  */
 public class SignUpRoute {
+    public final static String MALFORMED_JSON = "MALFORMED_JSON";
+
     private final ObjectMapper mapper = new ObjectMapper();
     private PersonRepository repository;
     private Response response;
@@ -31,8 +34,9 @@ public class SignUpRoute {
 
             return createUser(personCandidate);
         } catch (JsonMappingException ex) {
-            //FIXME Change cause?
-            return response.badRequest(ex.getCause());
+            return response.badRequest(MALFORMED_JSON);
+        } catch (BusinessLogicException ex) {
+            return response.badRequest(ex.getCauses());
         } catch (IOException ex) {
             ex.printStackTrace();
 
@@ -40,10 +44,10 @@ public class SignUpRoute {
         }
     }
 
-    private AppRoute createUser(SignUpData personCandidate) {
+    private AppRoute createUser(SignUpData personCandidate) throws BusinessLogicException {
         String[] signUpErrors = personCandidate.validate();
         if(signUpErrors.length != 0) {
-            return response.badRequest(signUpErrors);
+            throw new BusinessLogicException(signUpErrors);
         }
 
         Person person = new Person(personCandidate);
@@ -51,7 +55,7 @@ public class SignUpRoute {
         try {
             repository.create(person);
         } catch (PersonCollisionException ex) {
-            return response.badRequest(ex.getCauses());
+            throw new BusinessLogicException(ex.getCauses());
         }
 
         return response.created(person);

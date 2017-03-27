@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static com.vendingontime.backend.models.PersonCollisionException.*;
+import static com.vendingontime.backend.routes.SignUpRoute.MALFORMED_JSON;
 
 import org.junit.After;
 import org.junit.Before;
@@ -105,7 +106,7 @@ public class SignUpRouteTest {
         signUp.post(stringifiedPerson);
 
         verify(response, never()).created(person);
-        verify(response, times(1)).badRequest(any());
+        verify(response, times(1)).badRequest(MALFORMED_JSON);
         verify(repository, never()).create(person);
     }
 
