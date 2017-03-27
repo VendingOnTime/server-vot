@@ -41,6 +41,10 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
 
+    // Dependency injection
+    compile 'com.google.inject:guice:4.1.0'
+    compile 'com.google.inject.extensions:guice-persist:4.1.0'
+
     // Testing dependencies
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.14'
