@@ -9,6 +9,7 @@ import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
+
 import com.vendingontime.backend.services.BusinessLogicException;
 
 import java.io.IOException;

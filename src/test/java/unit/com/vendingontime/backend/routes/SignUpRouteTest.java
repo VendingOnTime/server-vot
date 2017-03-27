@@ -43,6 +43,7 @@ public class SignUpRouteTest {
     private Response response;
     private SignUpRoute signUp;
     private SignUpData payload;
+
     private Person person;
     private String stringifiedPerson;
 
