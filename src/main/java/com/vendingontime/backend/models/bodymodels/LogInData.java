@@ -9,7 +9,7 @@ import static com.vendingontime.backend.utils.StringUtils.isEmail;
 /**
  * Created by miguel on 3/26/17.
  */
-public class SignInData implements Validable {
+public class LogInData implements Validable {
     public static final String BAD_LOGIN = "BAD_LOGIN";
 
     private String email;
@@ -29,7 +29,7 @@ public class SignInData implements Validable {
         return email;
     }
 
-    public SignInData setEmail(String email) {
+    public LogInData setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -38,7 +38,7 @@ public class SignInData implements Validable {
         return password;
     }
 
-    public SignInData setPassword(String password) {
+    public LogInData setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -48,7 +48,7 @@ public class SignInData implements Validable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SignInData that = (SignInData) o;
+        LogInData that = (LogInData) o;
 
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;

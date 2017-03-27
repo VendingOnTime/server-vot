@@ -1,22 +1,22 @@
 package unit.com.vendingontime.backend.models.bodymodels;
 
-import com.vendingontime.backend.models.bodymodels.SignInData;
+import com.vendingontime.backend.models.bodymodels.LogInData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static com.vendingontime.backend.models.bodymodels.SignInData.*;
+import static com.vendingontime.backend.models.bodymodels.LogInData.*;
 
 /**
  * Created by miguel on 3/26/17.
  */
-public class SignInDataTest {
-    public SignInData user;
+public class LogInDataTest {
+    public LogInData user;
 
     @Before
     public void setUp() throws Exception {
-        user = new SignInData();
+        user = new LogInData();
 
         user.setEmail("user@example.com");
         user.setPassword("12345");
