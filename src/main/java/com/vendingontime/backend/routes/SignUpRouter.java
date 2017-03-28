@@ -29,14 +29,14 @@ public class SignUpRouter implements SparkRouter {
 
     @Override
     public void configure(Service http) {
-        http.post("/api-v1/signup/supervisor", (req, res) -> post(req.body()));
+        http.post("/api-v1/signup/supervisor", (req, res) -> signUpSupervisor(req.body()));
     }
 
-    public AppRoute post(String requestBody) {
+    public AppRoute signUpSupervisor(String body) {
         try {
-            SignUpData personCandidate = mapper.readValue(requestBody, SignUpData.class);
+            SignUpData supervisorCandidate = mapper.readValue(body, SignUpData.class);
 
-            return response.created(service.createUser(personCandidate));
+            return response.created(service.createSupervisor(supervisorCandidate));
         } catch (BusinessLogicException ex) {
             return response.badRequest(ex.getCauses());
         } catch (IOException ex) {

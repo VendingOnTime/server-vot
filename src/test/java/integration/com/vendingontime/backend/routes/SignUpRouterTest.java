@@ -1,7 +1,6 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
@@ -59,7 +58,7 @@ public class SignUpRouterTest extends IntegrationTest {
 
     @Test
     public void post() throws Exception {
-        AppRoute post = router.post(stringifiedSupervisor);
+        AppRoute post = router.signUpSupervisor(stringifiedSupervisor);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);

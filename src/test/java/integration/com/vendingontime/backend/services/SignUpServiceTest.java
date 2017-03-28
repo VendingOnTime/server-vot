@@ -48,7 +48,7 @@ public class SignUpServiceTest extends IntegrationTest {
 
     @Test
     public void createUser() throws Exception {
-        Person user = service.createUser(supervisor);
+        Person user = service.createSupervisor(supervisor);
 
         assertNotNull(user);
 

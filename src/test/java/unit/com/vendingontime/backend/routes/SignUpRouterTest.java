@@ -2,7 +2,6 @@ package unit.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.routes.SignUpRouter;
@@ -11,18 +10,10 @@ import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import static com.vendingontime.backend.models.PersonCollisionException.DNI_EXISTS;
-import static com.vendingontime.backend.models.PersonCollisionException.EMAIL_EXISTS;
-import static com.vendingontime.backend.models.PersonCollisionException.USERNAME_EXISTS;
 import static com.vendingontime.backend.models.bodymodels.SignUpData.INVALID_DNI;
 import static com.vendingontime.backend.routes.SignUpRouter.MALFORMED_JSON;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -80,43 +71,43 @@ public class SignUpRouterTest {
     }
 
     @Test
-    public void post() {
-        when(service.createUser(payload)).thenReturn(person);
-        signUp.post(stringifiedPerson);
+    public void signUpSupervisor() {
+        when(service.createSupervisor(payload)).thenReturn(person);
+        signUp.signUpSupervisor(stringifiedPerson);
 
         verify(response, times(1)).created(person);
-        verify(service, times(1)).createUser(payload);
+        verify(service, times(1)).createSupervisor(payload);
     }
 
     @Test
-    public void post_withInvalidData() {
+    public void signUpSupervisor_withInvalidData() {
         doThrow(new BusinessLogicException(new String[]{INVALID_DNI}))
-                .when(service).createUser(payload);
-        signUp.post(stringifiedPerson);
+                .when(service).createSupervisor(payload);
+        signUp.signUpSupervisor(stringifiedPerson);
 
-        verify(service, times(1)).createUser(payload);
+        verify(service, times(1)).createSupervisor(payload);
         verify(response, times(1)).badRequest(any());
     }
 
     @Test
-    public void post_withEmptyJSON() {
+    public void signUpSupervisor_withEmptyJSON() {
         stringifiedPerson = "";
 
-        signUp.post(stringifiedPerson);
+        signUp.signUpSupervisor(stringifiedPerson);
 
         verify(response, never()).created(person);
         verify(response, times(1)).badRequest(any());
-        verify(service, never()).createUser(payload);
+        verify(service, never()).createSupervisor(payload);
     }
 
     @Test
-    public void post_withInvalidJSONField() {
+    public void signUpSupervisor_withInvalidJSONField() {
         stringifiedPerson = "{\"id\":\"1234\"}";
 
-        signUp.post(stringifiedPerson);
+        signUp.signUpSupervisor(stringifiedPerson);
 
         verify(response, never()).created(person);
         verify(response, times(1)).badRequest(MALFORMED_JSON);
-        verify(service, never()).createUser(payload);
+        verify(service, never()).createSupervisor(payload);
     }
 }

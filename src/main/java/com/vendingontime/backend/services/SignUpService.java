@@ -2,6 +2,7 @@ package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
+import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -21,7 +22,12 @@ public class SignUpService {
         this.repository = repository;
     }
 
-    public Person createUser(SignUpData personCandidate) throws BusinessLogicException {
+    public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
+        return createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+    }
+
+    private Person createPerson(SignUpData personCandidate, PersonRole role) {
+        personCandidate.setRole(role);
         String[] signUpErrors = personCandidate.validate();
         if(signUpErrors.length != 0) {
             throw new BusinessLogicException(signUpErrors);

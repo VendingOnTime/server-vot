@@ -64,17 +64,26 @@ public class SignUpServiceTest {
     }
 
     @Test
-    public void createUser() {
-        signUp.createUser(payload);
+    public void createSupervisor() {
+        signUp.createSupervisor(payload);
 
         verify(repository, times(1)).create(person);
     }
 
     @Test
-    public void createUser_withInvalidPayload_throwsException() throws Exception {
+    public void createSupervisor_withNoRole_returnsSupervisor() throws Exception {
+        payload.setRole(null);
+        Person supervisor = signUp.createSupervisor(payload);
+
+        verify(repository, times(1)).create(person);
+        assertEquals(PersonRole.SUPERVISOR, supervisor.getRole());
+    }
+
+    @Test
+    public void createSupervisor_withInvalidPayload_throwsException() throws Exception {
         try {
             payload.setEmail("");
-            signUp.createUser(payload);
+            signUp.createSupervisor(payload);
             fail();
         } catch (BusinessLogicException e) {
             assertArrayEquals(new String[]{SignUpData.EMPTY_EMAIL}, e.getCauses());
@@ -82,11 +91,11 @@ public class SignUpServiceTest {
     }
 
     @Test
-    public void createUser_withCollision_throwsException() throws Exception {
+    public void createSupervisor_withCollision_throwsException() throws Exception {
         try {
             doThrow(new PersonCollisionException(new Cause[]{Cause.EMAIL}))
                     .when(repository).create(any());
-            signUp.createUser(payload);
+            signUp.createSupervisor(payload);
             fail();
         } catch (BusinessLogicException e) {
             assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
