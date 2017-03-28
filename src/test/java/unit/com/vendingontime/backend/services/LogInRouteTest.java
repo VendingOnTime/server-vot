@@ -1,22 +1,22 @@
-package unit.com.vendingontime.backend.routes;
+package unit.com.vendingontime.backend.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.initializers.InitDB;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.bodymodels.LogInData;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.LogInRoute;
+import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
+import com.vendingontime.backend.services.utils.PasswordEncryptor;
+import com.vendingontime.backend.services.utils.TokenGenerator;
 import org.junit.*;
 
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
-import static com.vendingontime.backend.routes.SignUpRoute.MALFORMED_JSON;
+import static com.vendingontime.backend.services.SignUpRoute.MALFORMED_JSON;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by miguel on 27/3/17.
@@ -29,21 +29,21 @@ public class LogInRouteTest {
 
     private PersonRepository repository;
     private Response response;
-    private LogInRoute logIn;
+    private PasswordEncryptor passwordEncryptor;
+    private TokenGenerator tokenGenerator;
+    private LogInService logIn;
     private LogInData logInData;
 
     private String stringifiedLogIn;
-
-    @BeforeClass
-    public static void mainSetUp() {
-        InitDB.generateSchemas();
-    }
 
     @Before
     public void setUp() throws Exception {
         repository = mock(PersonRepository.class);
         response = mock(Response.class);
-        logIn = new LogInRoute(repository, response);
+        passwordEncryptor = new DummyPasswordEncryptor();
+        tokenGenerator = mock(TokenGenerator.class);
+
+        logIn = new LogInService(repository, response, passwordEncryptor, tokenGenerator);
 
         logInData = new LogInData();
         logInData.setEmail(EMAIL);
@@ -56,6 +56,8 @@ public class LogInRouteTest {
     public void tearDown() throws Exception {
         repository = null;
         response = null;
+        passwordEncryptor = null;
+        tokenGenerator = null;
         logIn = null;
         logInData = null;
         stringifiedLogIn = null;
@@ -65,6 +67,7 @@ public class LogInRouteTest {
     public void post() {
         Person person = new Person().setEmail(EMAIL).setPassword(PASSWORD);
         when(repository.findByEmail(EMAIL)).thenReturn(Optional.of(person));
+        when(tokenGenerator.generate(logInData)).thenReturn("tokenGenerated");
 
         logIn.post(stringifiedLogIn);
 

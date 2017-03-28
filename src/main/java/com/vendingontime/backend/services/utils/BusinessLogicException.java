@@ -1,4 +1,4 @@
-package com.vendingontime.backend.services;
+package com.vendingontime.backend.services.utils;
 
 /**
  * Created by miguel on 27/3/17.
