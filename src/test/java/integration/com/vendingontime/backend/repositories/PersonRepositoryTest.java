@@ -1,15 +1,12 @@
 package integration.com.vendingontime.backend.repositories;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.vendingontime.backend.config.inject.ConfigModule;
-import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
+import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.*;
 
 import java.util.Optional;
@@ -23,7 +20,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by Alberto on 13/03/2017.
  */
-public class PersonRepositoryTest {
+public class PersonRepositoryTest extends IntegrationTest {
     private static final String DNI = "DNI";
     private static final String USERNAME = "USERNAME";
     private static final String EMAIL = "EMAIL";
@@ -38,14 +35,12 @@ public class PersonRepositoryTest {
 
     @Inject
     private PersonRepository repository;
+
     private Person personOne;
     private Person personTwo;
 
     @Before
     public void setUp() throws Exception {
-        Injector injector = Guice.createInjector(new ConfigModule());
-        injector.injectMembers(this);
-
         SignUpData payload = new SignUpData();
         payload.setDni(DNI);
         payload.setUsername(USERNAME);
