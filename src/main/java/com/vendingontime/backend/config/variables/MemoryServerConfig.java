@@ -29,6 +29,20 @@ public class MemoryServerConfig implements ServerConfig {
         variables.put(variable, value);
     }
 
+    private Map<ServerVariable, String> generateDefaults() {
+        HashMap<ServerVariable, String> defaults = new HashMap<>();
+
+        addDefaultVariables(defaults);
+
+        return defaults;
+    }
+
+    private void addDefaultVariables(HashMap<ServerVariable, String> defaults) {
+        for (ServerVariable serverVariable : ServerVariable.values()) {
+            defaults.put(serverVariable, serverVariable.getDefaultValue());
+        }
+    }
+
     private Map<ServerVariable, String> inflateEnvVariables() {
         HashMap<ServerVariable, String> variables = new HashMap<>();
 
@@ -42,24 +56,6 @@ public class MemoryServerConfig implements ServerConfig {
             String envVariable = System.getenv(serverVariable.name());
             String variable = envVariable != null ? envVariable : defaultVariables.get(serverVariable);
             variables.put(serverVariable, variable);
-        }
-    }
-
-    private Map<ServerVariable, String> generateDefaults() {
-        HashMap<ServerVariable, String> defaults = new HashMap<>();
-
-        addDefaultVariables(defaults);
-
-        return defaults;
-    }
-
-    /*
-    * Add other default variables here
-    */
-
-    private void addDefaultVariables(HashMap<ServerVariable, String> defaults) {
-        for (ServerVariable serverVariable : ServerVariable.values()) {
-            defaults.put(serverVariable, serverVariable.getDefaultValue());
         }
     }
 }

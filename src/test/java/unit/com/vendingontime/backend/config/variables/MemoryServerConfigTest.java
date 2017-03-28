@@ -1,6 +1,5 @@
 package unit.com.vendingontime.backend.config.variables;
 
-import com.vendingontime.backend.config.variables.Environment;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
 import org.junit.After;
@@ -27,11 +26,16 @@ public class MemoryServerConfigTest {
 
     @Test
     public void getString() throws Exception {
-        assertEquals(Environment.DEVELOPMENT.toString(), config.getString(ServerVariable.ENV));
+        assertEquals(ServerVariable.ENV.getDefaultValue(), config.getString(ServerVariable.ENV));
     }
 
     @Test
     public void getInt() throws Exception {
+        assertEquals(Integer.parseInt(ServerVariable.PORT.getDefaultValue()), config.getInt(ServerVariable.PORT));
+    }
+
+    @Test
+    public void setValue() throws Exception {
         int PORT = 80;
         config.setVariable(ServerVariable.PORT, String.valueOf(PORT));
         assertEquals(PORT, config.getInt(ServerVariable.PORT));
