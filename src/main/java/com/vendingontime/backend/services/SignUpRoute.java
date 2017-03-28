@@ -1,6 +1,5 @@
-package com.vendingontime.backend.routes;
+package com.vendingontime.backend.services;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.vendingontime.backend.models.Person;
@@ -10,7 +9,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
 
-import com.vendingontime.backend.services.BusinessLogicException;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import java.io.IOException;
 
@@ -34,14 +33,10 @@ public class SignUpRoute {
             SignUpData personCandidate = mapper.readValue(requestBody, SignUpData.class);
 
             return createUser(personCandidate);
-        } catch (JsonMappingException ex) {
-            return response.badRequest(MALFORMED_JSON);
         } catch (BusinessLogicException ex) {
             return response.badRequest(ex.getCauses());
         } catch (IOException ex) {
-            ex.printStackTrace();
-
-            return null;
+            return response.badRequest(MALFORMED_JSON);
         }
     }
 
