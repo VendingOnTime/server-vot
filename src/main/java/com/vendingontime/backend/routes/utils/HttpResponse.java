@@ -1,6 +1,10 @@
 package com.vendingontime.backend.routes.utils;
 
+import com.vendingontime.backend.config.inject.ConfigModule;
 import spark.ResponseTransformer;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by miguel on 13/3/17.
@@ -13,7 +17,9 @@ public class HttpResponse implements Response {
     private final ResponseTransformer transformer;
     private final ResultFactory resultFactory;
 
-    public HttpResponse(String contentType, ResponseTransformer transformer, ResultFactory resultFactory) {
+    @Inject
+    public HttpResponse(@Named(ConfigModule.RESPONSE_CONTENT_TYPE) String contentType,
+                        ResponseTransformer transformer, ResultFactory resultFactory) {
         this.contentType = contentType;
         this.transformer = transformer;
         this.resultFactory = resultFactory;
