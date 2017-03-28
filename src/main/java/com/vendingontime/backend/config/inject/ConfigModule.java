@@ -13,11 +13,14 @@ import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.repositories.Repository;
+import com.vendingontime.backend.repositories.JPAPersonRepository;
+import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.routes.TestRouter;
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
 import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
@@ -38,6 +41,7 @@ public class ConfigModule extends AbstractModule {
         bindCoreComponents();
         bindUtils();
         bindRepositories();
+        bindServices();
         bindRoutes();
     }
 
@@ -67,12 +71,17 @@ public class ConfigModule extends AbstractModule {
     }
 
     private void bindRepositories() {
-        bind(PersonRepository.class);
-        bind(new TypeLiteral<Repository<String, Person>>(){}).to(PersonRepository.class);
+        bind(PersonRepository.class).to(JPAPersonRepository.class);
+        bind(new TypeLiteral<Repository<String, Person>>(){}).to(JPAPersonRepository.class);
+    }
+
+    private void bindServices() {
+        bind(SignUpService.class);
     }
 
     private void bindRoutes() {
         Multibinder<SparkRouter> routerBinder = Multibinder.newSetBinder(binder(), SparkRouter.class);
         routerBinder.addBinding().to(TestRouter.class);
+        routerBinder.addBinding().to(SignUpRouter.class);
     }
 }

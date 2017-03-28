@@ -1,33 +1,37 @@
-package unit.com.vendingontime.backend.services;
+package unit.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
-
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
-import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.SignUpRoute;
+import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.Response;
-
-import org.junit.*;
+import com.vendingontime.backend.services.SignUpService;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.vendingontime.backend.models.PersonCollisionException.DNI_EXISTS;
+import static com.vendingontime.backend.models.PersonCollisionException.EMAIL_EXISTS;
+import static com.vendingontime.backend.models.PersonCollisionException.USERNAME_EXISTS;
+import static com.vendingontime.backend.models.bodymodels.SignUpData.INVALID_DNI;
+import static com.vendingontime.backend.routes.SignUpRouter.MALFORMED_JSON;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static com.vendingontime.backend.models.PersonCollisionException.*;
-import static com.vendingontime.backend.services.SignUpRoute.MALFORMED_JSON;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * Created by miguel on 13/3/17.
+ * Created by alberto on 28/3/17.
  */
-public class SignUpRouteTest {
+public class SignUpRouterTest {
     private static final String DNI = "12345678B";
     private static final String USERNAME = "USERNAME";
     private static final String EMAIL = "username@test.com";
@@ -38,9 +42,9 @@ public class SignUpRouteTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private PersonRepository repository;
+    private SignUpService service;
     private Response response;
-    private SignUpRoute signUp;
+    private SignUpRouter signUp;
     private SignUpData payload;
 
     private Person person;
@@ -48,18 +52,18 @@ public class SignUpRouteTest {
 
     @Before
     public void setUp() throws Exception {
-        repository = mock(PersonRepository.class);
+        service = mock(SignUpService.class);
         response = mock(Response.class);
-        signUp = new SignUpRoute(repository, response);
+        signUp = new SignUpRouter(service, response);
 
-        payload = new SignUpData();
-        payload.setDni(DNI);
-        payload.setUsername(USERNAME);
-        payload.setEmail(EMAIL);
-        payload.setName(NAME);
-        payload.setSurnames(SURNAME);
-        payload.setPassword(PASSWORD);
-        payload.setRole(ROLE);
+        payload = new SignUpData()
+                .setDni(DNI)
+                .setUsername(USERNAME)
+                .setEmail(EMAIL)
+                .setName(NAME)
+                .setSurnames(SURNAME)
+                .setPassword(PASSWORD)
+                .setRole(ROLE);
 
         person = new Person(payload);
 
@@ -68,7 +72,7 @@ public class SignUpRouteTest {
 
     @After
     public void tearDown() throws Exception {
-        repository = null;
+        service = null;
         response = null;
         signUp = null;
         payload = null;
@@ -77,10 +81,21 @@ public class SignUpRouteTest {
 
     @Test
     public void post() {
+        when(service.createUser(payload)).thenReturn(person);
         signUp.post(stringifiedPerson);
 
         verify(response, times(1)).created(person);
-        verify(repository, times(1)).create(person);
+        verify(service, times(1)).createUser(payload);
+    }
+
+    @Test
+    public void post_withInvalidData() {
+        doThrow(new BusinessLogicException(new String[]{INVALID_DNI}))
+                .when(service).createUser(payload);
+        signUp.post(stringifiedPerson);
+
+        verify(service, times(1)).createUser(payload);
+        verify(response, times(1)).badRequest(any());
     }
 
     @Test
@@ -91,7 +106,7 @@ public class SignUpRouteTest {
 
         verify(response, never()).created(person);
         verify(response, times(1)).badRequest(any());
-        verify(repository, never()).create(person);
+        verify(service, never()).createUser(payload);
     }
 
     @Test
@@ -102,28 +117,6 @@ public class SignUpRouteTest {
 
         verify(response, never()).created(person);
         verify(response, times(1)).badRequest(MALFORMED_JSON);
-        verify(repository, never()).create(person);
-    }
-
-    //TODO incorrect data tests?
-
-    @Test
-    @Ignore
-    public void post_withExistingUniqueData() {
-        List<Cause> causes = new LinkedList<>();
-        causes.add(Cause.DNI);
-        causes.add(Cause.EMAIL);
-        causes.add(Cause.USERNAME);
-
-        String[] stringCauses = new String[] {DNI_EXISTS, EMAIL_EXISTS, USERNAME_EXISTS};
-
-        signUp.post(stringifiedPerson);
-
-        doThrow(new PersonCollisionException(causes.toArray(new Cause[causes.size()]))).when(repository).create(person);
-
-        signUp.post(stringifiedPerson);
-
-        verify(response, times(1)).badRequest(stringCauses);
-        verify(repository, times(2)).create(person);
+        verify(service, never()).createUser(payload);
     }
 }
