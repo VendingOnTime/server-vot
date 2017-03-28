@@ -16,6 +16,10 @@ import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.routes.TestRouter;
+import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
+import com.vendingontime.backend.services.utils.JWTTokenGenerator;
+import com.vendingontime.backend.services.utils.PasswordEncryptor;
+import com.vendingontime.backend.services.utils.TokenGenerator;
 
 /**
  * Created by alberto on 27/3/17.
@@ -24,6 +28,7 @@ public class ConfigModule extends AbstractModule {
     @Override
     protected void configure() {
         bindCoreComponents();
+        bindUtils();
         bindRepositories();
         bindRoutes();
     }
@@ -34,6 +39,11 @@ public class ConfigModule extends AbstractModule {
         bind(ServerConfig.class).to(MemoryServerConfig.class).in(Singleton.class);
         bind(RESTContext.class).in(Singleton.class);
         bind(RouteInitializer.class).in(Singleton.class);
+    }
+
+    private void bindUtils() {
+        bind(TokenGenerator.class).to(JWTTokenGenerator.class);
+        bind(PasswordEncryptor.class).to(DummyPasswordEncryptor.class);
     }
 
     private void bindRepositories() {
