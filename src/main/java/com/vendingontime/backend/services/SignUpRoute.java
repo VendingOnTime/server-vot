@@ -1,4 +1,4 @@
-package com.vendingontime.backend.routes;
+package com.vendingontime.backend.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -9,7 +9,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
 
-import com.vendingontime.backend.services.BusinessLogicException;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import java.io.IOException;
 

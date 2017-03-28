@@ -1,4 +1,4 @@
-package com.vendingontime.backend.routes;
+package com.vendingontime.backend.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,7 +9,9 @@ import com.vendingontime.backend.models.bodymodels.LogInData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.Response;
-import com.vendingontime.backend.services.BusinessLogicException;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+import com.vendingontime.backend.services.utils.PasswordEncryptor;
+import com.vendingontime.backend.services.utils.TokenGenerator;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,16 +22,20 @@ import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
 /**
  * Created by miguel on 3/26/17.
  */
-public class LogInRoute {
+public class LogInService {
     public final static String MALFORMED_JSON = "MALFORMED_JSON";
 
     private final ObjectMapper mapper = new ObjectMapper();
     private PersonRepository repository;
     private Response response;
+    private PasswordEncryptor passwordEncryptor;
+    private TokenGenerator tokenGenerator;
 
-    public LogInRoute(PersonRepository repository, Response response) {
+    public LogInService(PersonRepository repository, Response response, PasswordEncryptor passwordEncryptor, TokenGenerator tokenGenerator) {
         this.repository = repository;
         this.response = response;
+        this.passwordEncryptor = passwordEncryptor;
+        this.tokenGenerator = tokenGenerator;
     }
 
     public AppRoute post(String requestBody) {
@@ -55,7 +61,7 @@ public class LogInRoute {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
         }
 
-        return response.ok(generateAuthToken(userData));
+        return response.ok(tokenGenerator.generate(userData));
     }
 
     private boolean checkProvidedData(LogInData userData) {
@@ -64,26 +70,11 @@ public class LogInRoute {
         if (personFound.isPresent()) {
             String userPassword = personFound.get().getPassword();
 
-            if (userData.getPassword().equals(userPassword)) {
+            if (passwordEncryptor.check(userPassword, userData.getPassword())) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    private String generateAuthToken(LogInData userData) {
-        String authToken;
-
-        try {
-            Algorithm algorithm = Algorithm.HMAC256("secret");
-            authToken = JWT.create()
-                    .withClaim("email", userData.getEmail())
-                    .sign(algorithm);
-
-            return authToken;
-        } catch (UnsupportedEncodingException | JWTCreationException ex) {
-            throw new BusinessLogicException(new String[]{BAD_LOGIN});
-        }
     }
 }
