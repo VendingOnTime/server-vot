@@ -56,5 +56,9 @@ dependencies {
     testCompile 'io.rest-assured:rest-assured:3.0.2'
 }
 
+test {
+    exclude "**/E2E*Test.class"
+}
+
 task stage(dependsOn: ['installDist', 'clean'])
 installDist.mustRunAfter clean
