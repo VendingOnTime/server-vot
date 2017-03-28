@@ -5,7 +5,7 @@ import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.bodymodels.LogInData;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
 import com.vendingontime.backend.services.utils.TokenGenerator;
@@ -23,13 +23,13 @@ public class LogInService {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private JPAPersonRepository repository;
-    private Response response;
+    private ServiceResponse serviceResponse;
     private PasswordEncryptor passwordEncryptor;
     private TokenGenerator tokenGenerator;
 
-    public LogInService(JPAPersonRepository repository, Response response, PasswordEncryptor passwordEncryptor, TokenGenerator tokenGenerator) {
+    public LogInService(JPAPersonRepository repository, ServiceResponse serviceResponse, PasswordEncryptor passwordEncryptor, TokenGenerator tokenGenerator) {
         this.repository = repository;
-        this.response = response;
+        this.serviceResponse = serviceResponse;
         this.passwordEncryptor = passwordEncryptor;
         this.tokenGenerator = tokenGenerator;
     }
@@ -40,9 +40,9 @@ public class LogInService {
 
             return authorizeUser(user);
         } catch (BusinessLogicException ex) {
-            return response.badRequest(ex.getCauses());
+            return serviceResponse.badRequest(ex.getCauses());
         } catch (IOException ex) {
-            return response.badRequest(MALFORMED_JSON);
+            return serviceResponse.badRequest(MALFORMED_JSON);
         }
     }
 
@@ -57,7 +57,7 @@ public class LogInService {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
         }
 
-        return response.ok(tokenGenerator.generate(userData));
+        return serviceResponse.ok(tokenGenerator.generate(userData));
     }
 
     private boolean checkProvidedData(LogInData userData) {

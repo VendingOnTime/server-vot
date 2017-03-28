@@ -5,7 +5,7 @@ import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.routes.SignUpRouter;
-import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
@@ -34,7 +34,7 @@ public class SignUpRouterTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private SignUpService service;
-    private Response response;
+    private ServiceResponse serviceResponse;
     private SignUpRouter signUp;
     private SignUpData payload;
 
@@ -44,8 +44,8 @@ public class SignUpRouterTest {
     @Before
     public void setUp() throws Exception {
         service = mock(SignUpService.class);
-        response = mock(Response.class);
-        signUp = new SignUpRouter(service, response);
+        serviceResponse = mock(ServiceResponse.class);
+        signUp = new SignUpRouter(service, serviceResponse);
 
         payload = new SignUpData()
                 .setDni(DNI)
@@ -64,7 +64,7 @@ public class SignUpRouterTest {
     @After
     public void tearDown() throws Exception {
         service = null;
-        response = null;
+        serviceResponse = null;
         signUp = null;
         payload = null;
         stringifiedPerson = null;
@@ -75,7 +75,7 @@ public class SignUpRouterTest {
         when(service.createSupervisor(payload)).thenReturn(person);
         signUp.signUpSupervisor(stringifiedPerson);
 
-        verify(response, times(1)).created(person);
+        verify(serviceResponse, times(1)).created(person);
         verify(service, times(1)).createSupervisor(payload);
     }
 
@@ -86,7 +86,7 @@ public class SignUpRouterTest {
         signUp.signUpSupervisor(stringifiedPerson);
 
         verify(service, times(1)).createSupervisor(payload);
-        verify(response, times(1)).badRequest(any());
+        verify(serviceResponse, times(1)).badRequest(any());
     }
 
     @Test
@@ -95,8 +95,8 @@ public class SignUpRouterTest {
 
         signUp.signUpSupervisor(stringifiedPerson);
 
-        verify(response, never()).created(person);
-        verify(response, times(1)).badRequest(any());
+        verify(serviceResponse, never()).created(person);
+        verify(serviceResponse, times(1)).badRequest(any());
         verify(service, never()).createSupervisor(payload);
     }
 
@@ -106,8 +106,8 @@ public class SignUpRouterTest {
 
         signUp.signUpSupervisor(stringifiedPerson);
 
-        verify(response, never()).created(person);
-        verify(response, times(1)).badRequest(MALFORMED_JSON);
+        verify(serviceResponse, never()).created(person);
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(service, never()).createSupervisor(payload);
     }
 }

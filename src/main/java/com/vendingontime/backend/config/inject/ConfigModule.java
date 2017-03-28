@@ -66,7 +66,7 @@ public class ConfigModule extends AbstractModule {
 
         // Routes
         bind(ResponseTransformer.class).to(JSONTransformer.class);
-        bind(Response.class).to(HttpResponse.class);
+        bind(ServiceResponse.class).to(HttpResponse.class);
         bind(ResultFactory.class).to(RESTResultFactory.class);
     }
 

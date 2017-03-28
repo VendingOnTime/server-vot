@@ -9,7 +9,7 @@ import javax.inject.Named;
 /**
  * Created by miguel on 13/3/17.
  */
-public class HttpResponse implements Response {
+public class HttpResponse implements ServiceResponse {
     public static final String UNAUTHORIZED = "UNAUTHORIZED";
     public static final String NOT_FOUND = "NOT_FOUND";
 
@@ -53,7 +53,7 @@ public class HttpResponse implements Response {
         };
     }
 
-    private static class StatusCode {
+    public static class StatusCode {
         public static final int OK = 200;
         public static final int CREATED = 201;
         public static final int BAD_REQUEST = 400;

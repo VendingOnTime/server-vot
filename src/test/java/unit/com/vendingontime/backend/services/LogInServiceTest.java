@@ -6,7 +6,7 @@ import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.bodymodels.LogInData;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.LogInService;
-import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
 import com.vendingontime.backend.services.utils.TokenGenerator;
@@ -28,7 +28,7 @@ public class LogInServiceTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private JPAPersonRepository repository;
-    private Response response;
+    private ServiceResponse serviceResponse;
     private PasswordEncryptor passwordEncryptor;
     private TokenGenerator tokenGenerator;
     private LogInService logIn;
@@ -39,11 +39,11 @@ public class LogInServiceTest {
     @Before
     public void setUp() throws Exception {
         repository = mock(JPAPersonRepository.class);
-        response = mock(Response.class);
+        serviceResponse = mock(ServiceResponse.class);
         passwordEncryptor = new DummyPasswordEncryptor();
         tokenGenerator = mock(TokenGenerator.class);
 
-        logIn = new LogInService(repository, response, passwordEncryptor, tokenGenerator);
+        logIn = new LogInService(repository, serviceResponse, passwordEncryptor, tokenGenerator);
 
         logInData = new LogInData();
         logInData.setEmail(EMAIL);
@@ -55,7 +55,7 @@ public class LogInServiceTest {
     @After
     public void tearDown() throws Exception {
         repository = null;
-        response = null;
+        serviceResponse = null;
         passwordEncryptor = null;
         tokenGenerator = null;
         logIn = null;
@@ -71,7 +71,7 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, times(1)).ok(anyString());
+        verify(serviceResponse, times(1)).ok(anyString());
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -81,8 +81,8 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(MALFORMED_JSON);
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(repository, never()).findByEmail(anyString());
     }
 
@@ -92,8 +92,8 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(MALFORMED_JSON);
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(repository, never()).findByEmail(logInData.getEmail());
     }
 
@@ -104,8 +104,8 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -116,8 +116,8 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -128,8 +128,8 @@ public class LogInServiceTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 }
