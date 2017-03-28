@@ -1,7 +1,7 @@
 package unit.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.initializers.InitDB;
+import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 
@@ -46,11 +46,6 @@ public class SignUpRouteTest {
 
     private Person person;
     private String stringifiedPerson;
-
-    @BeforeClass
-    public static void mainSetUp() {
-        InitDB.generateSchemas();
-    }
 
     @Before
     public void setUp() throws Exception {

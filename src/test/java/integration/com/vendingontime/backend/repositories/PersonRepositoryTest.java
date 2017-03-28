@@ -1,11 +1,12 @@
 package integration.com.vendingontime.backend.repositories;
 
-import com.vendingontime.backend.initializers.InitDB;
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
+import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.*;
 
 import java.util.Optional;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by Alberto on 13/03/2017.
  */
-public class PersonRepositoryTest {
+public class PersonRepositoryTest extends IntegrationTest {
     private static final String DNI = "DNI";
     private static final String USERNAME = "USERNAME";
     private static final String EMAIL = "EMAIL";
@@ -32,20 +33,14 @@ public class PersonRepositoryTest {
     private static final String USERNAME2 = "USERNAME2";
     private static final String EMAIL2 = "EMAIL2";
 
-
+    @Inject
     private PersonRepository repository;
+
     private Person personOne;
     private Person personTwo;
 
-    @BeforeClass
-    public static void mainSetUp() {
-        InitDB.generateSchemas();
-    }
-
     @Before
     public void setUp() throws Exception {
-        repository = new PersonRepository();
-
         SignUpData payload = new SignUpData();
         payload.setDni(DNI);
         payload.setUsername(USERNAME);
