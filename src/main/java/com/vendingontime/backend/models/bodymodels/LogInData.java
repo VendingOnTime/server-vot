@@ -67,8 +67,7 @@ public class LogInData implements Validable {
     @Override
     public String toString() {
         return "SignUpData{" +
-                "email='" + email + '\'' +
-                ", password='" + password +
+                "email='" + email +
                 '}';
     }
 }
