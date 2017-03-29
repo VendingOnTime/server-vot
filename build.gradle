@@ -9,6 +9,7 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 mainClassName = "com.vendingontime.backend.Application"
 
@@ -58,6 +59,7 @@ dependencies {
 
 test {
     exclude "**/E2E*Test.class"
+    finalizedBy jacocoTestReport
 }
 
 task stage(dependsOn: ['installDist', 'clean'])
