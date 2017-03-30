@@ -12,6 +12,9 @@ import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerConfig;
+import com.vendingontime.backend.initializers.SparkPluginInitializer;
+import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
+import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.repositories.Repository;
@@ -43,6 +46,7 @@ public class ConfigModule extends AbstractModule {
         bindRepositories();
         bindServices();
         bindRoutes();
+        bindPlugins();
     }
 
     private void bindLiterals() {
@@ -57,6 +61,7 @@ public class ConfigModule extends AbstractModule {
         bind(ServerConfig.class).to(MemoryServerConfig.class).in(Singleton.class);
         bind(RESTContext.class).in(Singleton.class);
         bind(RouteInitializer.class).in(Singleton.class);
+        bind(SparkPluginInitializer.class).in(Singleton.class);
     }
 
     private void bindUtils() {
@@ -83,5 +88,10 @@ public class ConfigModule extends AbstractModule {
         Multibinder<SparkRouter> routerBinder = Multibinder.newSetBinder(binder(), SparkRouter.class);
         routerBinder.addBinding().to(TestRouter.class);
         routerBinder.addBinding().to(SignUpRouter.class);
+    }
+
+    private void bindPlugins() {
+        Multibinder<SparkPlugin> sparkPluginBinder = Multibinder.newSetBinder(binder(), SparkPlugin.class);
+        sparkPluginBinder.addBinding().to(CORSPlugin.class);
     }
 }

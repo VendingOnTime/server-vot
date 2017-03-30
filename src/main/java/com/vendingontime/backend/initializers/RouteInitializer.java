@@ -25,8 +25,4 @@ public class RouteInitializer {
             context.addRouter(router);
         }
     }
-
-    public void tearDown() {
-        context.stop();
-    }
 }

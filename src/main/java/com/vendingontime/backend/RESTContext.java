@@ -3,6 +3,7 @@ package com.vendingontime.backend;
 import com.google.inject.Inject;
 import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
+import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.routes.SparkRouter;
 import spark.Service;
 
@@ -21,6 +22,10 @@ public class RESTContext {
 
     public void addRouter(SparkRouter router) {
         router.configure(http);
+    }
+
+    public void addPlugin(SparkPlugin plugin) {
+        plugin.enable(http);
     }
 
     public void stop() {
