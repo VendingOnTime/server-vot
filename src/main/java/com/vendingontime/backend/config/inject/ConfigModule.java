@@ -12,6 +12,7 @@ import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerConfig;
+import com.vendingontime.backend.initializers.SparkPluginInitializer;
 import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.models.Person;
@@ -60,6 +61,7 @@ public class ConfigModule extends AbstractModule {
         bind(ServerConfig.class).to(MemoryServerConfig.class).in(Singleton.class);
         bind(RESTContext.class).in(Singleton.class);
         bind(RouteInitializer.class).in(Singleton.class);
+        bind(SparkPluginInitializer.class).in(Singleton.class);
     }
 
     private void bindUtils() {
