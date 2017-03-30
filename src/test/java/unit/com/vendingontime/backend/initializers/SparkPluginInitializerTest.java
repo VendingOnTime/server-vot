@@ -1,10 +1,8 @@
 package unit.com.vendingontime.backend.initializers;
 
 import com.vendingontime.backend.RESTContext;
-import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.initializers.SparkPluginInitializer;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
-import com.vendingontime.backend.routes.SparkRouter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
