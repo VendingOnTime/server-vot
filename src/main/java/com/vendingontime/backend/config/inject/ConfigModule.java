@@ -12,9 +12,10 @@ import com.vendingontime.backend.initializers.DBInitializer;
 import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerConfig;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.repositories.PersonRepository;
+
+import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.Repository;
+import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.SparkRouter;

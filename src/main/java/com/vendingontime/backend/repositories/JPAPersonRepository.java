@@ -1,16 +1,16 @@
 package com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonCollisionException;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonCollisionException;
 
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.PersonCollisionException.Cause.*;
-import static com.vendingontime.backend.models.PersonCollisionException.Cause;
+import static com.vendingontime.backend.models.person.PersonCollisionException.Cause.*;
+import static com.vendingontime.backend.models.person.PersonCollisionException.Cause;
 
 /**
  * Created by miguel on 7/3/17.

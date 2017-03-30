@@ -1,16 +1,16 @@
 package unit.com.vendingontime.backend.services;
 
-import com.vendingontime.backend.models.Person;
+import com.vendingontime.backend.models.person.Person;
 
-import com.vendingontime.backend.models.PersonCollisionException;
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+import com.vendingontime.backend.models.person.PersonCollisionException;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.SignUpService;
 
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
-import static com.vendingontime.backend.models.PersonCollisionException.*;
+import static com.vendingontime.backend.models.person.PersonCollisionException.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

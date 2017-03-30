@@ -1,10 +1,9 @@
 package com.vendingontime.backend.services;
 
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonCollisionException;
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
-
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonCollisionException;
+import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 

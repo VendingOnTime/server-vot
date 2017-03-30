@@ -1,9 +1,9 @@
 package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;

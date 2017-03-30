@@ -1,8 +1,9 @@
 package com.vendingontime.backend.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.bodymodels.LogInData;
+
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
@@ -13,7 +14,7 @@ import com.vendingontime.backend.services.utils.TokenGenerator;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
+import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
 
 /**
  * Created by miguel on 3/26/17.

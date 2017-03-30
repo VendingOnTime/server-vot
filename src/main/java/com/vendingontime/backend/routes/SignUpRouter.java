@@ -1,7 +1,7 @@
 package com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.SignUpService;

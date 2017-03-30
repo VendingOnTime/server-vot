@@ -1,9 +1,9 @@
 package unit.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.SignUpService;
@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vendingontime.backend.models.bodymodels.SignUpData.INVALID_DNI;
+import static com.vendingontime.backend.models.bodymodels.person.SignUpData.INVALID_DNI;
 import static com.vendingontime.backend.routes.SignUpRouter.MALFORMED_JSON;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

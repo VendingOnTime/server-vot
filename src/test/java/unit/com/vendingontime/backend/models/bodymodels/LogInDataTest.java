@@ -1,12 +1,12 @@
 package unit.com.vendingontime.backend.models.bodymodels;
 
-import com.vendingontime.backend.models.bodymodels.LogInData;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static com.vendingontime.backend.models.bodymodels.LogInData.*;
+import static com.vendingontime.backend.models.bodymodels.person.LogInData.*;
 
 /**
  * Created by miguel on 3/26/17.

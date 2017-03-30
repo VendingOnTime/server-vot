@@ -1,13 +1,13 @@
 package unit.com.vendingontime.backend.models.bodymodels;
 
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.utils.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.vendingontime.backend.models.bodymodels.SignUpData.*;
+import static com.vendingontime.backend.models.bodymodels.person.SignUpData.*;
 import static org.junit.Assert.*;
 
 /**
