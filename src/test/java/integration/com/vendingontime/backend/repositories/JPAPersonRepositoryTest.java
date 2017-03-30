@@ -5,7 +5,7 @@ import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.PersonCollisionException;
 import com.vendingontime.backend.models.PersonRole;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
-import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.repositories.JPAPersonRepository;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.*;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by Alberto on 13/03/2017.
  */
-public class PersonRepositoryTest extends IntegrationTest {
+public class JPAPersonRepositoryTest extends IntegrationTest {
     private static final String DNI = "DNI";
     private static final String USERNAME = "USERNAME";
     private static final String EMAIL = "EMAIL";
@@ -34,7 +34,7 @@ public class PersonRepositoryTest extends IntegrationTest {
     private static final String EMAIL2 = "EMAIL2";
 
     @Inject
-    private PersonRepository repository;
+    private JPAPersonRepository repository;
 
     private Person personOne;
     private Person personTwo;

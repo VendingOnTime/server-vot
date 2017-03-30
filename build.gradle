@@ -9,6 +9,7 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 mainClassName = "com.vendingontime.backend.Application"
 
@@ -54,6 +55,18 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.7.14'
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
     testCompile 'io.rest-assured:rest-assured:3.0.2'
+}
+
+test {
+    exclude "**/E2E*Test.class"
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 task stage(dependsOn: ['installDist', 'clean'])

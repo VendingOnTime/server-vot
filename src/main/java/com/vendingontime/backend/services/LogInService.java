@@ -1,20 +1,16 @@
 package com.vendingontime.backend.services;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.bodymodels.LogInData;
-import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
 import com.vendingontime.backend.services.utils.TokenGenerator;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
@@ -26,14 +22,14 @@ public class LogInService {
     public final static String MALFORMED_JSON = "MALFORMED_JSON";
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private PersonRepository repository;
-    private Response response;
+    private JPAPersonRepository repository;
+    private ServiceResponse serviceResponse;
     private PasswordEncryptor passwordEncryptor;
     private TokenGenerator tokenGenerator;
 
-    public LogInService(PersonRepository repository, Response response, PasswordEncryptor passwordEncryptor, TokenGenerator tokenGenerator) {
+    public LogInService(JPAPersonRepository repository, ServiceResponse serviceResponse, PasswordEncryptor passwordEncryptor, TokenGenerator tokenGenerator) {
         this.repository = repository;
-        this.response = response;
+        this.serviceResponse = serviceResponse;
         this.passwordEncryptor = passwordEncryptor;
         this.tokenGenerator = tokenGenerator;
     }
@@ -44,9 +40,9 @@ public class LogInService {
 
             return authorizeUser(user);
         } catch (BusinessLogicException ex) {
-            return response.badRequest(ex.getCauses());
+            return serviceResponse.badRequest(ex.getCauses());
         } catch (IOException ex) {
-            return response.badRequest(MALFORMED_JSON);
+            return serviceResponse.badRequest(MALFORMED_JSON);
         }
     }
 
@@ -61,7 +57,7 @@ public class LogInService {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
         }
 
-        return response.ok(tokenGenerator.generate(userData));
+        return serviceResponse.ok(tokenGenerator.generate(userData));
     }
 
     private boolean checkProvidedData(LogInData userData) {

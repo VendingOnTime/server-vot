@@ -1,1 +1,2 @@
 # server-vot
+[![Build Status](https://travis-ci.org/VendingOnTime/server-vot.svg?branch=master)](https://travis-ci.org/VendingOnTime/server-vot) [![codecov](https://codecov.io/gh/VendingOnTime/server-vot/branch/master/graph/badge.svg)](https://codecov.io/gh/VendingOnTime/server-vot)

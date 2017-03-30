@@ -1,5 +1,6 @@
 package com.vendingontime.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.bodymodels.SignUpData;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
@@ -21,7 +22,7 @@ public class Person {
     @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;
     @Column(unique = true) private String email;
     @Column(unique = true) private String username;
-    @Column private String password;
+    @Column @JsonIgnore private String password;
     @Column(unique = true) private String dni;
     @Column private String name;
     @Column private String surnames;

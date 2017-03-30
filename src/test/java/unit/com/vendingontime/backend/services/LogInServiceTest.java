@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.Person;
 import com.vendingontime.backend.models.bodymodels.LogInData;
-import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.LogInService;
-import com.vendingontime.backend.routes.utils.Response;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
 import com.vendingontime.backend.services.utils.TokenGenerator;
@@ -15,20 +15,20 @@ import org.junit.*;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
-import static com.vendingontime.backend.services.SignUpRoute.MALFORMED_JSON;
+import static com.vendingontime.backend.services.LogInService.MALFORMED_JSON;
 import static org.mockito.Mockito.*;
 
 /**
  * Created by miguel on 27/3/17.
  */
-public class LogInRouteTest {
+public class LogInServiceTest {
     private static final String EMAIL = "username@test.com";
     private static final String PASSWORD = "PASSWORD";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private PersonRepository repository;
-    private Response response;
+    private JPAPersonRepository repository;
+    private ServiceResponse serviceResponse;
     private PasswordEncryptor passwordEncryptor;
     private TokenGenerator tokenGenerator;
     private LogInService logIn;
@@ -38,12 +38,12 @@ public class LogInRouteTest {
 
     @Before
     public void setUp() throws Exception {
-        repository = mock(PersonRepository.class);
-        response = mock(Response.class);
+        repository = mock(JPAPersonRepository.class);
+        serviceResponse = mock(ServiceResponse.class);
         passwordEncryptor = new DummyPasswordEncryptor();
         tokenGenerator = mock(TokenGenerator.class);
 
-        logIn = new LogInService(repository, response, passwordEncryptor, tokenGenerator);
+        logIn = new LogInService(repository, serviceResponse, passwordEncryptor, tokenGenerator);
 
         logInData = new LogInData();
         logInData.setEmail(EMAIL);
@@ -55,7 +55,7 @@ public class LogInRouteTest {
     @After
     public void tearDown() throws Exception {
         repository = null;
-        response = null;
+        serviceResponse = null;
         passwordEncryptor = null;
         tokenGenerator = null;
         logIn = null;
@@ -71,7 +71,7 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, times(1)).ok(anyString());
+        verify(serviceResponse, times(1)).ok(anyString());
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -81,8 +81,8 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(MALFORMED_JSON);
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(repository, never()).findByEmail(anyString());
     }
 
@@ -92,8 +92,8 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(MALFORMED_JSON);
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(repository, never()).findByEmail(logInData.getEmail());
     }
 
@@ -104,8 +104,8 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -116,8 +116,8 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 
@@ -128,8 +128,8 @@ public class LogInRouteTest {
 
         logIn.post(stringifiedLogIn);
 
-        verify(response, never()).ok(anyString());
-        verify(response, times(1)).badRequest(new String[]{BAD_LOGIN});
+        verify(serviceResponse, never()).ok(anyString());
+        verify(serviceResponse, times(1)).badRequest(new String[]{BAD_LOGIN});
         verify(repository, times(1)).findByEmail(logInData.getEmail());
     }
 }
