@@ -21,9 +21,13 @@ import javax.persistence.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Machine.findById", query = "SELECT m FROM Machine m WHERE m.id = :id")
+})
 public class Machine extends AbstractEntity<Machine> {
-    @OneToOne(optional = false) private MachineLocation location; // Minimo 2, max 140
+    @Embedded private MachineLocation location; // Minimo 2, max 140
     @Column @Enumerated private MachineType type;  // --
     @Column @Enumerated private MachineState state; // --
     @Column private String description; // Minimo 0, max 300
