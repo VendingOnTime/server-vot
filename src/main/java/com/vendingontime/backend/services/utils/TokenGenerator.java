@@ -1,6 +1,6 @@
 package com.vendingontime.backend.services.utils;
 
-import com.vendingontime.backend.models.bodymodels.LogInData;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
 
 /**
  * Created by miguel on 28/3/17.

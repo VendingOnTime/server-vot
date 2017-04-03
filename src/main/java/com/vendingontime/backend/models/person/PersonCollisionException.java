@@ -1,4 +1,4 @@
-package com.vendingontime.backend.models;
+package com.vendingontime.backend.models.person;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

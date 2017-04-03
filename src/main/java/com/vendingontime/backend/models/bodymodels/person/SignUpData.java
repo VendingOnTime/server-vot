@@ -1,6 +1,7 @@
-package com.vendingontime.backend.models.bodymodels;
+package com.vendingontime.backend.models.bodymodels.person;
 
-import com.vendingontime.backend.models.PersonRole;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.Validable;
 
 import java.util.Collections;
 import java.util.LinkedList;

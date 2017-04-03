@@ -2,9 +2,10 @@ package unit.com.vendingontime.backend.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.bodymodels.LogInData;
+
 import com.vendingontime.backend.repositories.JPAPersonRepository;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -14,8 +15,8 @@ import org.junit.*;
 
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.bodymodels.LogInData.BAD_LOGIN;
-import static com.vendingontime.backend.services.LogInService.MALFORMED_JSON;
+import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
+import static com.vendingontime.backend.services.SignUpRoute.MALFORMED_JSON;
 import static org.mockito.Mockito.*;
 
 /**

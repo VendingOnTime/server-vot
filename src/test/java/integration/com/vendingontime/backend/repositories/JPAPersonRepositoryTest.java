@@ -1,19 +1,20 @@
 package integration.com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
-import com.vendingontime.backend.models.Person;
-import com.vendingontime.backend.models.PersonCollisionException;
-import com.vendingontime.backend.models.PersonRole;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
+
 import com.vendingontime.backend.repositories.JPAPersonRepository;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonCollisionException;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.*;
 
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.PersonCollisionException.DNI_EXISTS;
-import static com.vendingontime.backend.models.PersonCollisionException.EMAIL_EXISTS;
-import static com.vendingontime.backend.models.PersonCollisionException.USERNAME_EXISTS;
+import static com.vendingontime.backend.models.person.PersonCollisionException.DNI_EXISTS;
+import static com.vendingontime.backend.models.person.PersonCollisionException.EMAIL_EXISTS;
+import static com.vendingontime.backend.models.person.PersonCollisionException.USERNAME_EXISTS;
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertArrayEquals;
 
