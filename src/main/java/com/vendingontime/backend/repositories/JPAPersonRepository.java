@@ -29,34 +29,11 @@ import static com.vendingontime.backend.models.person.PersonCollisionException.C
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class JPAPersonRepository implements PersonRepository {
-
-    private final EntityManager em;
+public class JPAPersonRepository extends JPARepository<Person> implements PersonRepository {
 
     @Inject
     public JPAPersonRepository(EntityManager entityManager) {
-        this.em = entityManager;
-    }
-
-    @Override
-    public Person create(Person person) throws PersonCollisionException {
-        if (person == null) throw new NullPointerException("person");
-        if (person.getId() != null) return person;
-        checkIfCollides(person);
-
-        EntityTransaction tx = em.getTransaction();
-
-        tx.begin();
-        em.persist(person);
-        tx.commit();
-
-        em.detach(person);
-        return person;
-    }
-
-    @Override
-    public Optional<Person> findById(String id) {
-        return findByQuery("findById", "id", id);
+        super(entityManager, Person.class);
     }
 
     @Override
@@ -74,55 +51,7 @@ public class JPAPersonRepository implements PersonRepository {
         return findByQuery("findByDni", "dni", dni);
     }
 
-    @Override
-    public Optional<Person> update(Person person) throws PersonCollisionException {
-        if (person == null) throw new NullPointerException("person");
-
-        Optional<Person> possiblePerson = findById(person.getId());
-        possiblePerson.ifPresent(found -> {
-            try {
-                checkIfCollides(person);
-
-                EntityTransaction tr = em.getTransaction();
-                tr.begin();
-                found.update(person);
-                tr.commit();
-            } finally {
-                em.detach(found);
-            }
-        });
-
-        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
-    }
-
-    @Override
-    public Optional<Person> delete(String id) {
-        if (id == null) throw new NullPointerException("id");
-
-        Optional<Person> possiblePerson = findById(id);
-        possiblePerson.ifPresent(found -> {
-            EntityTransaction tr = em.getTransaction();
-            tr.begin();
-            em.remove(found);
-            tr.commit();
-        });
-
-        return possiblePerson.isPresent() ? possiblePerson : Optional.empty();
-    }
-
-    private Optional<Person> findByQuery(String queryName, String paramName, Object param) {
-        if (param == null) return Optional.empty();
-
-        TypedQuery<Person> query = em.createNamedQuery("Person." + queryName, Person.class);
-        query.setParameter(paramName, param);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
-    }
-
-    private void checkIfCollides(Person person) throws PersonCollisionException {
+    protected void checkIfCollides(Person person) throws PersonCollisionException {
         boolean isNew = person.getId() == null;
 
         List<Cause> causes = new LinkedList<>();

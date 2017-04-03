@@ -21,7 +21,7 @@ import java.util.Optional;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public interface PersonRepository extends Repository<String, Person> {
+public interface PersonRepository extends Repository<Person> {
     Optional<Person> findByEmail(String email);
     Optional<Person> findByUsername(String email);
     Optional<Person> findByDni(String email);

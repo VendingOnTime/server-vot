@@ -22,7 +22,7 @@ import javax.persistence.*;
  * specific language governing permissions and limitations under the License.
  */
 @Entity
-public class Machine extends AbstractEntity {
+public class Machine extends AbstractEntity<Machine> {
     @OneToOne(optional = false) private MachineLocation location; // Minimo 2, max 140
     @Column @Enumerated private MachineType type;  // --
     @Column @Enumerated private MachineState state; // --

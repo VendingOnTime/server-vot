@@ -1,5 +1,7 @@
 package com.vendingontime.backend.repositories;
 
+import com.vendingontime.backend.models.AbstractEntity;
+
 import java.util.Optional;
 
 /*
@@ -19,9 +21,9 @@ import java.util.Optional;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public interface Repository<ID, MODEL> {
+public interface Repository<MODEL extends AbstractEntity> {
     MODEL create(MODEL model);
-    Optional<MODEL> findById(ID id);
+    Optional<MODEL> findById(String id);
     Optional<MODEL> update(MODEL model);
-    Optional<MODEL> delete(ID id);
+    Optional<MODEL> delete(String id);
 }

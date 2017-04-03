@@ -31,7 +31,7 @@ import javax.persistence.*;
         @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM Person p WHERE p.username = :username"),
         @NamedQuery(name = "Person.findByDni", query = "SELECT p FROM Person p WHERE p.dni = :dni")
 })
-public class Person extends AbstractEntity {
+public class Person extends AbstractEntity<Person> {
     @Column(unique = true) private String email;
     @Column(unique = true) private String username;
     @Column @JsonIgnore private String password;
