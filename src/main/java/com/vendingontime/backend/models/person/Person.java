@@ -1,25 +1,37 @@
-package com.vendingontime.backend.models;
+package com.vendingontime.backend.models.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vendingontime.backend.models.bodymodels.SignUpData;
-import org.eclipse.persistence.annotations.UuidGenerator;
+import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 
 import javax.persistence.*;
 
-/**
- * Created by miguel on 7/3/17.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 @Entity
-@UuidGenerator(name = "PER_ID_GEN")
 @NamedQueries({
         @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
         @NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
         @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM Person p WHERE p.username = :username"),
         @NamedQuery(name = "Person.findByDni", query = "SELECT p FROM Person p WHERE p.dni = :dni")
 })
-public class Person {
-    @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;
+public class Person extends AbstractEntity {
     @Column(unique = true) private String email;
     @Column(unique = true) private String username;
     @Column @JsonIgnore private String password;
@@ -32,33 +44,24 @@ public class Person {
         super();
     }
 
-    public Person(SignUpData sd) {
-        this.email = sd.getEmail();
-        this.username = sd.getUsername();
-        this.password = sd.getPassword();
-        this.dni = sd.getDni();
-        this.name = sd.getName();
-        this.surnames = sd.getSurnames();
-        this.role = sd.getRole();
+    public Person(SignUpData signUpData) {
+        this.email = signUpData.getEmail();
+        this.username = signUpData.getUsername();
+        this.password = signUpData.getPassword();
+        this.dni = signUpData.getDni();
+        this.name = signUpData.getName();
+        this.surnames = signUpData.getSurnames();
+        this.role = signUpData.getRole();
     }
 
-    public void update(Person p) {
-        this.email = p.getEmail();
-        this.username = p.getUsername();
-        this.password = p.getPassword();
-        this.dni = p.getDni();
-        this.name = p.getName();
-        this.surnames = p.getSurnames();
-        this.role = p.getRole();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Person setId(String id) {
-        this.id = id;
-        return this;
+    public void update(Person person) {
+        this.email = person.getEmail();
+        this.username = person.getUsername();
+        this.password = person.getPassword();
+        this.dni = person.getDni();
+        this.name = person.getName();
+        this.surnames = person.getSurnames();
+        this.role = person.getRole();
     }
 
     public String getEmail() {

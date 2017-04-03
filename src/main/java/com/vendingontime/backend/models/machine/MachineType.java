@@ -1,4 +1,4 @@
-package com.vendingontime.backend.services.utils;
+package com.vendingontime.backend.models.machine;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -17,14 +17,6 @@ package com.vendingontime.backend.services.utils;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class DummyPasswordEncryptor implements PasswordEncryptor {
-    @Override
-    public String encrypt(String password) {
-        return password;
-    }
-
-    @Override
-    public boolean check(String encryptedPwd, String providedPwd) {
-        return encryptedPwd.equals(providedPwd);
-    }
+public enum MachineType {
+    COFFEE, SNACKS, DRINKS
 }

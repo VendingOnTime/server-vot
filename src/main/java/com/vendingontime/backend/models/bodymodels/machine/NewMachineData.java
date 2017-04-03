@@ -1,4 +1,9 @@
-package com.vendingontime.backend.services.utils;
+package com.vendingontime.backend.models.bodymodels.machine;
+
+import com.vendingontime.backend.models.bodymodels.Validable;
+import com.vendingontime.backend.models.machine.MachineLocation;
+import com.vendingontime.backend.models.machine.MachineState;
+import com.vendingontime.backend.models.machine.MachineType;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -17,14 +22,16 @@ package com.vendingontime.backend.services.utils;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class DummyPasswordEncryptor implements PasswordEncryptor {
-    @Override
-    public String encrypt(String password) {
-        return password;
-    }
+public class NewMachineData implements Validable {
+    private MachineLocation machineLocation; // Minimo 2, max 140
+    private MachineType machineType;  // --
+    private MachineState machineState; // --
+    private String description; // Minimo 0, max 300
 
     @Override
-    public boolean check(String encryptedPwd, String providedPwd) {
-        return encryptedPwd.equals(providedPwd);
+    public String[] validate() {
+        return null;
     }
+
+
 }

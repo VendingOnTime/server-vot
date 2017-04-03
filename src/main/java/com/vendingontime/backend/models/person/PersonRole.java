@@ -1,4 +1,7 @@
-package com.vendingontime.backend.services.utils;
+package com.vendingontime.backend.models.person;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -17,14 +20,16 @@ package com.vendingontime.backend.services.utils;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class DummyPasswordEncryptor implements PasswordEncryptor {
-    @Override
-    public String encrypt(String password) {
-        return password;
+public enum PersonRole {
+    CUSTOMER, SUPERVISOR, TECHNICIAN;
+
+    @JsonCreator
+    public static PersonRole fromValue(String value) {
+        return PersonRole.valueOf(value.toUpperCase());
     }
 
-    @Override
-    public boolean check(String encryptedPwd, String providedPwd) {
-        return encryptedPwd.equals(providedPwd);
+    @JsonValue
+    public String toValue() {
+        return toString().toLowerCase();
     }
 }
