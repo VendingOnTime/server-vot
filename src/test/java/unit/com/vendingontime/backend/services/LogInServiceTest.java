@@ -16,7 +16,7 @@ import org.junit.*;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
-import static com.vendingontime.backend.services.SignUpRoute.MALFORMED_JSON;
+import static com.vendingontime.backend.services.LogInService.MALFORMED_JSON;
 import static org.mockito.Mockito.*;
 
 /*
