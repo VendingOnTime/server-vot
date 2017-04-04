@@ -16,5 +16,8 @@ package com.vendingontime.backend.repositories;/*
  * specific language governing permissions and limitations under the License.
  */
 
-public interface MachineRepository {
+import com.vendingontime.backend.models.machine.Machine;
+
+public interface MachineRepository extends Repository<Machine> {
+
 }

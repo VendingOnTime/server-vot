@@ -1,6 +1,5 @@
 package com.vendingontime.backend.models.machine;
 
-import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.utils.Location;
 
 import javax.persistence.*;
@@ -48,7 +47,6 @@ public class MachineLocation implements Location {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         MachineLocation location = (MachineLocation) o;
 
@@ -57,9 +55,7 @@ public class MachineLocation implements Location {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        return result;
+        return getName() != null ? getName().hashCode() : 0;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.vendingontime.backend.models.machine;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -18,5 +21,15 @@ package com.vendingontime.backend.models.machine;
  * specific language governing permissions and limitations under the License.
  */
 public enum MachineType {
-    COFFEE, SNACKS, DRINKS
+    COFFEE, SNACKS, DRINKS;
+
+    @JsonCreator
+    public static MachineType fromValue(String value) {
+        return MachineType.valueOf(value.toUpperCase());
+    }
+
+    @JsonValue
+    public String toValue() {
+        return toString().toLowerCase();
+    }
 }

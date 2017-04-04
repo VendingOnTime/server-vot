@@ -45,11 +45,11 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AbstractEntity)) return false;
 
-        AbstractEntity entity = (AbstractEntity) o;
+        AbstractEntity that = (AbstractEntity) o;
 
-        return (id != null ? !id.equals(entity.id) : entity.id != null);
+        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
     }
 
     public abstract void update(T entity);
