@@ -95,6 +95,19 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         repository.delete(machineTwoId);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void create_null() throws Exception {
+        repository.create(null);
+    }
+
+    @Test
+    public void create_withIDExistent() throws Exception {
+        Machine machine = repository.create(this.machineOne);
+
+        assertEquals(machine, repository.create(machine));
+    }
+
+
     @Test
     public void findById() throws Exception {
         Machine machine = repository.create(this.machineOne);
