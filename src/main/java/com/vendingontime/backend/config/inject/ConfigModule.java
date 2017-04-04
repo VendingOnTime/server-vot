@@ -20,10 +20,12 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
+import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.routes.TestRouter;
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
 import com.vendingontime.backend.services.utils.JWTTokenGenerator;
@@ -97,12 +99,14 @@ public class ConfigModule extends AbstractModule {
 
     private void bindServices() {
         bind(SignUpService.class);
+        bind(LogInService.class);
     }
 
     private void bindRoutes() {
         Multibinder<SparkRouter> routerBinder = Multibinder.newSetBinder(binder(), SparkRouter.class);
         routerBinder.addBinding().to(TestRouter.class);
         routerBinder.addBinding().to(SignUpRouter.class);
+        routerBinder.addBinding().to(LogInRouter.class);
     }
 
     private void bindPlugins() {
