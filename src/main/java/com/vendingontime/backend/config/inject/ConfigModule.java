@@ -91,7 +91,7 @@ public class ConfigModule extends AbstractModule {
 
     private void bindRepositories() {
         bind(PersonRepository.class).to(JPAPersonRepository.class);
-        bind(new TypeLiteral<Repository<String, Person>>(){}).to(JPAPersonRepository.class);
+        bind(new TypeLiteral<Repository<Person>>(){}).to(JPAPersonRepository.class);
     }
 
     private void bindServices() {

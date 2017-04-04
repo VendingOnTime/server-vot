@@ -25,7 +25,7 @@ import javax.persistence.OneToOne;
  */
 
 @Entity
-public class MachineLocation extends AbstractEntity{
+public class MachineLocation extends AbstractEntity<MachineLocation> {
     @Column private String name;
     @OneToOne(optional = false, mappedBy = "location") private Machine machine;
 
