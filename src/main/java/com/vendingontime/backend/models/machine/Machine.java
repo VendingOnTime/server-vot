@@ -110,10 +110,9 @@ public class Machine extends AbstractEntity<Machine> {
     public String toString() {
         return "Machine{" +
                 "location=" + location +
-                ", id='" + id + '\'' +
                 ", type=" + type +
                 ", state=" + state +
                 ", description='" + description + '\'' +
-                '}';
+                "} " + super.toString();
     }
 }
