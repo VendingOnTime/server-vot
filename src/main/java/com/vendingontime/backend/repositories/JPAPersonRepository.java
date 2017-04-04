@@ -51,6 +51,7 @@ public class JPAPersonRepository extends JPARepository<Person> implements Person
         return findByQuery("findByDni", "dni", dni);
     }
 
+    @Override
     protected void checkIfCollides(Person person) throws PersonCollisionException {
         boolean isNew = person.getId() == null;
 

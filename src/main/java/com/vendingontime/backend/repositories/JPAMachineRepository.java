@@ -1,9 +1,4 @@
-package com.vendingontime.backend.models.machine;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-/*
+package com.vendingontime.backend.repositories;/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,16 +15,21 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public enum MachineType {
-    COFFEE, SNACKS, DRINKS;
 
-    @JsonCreator
-    public static MachineType fromValue(String value) {
-        return MachineType.valueOf(value.toUpperCase());
+import com.google.inject.Inject;
+import com.vendingontime.backend.models.machine.Machine;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import java.util.Optional;
+
+public class JPAMachineRepository extends JPARepository<Machine> implements MachineRepository {
+
+    @Inject
+    public JPAMachineRepository(EntityManager entityManager) {
+        super(entityManager, Machine.class);
     }
 
-    @JsonValue
-    public String toValue() {
-        return toString().toLowerCase();
-    }
 }

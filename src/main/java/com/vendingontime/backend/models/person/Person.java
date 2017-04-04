@@ -131,29 +131,32 @@ public class Person extends AbstractEntity<Person> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Person person = (Person) o;
 
-        if (id != null ? !id.equals(person.id) : person.id != null) return false;
-        if (email != null ? !email.equals(person.email) : person.email != null) return false;
-        if (username != null ? !username.equals(person.username) : person.username != null) return false;
-        if (password != null ? !password.equals(person.password) : person.password != null) return false;
-        if (dni != null ? !dni.equals(person.dni) : person.dni != null) return false;
-        if (name != null ? !name.equals(person.name) : person.name != null) return false;
-        if (surnames != null ? !surnames.equals(person.surnames) : person.surnames != null) return false;
-        return role == person.role;
+        if (getEmail() != null ? !getEmail().equals(person.getEmail()) : person.getEmail() != null) return false;
+        if (getUsername() != null ? !getUsername().equals(person.getUsername()) : person.getUsername() != null)
+            return false;
+        if (getPassword() != null ? !getPassword().equals(person.getPassword()) : person.getPassword() != null)
+            return false;
+        if (getDni() != null ? !getDni().equals(person.getDni()) : person.getDni() != null) return false;
+        if (getName() != null ? !getName().equals(person.getName()) : person.getName() != null) return false;
+        if (getSurnames() != null ? !getSurnames().equals(person.getSurnames()) : person.getSurnames() != null)
+            return false;
+        return getRole() == person.getRole();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (dni != null ? dni.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (surnames != null ? surnames.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
+        int result = super.hashCode();
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getUsername() != null ? getUsername().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        result = 31 * result + (getDni() != null ? getDni().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getSurnames() != null ? getSurnames().hashCode() : 0);
+        result = 31 * result + (getRole() != null ? getRole().hashCode() : 0);
         return result;
     }
 
