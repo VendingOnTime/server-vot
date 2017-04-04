@@ -9,6 +9,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
+import com.vendingontime.backend.services.utils.TokenGenerator;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
@@ -56,9 +57,13 @@ public class LogInRouterTest extends IntegrationTest {
     @Inject
     private PersonRepository repository;
 
+    @Inject
+    private TokenGenerator tokenGenerator;
+
     private ObjectMapper mapper;
     private SignUpData signUpData;
-    private String logInData;
+    private LogInData logInData;
+    private String stringifiedLogInData;
 
     @Before
     public void setUp() throws Exception {
@@ -73,25 +78,31 @@ public class LogInRouterTest extends IntegrationTest {
                 .setName("name")
                 .setSurnames("surnames");
 
-        logInData = mapper.writeValueAsString(new LogInData()
+        logInData = new LogInData()
                 .setEmail(EMAIL)
-                .setPassword(PASSWORD));
+                .setPassword(PASSWORD);
+
+        stringifiedLogInData = mapper.writeValueAsString(logInData);
     }
 
     @After
     public void tearDown() throws Exception {
         signUpData = null;
         logInData = null;
+        stringifiedLogInData = null;
     }
 
     @Test
     public void logInUser() throws Exception {
         signUpService.createSupervisor(signUpData);
 
-        String result = (String) logInRouter.logInUser(logInData).handle(mock(Request.class), mock(Response.class));
+        String result = (String) logInRouter.logInUser(stringifiedLogInData)
+                .handle(mock(Request.class), mock(Response.class));
+
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
 
         assertTrue(restResult.getSuccess());
+        assertEquals(tokenGenerator.generate(logInData), restResult.getData());
 
         Optional<Person> byEmail = repository.findByEmail(EMAIL);
         repository.delete(byEmail.get().getId());
