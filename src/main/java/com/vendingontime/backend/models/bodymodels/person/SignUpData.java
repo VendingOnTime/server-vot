@@ -96,6 +96,8 @@ public class SignUpData implements Validable {
         causes.addAll(validateCommon());
         causes.addAll(validateBusinessCommon());
         if (isEmpty(dni)) causes.add(EMPTY_DNI);
+        if (isEmpty(name)) causes.add(EMPTY_NAME);
+        if (isEmpty(surnames)) causes.add(EMPTY_SURNAMES);
         return causes;
     }
 
@@ -104,8 +106,6 @@ public class SignUpData implements Validable {
         if (isEmpty(email)) causes.add(EMPTY_EMAIL);
         if (isEmpty(username)) causes.add(EMPTY_USERNAME);
         if (isEmpty(password)) causes.add(EMPTY_PASSWORD);
-        if (isEmpty(name)) causes.add(EMPTY_NAME);
-        if (isEmpty(surnames)) causes.add(EMPTY_SURNAMES);
         return causes;
     }
 
