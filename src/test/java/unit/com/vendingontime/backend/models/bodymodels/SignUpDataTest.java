@@ -119,7 +119,7 @@ public class SignUpDataTest {
         supervisor.setRole(PersonRole.SUPERVISOR);
 
         assertArrayEquals(new String[]{
-                EMPTY_EMAIL, EMPTY_USERNAME, EMPTY_PASSWORD, EMPTY_NAME, EMPTY_SURNAMES
+                EMPTY_EMAIL, EMPTY_USERNAME, EMPTY_PASSWORD
         }, supervisor.validate());
     }
 
@@ -134,7 +134,7 @@ public class SignUpDataTest {
         technician.setRole(PersonRole.TECHNICIAN);
 
         assertArrayEquals(new String[]{
-                EMPTY_EMAIL, EMPTY_USERNAME, EMPTY_PASSWORD, EMPTY_NAME, EMPTY_SURNAMES, EMPTY_DNI
+                EMPTY_EMAIL, EMPTY_USERNAME, EMPTY_PASSWORD, EMPTY_DNI, EMPTY_NAME, EMPTY_SURNAMES
         }, technician.validate());
     }
 }
