@@ -1,22 +1,27 @@
-package integration.com.vendingontime.backend.services;
+package integration.com.vendingontime.backend.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.LogInService;
+import com.vendingontime.backend.routes.LogInRouter;
+import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import spark.Request;
+import spark.Response;
 
 import javax.inject.Inject;
 
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,7 +41,7 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class LogInServiceTest extends IntegrationTest {
+public class LogInRouterTest extends IntegrationTest {
 
     private static final String EMAIL = "user@example.com";
     private static final String PASSWORD = "12345";
@@ -46,16 +51,19 @@ public class LogInServiceTest extends IntegrationTest {
     private SignUpService signUpService;
 
     @Inject
-    private LogInService logInService;
+    private LogInRouter logInRouter;
 
     @Inject
     private PersonRepository repository;
 
+    private ObjectMapper mapper;
     private SignUpData signUpData;
-    private LogInData logInData;
+    private String logInData;
 
     @Before
     public void setUp() throws Exception {
+
+        mapper = new ObjectMapper();
 
         signUpData = new SignUpData()
                 .setRole(PersonRole.SUPERVISOR)
@@ -65,9 +73,9 @@ public class LogInServiceTest extends IntegrationTest {
                 .setName("name")
                 .setSurnames("surnames");
 
-        logInData = new LogInData()
+        logInData = mapper.writeValueAsString(new LogInData()
                 .setEmail(EMAIL)
-                .setPassword(PASSWORD);
+                .setPassword(PASSWORD));
     }
 
     @After
@@ -77,11 +85,13 @@ public class LogInServiceTest extends IntegrationTest {
     }
 
     @Test
-    public void authorizeUser() throws Exception {
+    public void logInUser() throws Exception {
         signUpService.createSupervisor(signUpData);
 
-        String token = logInService.authorizeUser(logInData);
-        assertNotNull(token);
+        String result = (String) logInRouter.logInUser(logInData).handle(mock(Request.class), mock(Response.class));
+        RESTResult restResult = mapper.readValue(result, RESTResult.class);
+
+        assertTrue(restResult.getSuccess());
 
         Optional<Person> byEmail = repository.findByEmail(EMAIL);
         repository.delete(byEmail.get().getId());
