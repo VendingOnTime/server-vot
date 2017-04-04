@@ -18,8 +18,6 @@ package com.vendingontime.backend.repositories;
  */
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonCollisionException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
