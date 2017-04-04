@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 
 public class LogInRouter extends AbstractSparkRouter {
-    public static final String V1_LOG_IN = "/api-v1/login";
+    public static final String V1_LOG_IN = V1 + "/login";
 
     private final LogInService service;
 

@@ -33,7 +33,7 @@ import java.io.IOException;
  */
 public class SignUpRouter extends AbstractSparkRouter {
 
-    public static final String V1_SIGN_UP_SUPERVISOR = "/api-v1/signup/supervisor";
+    public static final String V1_SIGN_UP_SUPERVISOR = V1 + "/signup/supervisor";
 
     private final SignUpService service;
 
