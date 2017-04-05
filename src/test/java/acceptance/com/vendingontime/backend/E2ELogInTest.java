@@ -13,9 +13,8 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
-
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /*
@@ -64,7 +63,7 @@ public class E2ELogInTest extends E2ETest {
                 .setSurnames(SURNAME)
                 .setPassword(PASSWORD);
 
-        signUpService.createSupervisor(signUpData);
+        Person supervisor = signUpService.createSupervisor(signUpData);
 
         LogInData payload = new LogInData()
                 .setEmail(EMAIL)
@@ -78,10 +77,9 @@ public class E2ELogInTest extends E2ETest {
                 .statusCode(HttpResponse.StatusCode.OK)
                 .body("success", equalTo(true))
                 .body("data", equalTo(tokenGenerator.generateFrom(payload)))
-                .body("error", equalTo(null));
+                .body("error", nullValue());
 
-        Optional<Person> byEmail = repository.findByEmail(EMAIL);
-        repository.delete(byEmail.get().getId());
+        repository.delete(supervisor.getId());
     }
 
 }
