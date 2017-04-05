@@ -1,19 +1,4 @@
 package com.vendingontime.backend.routes;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.bodymodels.person.SignUpData;
-import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.SignUpService;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.Service;
-
-import javax.inject.Inject;
-import java.io.IOException;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -31,28 +16,38 @@ import java.io.IOException;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class SignUpRouter extends AbstractSparkRouter {
 
-    public static final String V1_SIGN_UP_SUPERVISOR = V1 + "/signup/supervisor";
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
+import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
+import com.vendingontime.backend.services.LogInService;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+import spark.Service;
 
-    private final SignUpService service;
+import javax.inject.Inject;
+import java.io.IOException;
+
+public class LogInRouter extends AbstractSparkRouter {
+    public static final String V1_LOG_IN = V1 + "/login";
+
+    private final LogInService service;
 
     @Inject
-    public SignUpRouter(SignUpService service, ServiceResponse serviceResponse) {
+    public LogInRouter(ServiceResponse serviceResponse, LogInService service) {
         super(serviceResponse);
         this.service = service;
     }
 
     @Override
     public void configure(Service http) {
-        http.post(V1_SIGN_UP_SUPERVISOR, map((req, res) -> signUpSupervisor(req.body())));
+        http.post(V1_LOG_IN, map((req, res) -> logInUser(req.body())));
     }
 
-    public AppRoute signUpSupervisor(String body) {
+    public AppRoute logInUser(String body) {
         try {
-            SignUpData supervisorCandidate = mapper.readValue(body, SignUpData.class);
+            LogInData user = mapper.readValue(body, LogInData.class);
 
-            return serviceResponse.created(service.createSupervisor(supervisorCandidate));
+            return serviceResponse.ok(service.authorizeUser(user));
         } catch (BusinessLogicException ex) {
             return serviceResponse.badRequest(ex.getCauses());
         } catch (IOException ex) {

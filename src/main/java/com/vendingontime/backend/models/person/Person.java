@@ -163,14 +163,12 @@ public class Person extends AbstractEntity<Person> {
     @Override
     public String toString() {
         return "Person{" +
-                "id='" + id + '\'' +
-                ", email='" + email + '\'' +
+                "email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", dni='" + dni + '\'' +
                 ", name='" + name + '\'' +
                 ", surnames='" + surnames + '\'' +
                 ", role=" + role +
-                '}';
+                "} " + super.toString();
     }
 }

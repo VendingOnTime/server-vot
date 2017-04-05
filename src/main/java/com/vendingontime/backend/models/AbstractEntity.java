@@ -26,7 +26,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 @UuidGenerator(name = "PER_ID_GEN")
 public abstract class AbstractEntity<T extends AbstractEntity> {
-    @Id @GeneratedValue(generator = "PER_ID_GEN") public String id;
+    @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;
 
     public String getId() {
         return id;
@@ -53,4 +53,11 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
     }
 
     public abstract void update(T entity);
+
+    @Override
+    public String toString() {
+        return "AbstractEntity{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }
