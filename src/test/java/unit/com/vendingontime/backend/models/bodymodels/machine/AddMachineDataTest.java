@@ -1,7 +1,7 @@
 package unit.com.vendingontime.backend.models.bodymodels.machine;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.machine.MachineLocation;
+import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.utils.StringUtils;
