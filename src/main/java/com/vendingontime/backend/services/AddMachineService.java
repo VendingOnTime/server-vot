@@ -1,4 +1,5 @@
-package com.vendingontime.backend.services;/*
+package com.vendingontime.backend.services;
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,5 +17,15 @@ package com.vendingontime.backend.services;/*
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.repositories.MachineRepository;
+
+import javax.inject.Inject;
+
 public class AddMachineService {
+    private MachineRepository machineRepository;
+
+    @Inject
+    public AddMachineService(MachineRepository machineRepository) {
+        this.machineRepository = machineRepository;
+    }
 }

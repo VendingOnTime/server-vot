@@ -18,11 +18,14 @@ import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
 
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.*;
+
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -105,11 +108,13 @@ public class ConfigModule extends AbstractModule {
         bind(new TypeLiteral<Repository<Company>>(){}).to(JPACompanyRepository.class);
 
         bind(MachineRepository.class).to(JPAMachineRepository.class);
+        bind(new TypeLiteral<Repository<Machine>>(){}).to(JPAMachineRepository.class);
     }
 
     private void bindServices() {
         bind(SignUpService.class);
         bind(LogInService.class);
+        bind(AddMachineService.class);
     }
 
     private void bindMiddleware() {
