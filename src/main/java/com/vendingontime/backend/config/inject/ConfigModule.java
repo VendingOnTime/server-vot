@@ -114,7 +114,6 @@ public class ConfigModule extends AbstractModule {
 
     private void bindRoutes() {
         Multibinder<SparkRouter> routerBinder = Multibinder.newSetBinder(binder(), SparkRouter.class);
-        routerBinder.addBinding().to(TestRouter.class);
         routerBinder.addBinding().to(SignUpRouter.class);
         routerBinder.addBinding().to(LogInRouter.class);
         routerBinder.addBinding().to(UserProfileRouter.class);
