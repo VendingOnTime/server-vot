@@ -15,16 +15,16 @@ import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.initializers.SparkPluginInitializer;
 import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
-import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.repositories.*;
 
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.Repository;
-import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.routes.TestRouter;
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -95,11 +95,15 @@ public class ConfigModule extends AbstractModule {
     private void bindRepositories() {
         bind(PersonRepository.class).to(JPAPersonRepository.class);
         bind(new TypeLiteral<Repository<Person>>(){}).to(JPAPersonRepository.class);
+
+        bind(MachineRepository.class).to(JPAMachineRepository.class);
+        bind(new TypeLiteral<Repository<Machine>>(){}).to(JPAMachineRepository.class);
     }
 
     private void bindServices() {
         bind(SignUpService.class);
         bind(LogInService.class);
+        bind(AddMachineService.class);
     }
 
     private void bindRoutes() {
