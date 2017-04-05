@@ -15,6 +15,8 @@ import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.initializers.SparkPluginInitializer;
 import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
+import com.vendingontime.backend.middleware.EndpointProtector;
+import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.repositories.PersonRepository;
 
 import com.vendingontime.backend.models.person.Person;
@@ -55,6 +57,9 @@ public class ConfigModule extends AbstractModule {
     public static final String RESPONSE_CONTENT_TYPE = "RESPONSE_CONTENT_TYPE";
     private static final String RESPONSE_CONTENT_TYPE_DEFAULT = "application/json";
 
+    public static final String TOKEN_STRATEGY_TYPE = "TOKEN_TYPE";
+    private static final String TOKEN_STRATEGY_TYPE_DEFAULT = "JWT";
+
     @Override
     protected void configure() {
         bindLiterals();
@@ -62,6 +67,7 @@ public class ConfigModule extends AbstractModule {
         bindUtils();
         bindRepositories();
         bindServices();
+        bindMiddleware();
         bindRoutes();
         bindPlugins();
     }
@@ -70,6 +76,9 @@ public class ConfigModule extends AbstractModule {
         bind(String.class)
                 .annotatedWith(Names.named(RESPONSE_CONTENT_TYPE))
                 .toInstance(RESPONSE_CONTENT_TYPE_DEFAULT);
+        bind(String.class)
+                .annotatedWith(Names.named(TOKEN_STRATEGY_TYPE))
+                .toInstance(TOKEN_STRATEGY_TYPE_DEFAULT);
     }
 
     private void bindCoreComponents() {
@@ -100,6 +109,10 @@ public class ConfigModule extends AbstractModule {
     private void bindServices() {
         bind(SignUpService.class);
         bind(LogInService.class);
+    }
+
+    private void bindMiddleware() {
+        bind(EndpointProtector.class).to(TokenEndpointProtector.class);
     }
 
     private void bindRoutes() {

@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
+import com.vendingontime.backend.middleware.SparkMiddleware;
+import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.routes.SparkRouter;
 import spark.Service;
 
@@ -40,6 +42,10 @@ public class RESTContext {
 
     public void addPlugin(SparkPlugin plugin) {
         plugin.enable(http);
+    }
+
+    public void addMiddleware(SparkMiddleware middleware) {
+        middleware.configure(http);
     }
 
     public void stop() {
