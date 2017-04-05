@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
@@ -73,7 +74,7 @@ public class JWTTokenGenerator implements TokenGenerator {
             JWT decode = JWT.decode(token);
             String email = decode.getClaim(EMAIL_CLAIM).asString();
             return repository.findByEmail(email);
-        } catch (UnsupportedEncodingException | JWTDecodeException e) {
+        } catch (UnsupportedEncodingException | SignatureVerificationException | JWTDecodeException e) {
             return Optional.empty();
         }
     }

@@ -32,7 +32,7 @@ import java.util.Optional;
 
 public class TokenEndpointProtector implements EndpointProtector, SparkMiddleware {
 
-    public static final String X_AUTHORIZATION = "X-Authorization";
+    public static final String AUTHORIZATION = "Authorization";
     public static final String LOGGED_IN_PERSON = "loggedInPerson";
 
     private final RESTContext context;
@@ -60,13 +60,13 @@ public class TokenEndpointProtector implements EndpointProtector, SparkMiddlewar
         if (endpointUri == null) throw new IllegalStateException("Endpoint must call protect first");
         service.before(endpointUri, (request, response) -> {
             if (!fillRequestWithPersonIfAuthorized(request)) {
-                service.halt(HttpResponse.StatusCode.UNAUTHORIZED);
+                service.halt(HttpResponse.StatusCode.UNAUTHORIZED, "Unauthorized");
             }
         });
     }
 
     public boolean fillRequestWithPersonIfAuthorized(Request req) {
-        String authHeader = req.headers(X_AUTHORIZATION);
+        String authHeader = req.headers(AUTHORIZATION);
         Optional<String> possibleToken = getTokenFrom(authHeader);
 
         if (!possibleToken.isPresent()) return false;

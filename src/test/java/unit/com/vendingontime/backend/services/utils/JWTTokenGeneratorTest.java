@@ -89,4 +89,14 @@ public class JWTTokenGeneratorTest {
         Optional<Person> noPerson = generator.recoverFrom("invalid");
         assertThat(noPerson.isPresent(), is(false));
     }
+
+    @Test
+    public void recoverFrom_withTokenWithInvalidSignature() throws Exception {
+        String ALMOST_GOOD_TOKEN = "eyJhbGciOiJIUzI1NiJ9." +
+                "eyJpc3MiOiJpc3N1ZXIiLCJlbWFpbCI6InN1cGVydmlzb3IxQGNvbXBhbnkuY29tIn0." +
+                "MkSP370En6ZiGB5gYphv6V1ymHqUIHpApTprlYwtKr";
+
+        Optional<Person> noPerson = generator.recoverFrom(ALMOST_GOOD_TOKEN);
+        assertThat(noPerson.isPresent(), is(false));
+    }
 }

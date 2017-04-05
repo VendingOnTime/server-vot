@@ -12,7 +12,7 @@ import spark.Request;
 import java.util.Optional;
 
 import static com.vendingontime.backend.middleware.TokenEndpointProtector.LOGGED_IN_PERSON;
-import static com.vendingontime.backend.middleware.TokenEndpointProtector.X_AUTHORIZATION;
+import static com.vendingontime.backend.middleware.TokenEndpointProtector.AUTHORIZATION;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -74,7 +74,7 @@ public class TokenEndpointProtectorTest {
     @Test
     public void fillRequestWithPersonIfAuthorized_withTokenAndPerson_returnsTrue() throws Exception {
         Request req = mock(Request.class);
-        when(req.headers(X_AUTHORIZATION)).thenReturn(TOKEN_STRATEGY_TYPE + " " + TOKEN);
+        when(req.headers(AUTHORIZATION)).thenReturn(TOKEN_STRATEGY_TYPE + " " + TOKEN);
 
         boolean loggedIn = endpointProtector.fillRequestWithPersonIfAuthorized(req);
         assertTrue(loggedIn);
@@ -93,7 +93,7 @@ public class TokenEndpointProtectorTest {
     @Test
     public void fillRequestWithPersonIfAuthorized_withWrongHeaderFormat_returnsFalse() throws Exception {
         Request req = mock(Request.class);
-        when(req.headers(X_AUTHORIZATION)).thenReturn(TOKEN);
+        when(req.headers(AUTHORIZATION)).thenReturn(TOKEN);
 
         boolean loggedIn = endpointProtector.fillRequestWithPersonIfAuthorized(req);
         assertFalse(loggedIn);
@@ -103,7 +103,7 @@ public class TokenEndpointProtectorTest {
     @Test
     public void fillRequestWithPersonIfAuthorized_withInvalidTokenStrategy_returnsFalse() throws Exception {
         Request req = mock(Request.class);
-        when(req.headers(X_AUTHORIZATION)).thenReturn("ITS " + TOKEN);
+        when(req.headers(AUTHORIZATION)).thenReturn("ITS " + TOKEN);
 
         boolean loggedIn = endpointProtector.fillRequestWithPersonIfAuthorized(req);
         assertFalse(loggedIn);
@@ -113,7 +113,7 @@ public class TokenEndpointProtectorTest {
     @Test
     public void fillRequestWithPersonIfAuthorized_withInvalidToken_returnsFalse() throws Exception {
         Request req = mock(Request.class);
-        when(req.headers(X_AUTHORIZATION)).thenReturn(TOKEN_STRATEGY_TYPE + " invalidToken");
+        when(req.headers(AUTHORIZATION)).thenReturn(TOKEN_STRATEGY_TYPE + " invalidToken");
 
         boolean loggedIn = endpointProtector.fillRequestWithPersonIfAuthorized(req);
         assertFalse(loggedIn);
