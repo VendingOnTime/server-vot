@@ -1,16 +1,21 @@
-package unit.com.vendingontime.backend.services;
+package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.machine.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
+import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,57 +40,40 @@ import static org.mockito.Mockito.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class AddMachineServiceTest {
+public class AddMachineServiceTest extends IntegrationTest {
     private static final String DESCRIPTION = "DESCRIPTION";
     private static final String LOCATION_NAME = "LOCATION_NAME";
     private static final MachineLocation MACHINE_LOCATION = new MachineLocation().setName(LOCATION_NAME);
 
-    private JPAMachineRepository repository;
-    private AddMachineService addMachineService;
+    @Inject private JPAMachineRepository repository;
+    @Inject private AddMachineService service;
+
     private AddMachineData addMachineData;
-    private Machine machine;
 
     @Before
     public void setUp() throws Exception {
-        repository = mock(JPAMachineRepository.class);
-
-        addMachineService = new AddMachineService(repository);
-
         addMachineData = new AddMachineData()
                 .setDescription(DESCRIPTION)
                 .setMachineLocation(MACHINE_LOCATION)
                 .setMachineType(MachineType.COFFEE)
                 .setMachineState(MachineState.OPERATIVE);
-
-        machine = new Machine(addMachineData);
     }
 
     @After
     public void tearDown() throws Exception {
-        repository = null;
-        addMachineService = null;
         addMachineData = null;
     }
 
     @Test
     public void createMachine() {
-        addMachineService.createMachine(addMachineData);
+        Machine machine = service.createMachine(addMachineData);
 
-        verify(repository, times(1)).create(machine);
-    }
+        assertNotNull(machine);
 
-    @Test
-    public void createMachine_withInvalidPayload_throwsException() {
-        try {
-            addMachineData.getMachineLocation().setName("");
-            addMachineService.createMachine(addMachineData);
-            fail();
-        } catch (BusinessLogicException ex) {
-            assertArrayEquals(new String[]{AddMachineData.SHORT_MACHINE_LOCATION_NAME}, ex.getCauses());
+        Optional<Machine> byId = repository.findById(machine.getId());
+        assertTrue(byId.isPresent());
 
-            verify(repository, never()).create(any());
-        }
-
-
+        assertEquals(machine, byId.get());
+        repository.delete(byId.get().getId());
     }
 }
