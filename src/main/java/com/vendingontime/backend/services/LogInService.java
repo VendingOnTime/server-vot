@@ -1,7 +1,5 @@
 package com.vendingontime.backend.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.repositories.PersonRepository;
