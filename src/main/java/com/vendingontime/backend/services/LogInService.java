@@ -1,7 +1,5 @@
 package com.vendingontime.backend.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -54,7 +52,7 @@ public class LogInService {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
         }
 
-        return tokenGenerator.generate(userData);
+        return tokenGenerator.generateFrom(userData);
     }
 
     private boolean checkProvidedData(LogInData userData) {

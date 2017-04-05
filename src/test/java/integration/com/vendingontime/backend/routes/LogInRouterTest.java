@@ -102,7 +102,7 @@ public class LogInRouterTest extends IntegrationTest {
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
 
         assertTrue(restResult.getSuccess());
-        assertEquals(tokenGenerator.generate(logInData), restResult.getData());
+        assertEquals(tokenGenerator.generateFrom(logInData), restResult.getData());
 
         Optional<Person> byEmail = repository.findByEmail(EMAIL);
         repository.delete(byEmail.get().getId());

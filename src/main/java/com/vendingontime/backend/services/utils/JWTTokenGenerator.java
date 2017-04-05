@@ -3,9 +3,16 @@ package com.vendingontime.backend.services.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.vendingontime.backend.config.variables.ServerConfig;
+import com.vendingontime.backend.config.variables.ServerVariable;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.repositories.PersonRepository;
 
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
 
@@ -27,20 +34,38 @@ import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_L
  * specific language governing permissions and limitations under the License.
  */
 public class JWTTokenGenerator implements TokenGenerator {
+
+    private static final String EMAIL_CLAIM = "email";
+
+    private final ServerConfig config;
+    private final PersonRepository repository;
+
+    @Inject
+    public JWTTokenGenerator(ServerConfig config, PersonRepository repository) {
+        this.config = config;
+        this.repository = repository;
+    }
+
     @Override
-    public String generate(LogInData userData) {
-        String authToken;
-
+    public String generateFrom(LogInData userData) {
         try {
-            //TODO Change secret with env variable
-            Algorithm algorithm = Algorithm.HMAC256("secret");
-            authToken = JWT.create()
-                    .withClaim("email", userData.getEmail())
+            Algorithm algorithm = Algorithm.HMAC256(config.getString(ServerVariable.JWT_SECRET));
+            return JWT.create()
+                    .withClaim(EMAIL_CLAIM, userData.getEmail())
                     .sign(algorithm);
-
-            return authToken;
         } catch (UnsupportedEncodingException | JWTCreationException ex) {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
+        }
+    }
+
+    @Override
+    public Optional<Person> recoverFrom(String token) {
+        try {
+            JWT decode = JWT.decode(token);
+            String email = decode.getClaim(EMAIL_CLAIM).asString();
+            return repository.findByEmail(email);
+        } catch (JWTDecodeException e) {
+            return Optional.empty();
         }
     }
 }

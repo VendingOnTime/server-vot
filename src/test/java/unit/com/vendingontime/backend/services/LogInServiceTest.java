@@ -7,7 +7,6 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
-import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
 import com.vendingontime.backend.services.utils.PasswordEncryptor;
 import com.vendingontime.backend.services.utils.TokenGenerator;
 import org.junit.*;
@@ -80,13 +79,13 @@ public class LogInServiceTest {
     @Test
     public void authorizeUser() {
         String generatedToken = "tokenGenerated";
-        when(tokenGenerator.generate(logInData)).thenReturn(generatedToken);
+        when(tokenGenerator.generateFrom(logInData)).thenReturn(generatedToken);
 
         String token = logInService.authorizeUser(logInData);
 
         verify(repository, times(1)).findByEmail(logInData.getEmail());
         verify(passwordEncryptor, times(1)).check(PASSWORD, logInData.getPassword());
-        verify(tokenGenerator, times(1)).generate(logInData);
+        verify(tokenGenerator, times(1)).generateFrom(logInData);
         assertEquals(generatedToken, token);
     }
 
@@ -100,7 +99,7 @@ public class LogInServiceTest {
         } catch (BusinessLogicException e) {
             verify(repository, times(1)).findByEmail(logInData.getEmail());
             verify(passwordEncryptor, never()).check(anyString(), anyString());
-            verify(tokenGenerator, never()).generate(any());
+            verify(tokenGenerator, never()).generateFrom(any());
             assertArrayEquals(new String[]{BAD_LOGIN}, e.getCauses());
         }
     }
@@ -116,7 +115,7 @@ public class LogInServiceTest {
         } catch (BusinessLogicException e) {
             verify(repository, times(1)).findByEmail(logInData.getEmail());
             verify(passwordEncryptor, times(1)).check(PASSWORD, incorrectPwd);
-            verify(tokenGenerator, never()).generate(any());
+            verify(tokenGenerator, never()).generateFrom(any());
             assertArrayEquals(new String[]{BAD_LOGIN}, e.getCauses());
         }
     }
@@ -131,7 +130,7 @@ public class LogInServiceTest {
         } catch (BusinessLogicException e) {
             verify(repository, never()).findByEmail(anyString());
             verify(passwordEncryptor, never()).check(anyString(), anyString());
-            verify(tokenGenerator, never()).generate(any());
+            verify(tokenGenerator, never()).generateFrom(any());
             assertArrayEquals(new String[]{BAD_LOGIN}, e.getCauses());
         }
     }
