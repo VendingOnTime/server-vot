@@ -1,6 +1,7 @@
 package com.vendingontime.backend.models.machine;
 
 import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 
 import javax.persistence.*;
 
@@ -36,7 +37,12 @@ public class Machine extends AbstractEntity<Machine> {
         super();
     }
 
-    // TODO Constructor with NewMachineData
+    public Machine(AddMachineData addMachineData) {
+        this.location = addMachineData.getMachineLocation();
+        this.description = addMachineData.getDescription();
+        this.type = addMachineData.getMachineType();
+        this.state = addMachineData.getMachineState();
+    }
 
     public void update(Machine machine) {
         this.location = machine.getLocation();

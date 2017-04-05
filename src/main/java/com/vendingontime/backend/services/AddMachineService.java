@@ -1,4 +1,12 @@
 package com.vendingontime.backend.services;
+
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+
+import javax.inject.Inject;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -17,15 +25,25 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
-import com.vendingontime.backend.repositories.MachineRepository;
-
-import javax.inject.Inject;
-
 public class AddMachineService {
-    private MachineRepository machineRepository;
+    private MachineRepository repository;
 
     @Inject
     public AddMachineService(MachineRepository machineRepository) {
-        this.machineRepository = machineRepository;
+        this.repository = machineRepository;
+    }
+
+    public Machine createMachine(AddMachineData machineCandidate) {
+        String[] signUpErrors = machineCandidate.validate();
+
+        if(signUpErrors.length != 0) {
+            throw new BusinessLogicException(signUpErrors);
+        }
+
+        Machine machine = new Machine(machineCandidate);
+
+        machine = repository.create(machine);
+
+        return machine;
     }
 }
