@@ -21,7 +21,8 @@ public enum ServerVariable {
     PORT("8080"),
     ENV(Environment.DEVELOPMENT.toString()),
     DATA_SOURCE("derby_in_memory"),
-    JWT_SECRET("secret");
+    JWT_SECRET("secret"),
+    JWT_ISSUER("issuer");
 
     private final String defaultValue;
 

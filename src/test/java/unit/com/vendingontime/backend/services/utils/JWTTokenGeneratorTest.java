@@ -57,6 +57,7 @@ public class JWTTokenGeneratorTest {
                 .setPassword(PASSWORD);
 
         when(serverConfig.getString(ServerVariable.JWT_SECRET)).thenReturn("dummy");
+        when(serverConfig.getString(ServerVariable.JWT_ISSUER)).thenReturn("issuer");
         when(repository.findByEmail(EMAIL)).thenReturn(Optional.of(new Person().setEmail(EMAIL)));
     }
 

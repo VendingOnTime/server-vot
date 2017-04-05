@@ -1,9 +1,12 @@
 package com.vendingontime.backend.services.utils;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
@@ -49,10 +52,10 @@ public class JWTTokenGenerator implements TokenGenerator {
     @Override
     public String generateFrom(LogInData userData) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(config.getString(ServerVariable.JWT_SECRET));
             return JWT.create()
+                    .withIssuer(config.getString(ServerVariable.JWT_ISSUER))
                     .withClaim(EMAIL_CLAIM, userData.getEmail())
-                    .sign(algorithm);
+                    .sign(getAlgorithm());
         } catch (UnsupportedEncodingException | JWTCreationException ex) {
             throw new BusinessLogicException(new String[]{BAD_LOGIN});
         }
@@ -61,11 +64,21 @@ public class JWTTokenGenerator implements TokenGenerator {
     @Override
     public Optional<Person> recoverFrom(String token) {
         try {
+            JWTVerifier verifier = JWT.require(getAlgorithm())
+                    .withIssuer(config.getString(ServerVariable.JWT_ISSUER))
+                    .build();
+
+            verifier.verify(token);
+
             JWT decode = JWT.decode(token);
             String email = decode.getClaim(EMAIL_CLAIM).asString();
             return repository.findByEmail(email);
-        } catch (JWTDecodeException e) {
+        } catch (UnsupportedEncodingException | JWTDecodeException e) {
             return Optional.empty();
         }
+    }
+
+    private Algorithm getAlgorithm() throws UnsupportedEncodingException {
+        return Algorithm.HMAC256(config.getString(ServerVariable.JWT_SECRET));
     }
 }
