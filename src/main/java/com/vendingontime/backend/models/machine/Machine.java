@@ -28,10 +28,10 @@ import javax.persistence.*;
         @NamedQuery(name = "Machine.findById", query = "SELECT m FROM Machine m WHERE m.id = :id")
 })
 public class Machine extends AbstractEntity<Machine> {
-    @Embedded private MachineLocation location; // Minimo 2, max 140
-    @Column @Enumerated private MachineType type;  // --
-    @Column @Enumerated private MachineState state; // --
-    @Column private String description; // Minimo 0, max 300
+    @Embedded private MachineLocation location;
+    @Column @Enumerated private MachineType type;
+    @Column @Enumerated private MachineState state;
+    @Column private String description;
 
     public Machine() {
         super();
