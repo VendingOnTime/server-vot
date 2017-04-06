@@ -17,11 +17,10 @@ import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.repositories.*;
 
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.Repository;
-import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.routes.*;
 import com.vendingontime.backend.routes.utils.*;
 import com.vendingontime.backend.services.LogInService;
@@ -101,6 +100,9 @@ public class ConfigModule extends AbstractModule {
     private void bindRepositories() {
         bind(PersonRepository.class).to(JPAPersonRepository.class);
         bind(new TypeLiteral<Repository<Person>>(){}).to(JPAPersonRepository.class);
+
+        bind(CompanyRepository.class).to(JPACompanyRepository.class);
+        bind(new TypeLiteral<Repository<Company>>(){}).to(JPACompanyRepository.class);
     }
 
     private void bindServices() {
