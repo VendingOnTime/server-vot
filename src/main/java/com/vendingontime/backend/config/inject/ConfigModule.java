@@ -15,15 +15,14 @@ import com.vendingontime.backend.config.variables.ServerConfig;
 import com.vendingontime.backend.initializers.SparkPluginInitializer;
 import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
+import com.vendingontime.backend.middleware.EndpointProtector;
+import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.repositories.PersonRepository;
 
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
-import com.vendingontime.backend.routes.LogInRouter;
-import com.vendingontime.backend.routes.SignUpRouter;
-import com.vendingontime.backend.routes.SparkRouter;
-import com.vendingontime.backend.routes.TestRouter;
+import com.vendingontime.backend.routes.*;
 import com.vendingontime.backend.routes.utils.*;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
@@ -55,6 +54,9 @@ public class ConfigModule extends AbstractModule {
     public static final String RESPONSE_CONTENT_TYPE = "RESPONSE_CONTENT_TYPE";
     private static final String RESPONSE_CONTENT_TYPE_DEFAULT = "application/json";
 
+    public static final String TOKEN_STRATEGY_TYPE = "TOKEN_TYPE";
+    private static final String TOKEN_STRATEGY_TYPE_DEFAULT = "JWT";
+
     @Override
     protected void configure() {
         bindLiterals();
@@ -62,6 +64,7 @@ public class ConfigModule extends AbstractModule {
         bindUtils();
         bindRepositories();
         bindServices();
+        bindMiddleware();
         bindRoutes();
         bindPlugins();
     }
@@ -70,6 +73,9 @@ public class ConfigModule extends AbstractModule {
         bind(String.class)
                 .annotatedWith(Names.named(RESPONSE_CONTENT_TYPE))
                 .toInstance(RESPONSE_CONTENT_TYPE_DEFAULT);
+        bind(String.class)
+                .annotatedWith(Names.named(TOKEN_STRATEGY_TYPE))
+                .toInstance(TOKEN_STRATEGY_TYPE_DEFAULT);
     }
 
     private void bindCoreComponents() {
@@ -102,11 +108,15 @@ public class ConfigModule extends AbstractModule {
         bind(LogInService.class);
     }
 
+    private void bindMiddleware() {
+        bind(EndpointProtector.class).to(TokenEndpointProtector.class);
+    }
+
     private void bindRoutes() {
         Multibinder<SparkRouter> routerBinder = Multibinder.newSetBinder(binder(), SparkRouter.class);
-        routerBinder.addBinding().to(TestRouter.class);
         routerBinder.addBinding().to(SignUpRouter.class);
         routerBinder.addBinding().to(LogInRouter.class);
+        routerBinder.addBinding().to(UserProfileRouter.class);
     }
 
     private void bindPlugins() {

@@ -1,19 +1,21 @@
 package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
-import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.SignUpRouter;
+import com.vendingontime.backend.routes.UserProfileRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
+import com.vendingontime.backend.services.LogInService;
+import com.vendingontime.backend.services.SignUpService;
 import org.junit.Test;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
-
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -35,7 +37,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class E2ESignUpSupervisorTest extends E2ETest {
+
+public class E2EUserProfileTest extends E2ETest {
 
     private static final String DNI = "12345678B";
     private static final String USERNAME = "USERNAME";
@@ -45,12 +48,17 @@ public class E2ESignUpSupervisorTest extends E2ETest {
     private static final String PASSWORD = "PASSWORD";
 
     @Inject
-    PersonRepository repository;
+    private SignUpService signUpService;
+
+    @Inject
+    private LogInService logInService;
+
+    @Inject
+    private PersonRepository repository;
 
     @Test
-    public void createSupervisor() throws Exception {
-
-        SignUpData payload = new SignUpData()
+    public void retrieveUserProfile() throws Exception {
+        SignUpData signUpData = new SignUpData()
                 .setDni(DNI)
                 .setUsername(USERNAME)
                 .setEmail(EMAIL)
@@ -58,24 +66,31 @@ public class E2ESignUpSupervisorTest extends E2ETest {
                 .setSurnames(SURNAME)
                 .setPassword(PASSWORD);
 
+        Person supervisor = signUpService.createSupervisor(signUpData);
+
+        LogInData logInData = new LogInData()
+                .setEmail(EMAIL)
+                .setPassword(PASSWORD);
+
+        String token = logInService.authorizeUser(logInData);
+
         given()
-                .body(payload)
+                .header("Authorization", "JWT " + token)
         .when()
-                .post(host + SignUpRouter.V1_SIGN_UP_SUPERVISOR)
+                .get(host + UserProfileRouter.V1_PROFILE)
         .then()
-                .statusCode(HttpResponse.StatusCode.CREATED)
+                .statusCode(HttpResponse.StatusCode.OK)
                 .body("success", is(true))
+                .body("data.id", notNullValue())
                 .body("data.dni", equalTo(DNI))
                 .body("data.username", equalTo(USERNAME))
                 .body("data.email", equalTo(EMAIL))
                 .body("data.name", equalTo(NAME))
                 .body("data.surnames", equalTo(SURNAME))
-                .body("data.password", nullValue())
-                .body("data.role", equalTo(PersonRole.SUPERVISOR.toString().toLowerCase()))
+                .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
                 .body("error", nullValue());
 
-        Optional<Person> byEmail = repository.findByEmail(EMAIL);
-        repository.delete(byEmail.get().getId());
+        repository.delete(supervisor.getId());
     }
 
 }

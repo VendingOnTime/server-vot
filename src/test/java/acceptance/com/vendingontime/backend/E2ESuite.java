@@ -30,9 +30,9 @@ import spark.Spark;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        E2EExampleTest.class,
         E2ESignUpSupervisorTest.class,
-        E2ELogInTest.class
+        E2ELogInTest.class,
+        E2EUserProfileTest.class
 })
 public class E2ESuite {
 

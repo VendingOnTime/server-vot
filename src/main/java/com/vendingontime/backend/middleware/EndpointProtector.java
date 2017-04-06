@@ -1,7 +1,4 @@
-package com.vendingontime.backend.routes;
-
-import spark.Service;
-
+package com.vendingontime.backend.middleware;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -19,10 +16,7 @@ import spark.Service;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class TestRouter implements SparkRouter {
 
-    @Override
-    public void configure(Service http) {
-        http.get("/api", (req, res) -> "Hello World");
-    }
+public interface EndpointProtector {
+    void protect(String uri);
 }

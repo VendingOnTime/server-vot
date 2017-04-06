@@ -1,6 +1,9 @@
 package com.vendingontime.backend.services.utils;
 
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
+import com.vendingontime.backend.models.person.Person;
+
+import java.util.Optional;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,5 +23,6 @@ import com.vendingontime.backend.models.bodymodels.person.LogInData;
  * specific language governing permissions and limitations under the License.
  */
 public interface TokenGenerator {
-    String generate(LogInData userData);
+    String generateFrom(LogInData userData);
+    Optional<Person> recoverFrom(String token);
 }

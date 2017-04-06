@@ -1,28 +1,22 @@
-package integration.com.vendingontime.backend.routes;
+package integration.com.vendingontime.backend.services.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.LogInRouter;
-import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
-import com.vendingontime.backend.services.utils.TokenGenerator;
+import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import spark.Request;
-import spark.Response;
 
 import javax.inject.Inject;
 
 import java.util.Optional;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -42,70 +36,52 @@ import static org.mockito.Mockito.mock;
  * specific language governing permissions and limitations under the License.
  */
 
-public class LogInRouterTest extends IntegrationTest {
+public class JWTTokenGeneratorTest extends IntegrationTest {
 
-    private static final String EMAIL = "user@example.com";
-    private static final String PASSWORD = "12345";
-
-
-    @Inject
-    private SignUpService signUpService;
+    private static final String EMAIL = "supervisor@example.com";
+    private static final String USERNAME = "supervisor1";
+    private static final String PASSWORD = "password";
 
     @Inject
-    private LogInRouter logInRouter;
+    private JWTTokenGenerator tokenGenerator;
+
+    @Inject
+    private SignUpService service;
 
     @Inject
     private PersonRepository repository;
 
-    @Inject
-    private TokenGenerator tokenGenerator;
-
-    private ObjectMapper mapper;
     private SignUpData signUpData;
     private LogInData logInData;
-    private String stringifiedLogInData;
 
     @Before
     public void setUp() throws Exception {
-
-        mapper = new ObjectMapper();
-
         signUpData = new SignUpData()
-                .setRole(PersonRole.SUPERVISOR)
+                .setUsername(USERNAME)
                 .setEmail(EMAIL)
-                .setUsername("user")
-                .setPassword(PASSWORD)
-                .setName("name")
-                .setSurnames("surnames");
+                .setPassword(PASSWORD);
 
         logInData = new LogInData()
                 .setEmail(EMAIL)
                 .setPassword(PASSWORD);
-
-        stringifiedLogInData = mapper.writeValueAsString(logInData);
     }
 
     @After
     public void tearDown() throws Exception {
         signUpData = null;
         logInData = null;
-        stringifiedLogInData = null;
     }
 
     @Test
-    public void logInUser() throws Exception {
-        signUpService.createSupervisor(signUpData);
+    public void recoverFrom() throws Exception {
+        String token = tokenGenerator.generateFrom(logInData);
+        Person supervisor = service.createSupervisor(signUpData);
 
-        String result = (String) logInRouter.logInUser(stringifiedLogInData)
-                .handle(mock(Request.class), mock(Response.class));
+        Optional<Person> possiblePerson = tokenGenerator.recoverFrom(token);
+        assertTrue(possiblePerson.isPresent());
+        assertThat(possiblePerson.get(), equalTo(supervisor));
 
-        RESTResult restResult = mapper.readValue(result, RESTResult.class);
-
-        assertTrue(restResult.getSuccess());
-        assertEquals(tokenGenerator.generateFrom(logInData), restResult.getData());
-
-        Optional<Person> byEmail = repository.findByEmail(EMAIL);
-        repository.delete(byEmail.get().getId());
+        repository.delete(supervisor.getId());
     }
 
 }

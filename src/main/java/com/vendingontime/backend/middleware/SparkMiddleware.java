@@ -1,10 +1,6 @@
-package acceptance.com.vendingontime.backend;
+package com.vendingontime.backend.middleware;
 
-import acceptance.com.vendingontime.backend.testutils.E2ETest;
-import org.junit.Test;
-
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.core.Is.is;
+import spark.Service;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,14 +19,7 @@ import static org.hamcrest.core.Is.is;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class E2EExampleTest extends E2ETest {
 
-    @Test
-    public void helloTest() throws Exception {
-        when()
-                .get(host + "/api")
-        .then()
-                .statusCode(200)
-                .body(is("Hello World"));
-    }
+public interface SparkMiddleware {
+    void configure(Service service);
 }
