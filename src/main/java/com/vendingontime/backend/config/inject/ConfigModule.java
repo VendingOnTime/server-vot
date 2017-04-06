@@ -103,6 +103,8 @@ public class ConfigModule extends AbstractModule {
 
         bind(CompanyRepository.class).to(JPACompanyRepository.class);
         bind(new TypeLiteral<Repository<Company>>(){}).to(JPACompanyRepository.class);
+
+        bind(MachineRepository.class).to(JPAMachineRepository.class);
     }
 
     private void bindServices() {
