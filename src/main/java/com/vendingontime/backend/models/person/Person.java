@@ -3,6 +3,7 @@ package com.vendingontime.backend.models.person;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.company.Company;
 
 import javax.persistence.*;
 
@@ -39,6 +40,9 @@ public class Person extends AbstractEntity<Person> {
     @Column private String name;
     @Column private String surnames;
     @Column @Enumerated private PersonRole role;
+
+    @OneToOne
+    private Company company;
 
     public Person() {
         super();
@@ -124,6 +128,15 @@ public class Person extends AbstractEntity<Person> {
 
     public Person setRole(PersonRole role) {
         this.role = role;
+        return this;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public Person setCompany(Company company) {
+        this.company = company;
         return this;
     }
 

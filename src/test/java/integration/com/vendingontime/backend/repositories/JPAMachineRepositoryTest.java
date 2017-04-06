@@ -2,7 +2,7 @@ package integration.com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.machine.MachineLocation;
+import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.repositories.JPAMachineRepository;

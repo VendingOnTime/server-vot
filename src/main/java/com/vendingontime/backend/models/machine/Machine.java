@@ -1,6 +1,8 @@
 package com.vendingontime.backend.models.machine;
 
 import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.location.MachineLocation;
 
 import javax.persistence.*;
 
@@ -31,6 +33,9 @@ public class Machine extends AbstractEntity<Machine> {
     @Column @Enumerated private MachineType type;  // --
     @Column @Enumerated private MachineState state; // --
     @Column private String description; // Minimo 0, max 300
+
+    @ManyToOne
+    private Company company;
 
     public Machine() {
         super();
@@ -78,6 +83,15 @@ public class Machine extends AbstractEntity<Machine> {
 
     public Machine setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public Machine setCompany(Company company) {
+        this.company = company;
         return this;
     }
 
