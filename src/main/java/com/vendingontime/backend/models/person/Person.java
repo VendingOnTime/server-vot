@@ -42,6 +42,7 @@ public class Person extends AbstractEntity<Person> {
     @Column @Enumerated private PersonRole role;
 
     @OneToOne
+    @JsonIgnore
     private Company company;
 
     public Person() {

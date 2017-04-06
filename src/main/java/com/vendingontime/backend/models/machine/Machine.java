@@ -1,5 +1,6 @@
 package com.vendingontime.backend.models.machine;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
@@ -35,6 +36,7 @@ public class Machine extends AbstractEntity<Machine> {
     @Column private String description; // Minimo 0, max 300
 
     @ManyToOne
+    @JsonIgnore
     private Company company;
 
     public Machine() {
