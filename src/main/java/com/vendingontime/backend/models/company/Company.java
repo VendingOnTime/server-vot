@@ -31,10 +31,10 @@ import java.util.Set;
 })
 public class Company extends AbstractEntity<Company> {
 
-    @OneToOne(mappedBy = "company")
+    @OneToOne(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Person owner;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Machine> machines = new HashSet<>();
 
     public Company() {
