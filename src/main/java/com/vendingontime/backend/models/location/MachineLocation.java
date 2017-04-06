@@ -1,6 +1,4 @@
-package com.vendingontime.backend.models.machine;
-
-import com.vendingontime.backend.models.utils.Location;
+package com.vendingontime.backend.models.location;
 
 import javax.persistence.*;
 
