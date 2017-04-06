@@ -9,6 +9,7 @@
 
         <class>com.vendingontime.backend.models.person.Person</class>
         <class>com.vendingontime.backend.models.machine.Machine</class>
+        <class>com.vendingontime.backend.models.company.Company</class>
 
         <properties>
             <property name="eclipselink.target-database" value="Derby"/>
