@@ -117,12 +117,13 @@ public class JPACompanyRepositoryTest extends IntegrationTest {
         Company company = companyRepository.create(this.company);
         String companyId = company.getId();
 
-        company.setOwner(owner);
+        Person savedOwner = personRepository.findById(ownerId).get();
+        company.setOwner(savedOwner);
         Optional<Company> possibleUpdated = companyRepository.update(company);
 
         assertThat(possibleUpdated.isPresent(), is(true));
         assertThat(possibleUpdated.get().getOwner(), equalTo(owner));
-        assertThat(owner.getCompany(), equalTo(company));
+        assertThat(savedOwner.getCompany(), equalTo(company));
 
         companyRepository.delete(companyId);
         personRepository.delete(ownerId);
@@ -136,12 +137,14 @@ public class JPACompanyRepositoryTest extends IntegrationTest {
         Company company = companyRepository.create(this.company);
         String companyId = company.getId();
 
-        company.addMachine(machine);
+        Machine savedMachine = machineRepository.findById(machineId).get();
+
+        company.addMachine(savedMachine);
         Optional<Company> possibleUpdated = companyRepository.update(company);
 
         assertThat(possibleUpdated.isPresent(), is(true));
         assertThat(possibleUpdated.get().getMachines().contains(machine), is(true));
-        assertThat(machine.getCompany(), equalTo(company));
+        assertThat(savedMachine.getCompany(), equalTo(company));
 
         machineRepository.delete(machineId);
         companyRepository.delete(companyId);

@@ -89,6 +89,6 @@ public class Company extends AbstractEntity<Company> {
 
     @PreRemove
     void preRemove() {
-        owner.setCompany(null);
+        if (owner != null) owner.setCompany(null);
     }
 }
