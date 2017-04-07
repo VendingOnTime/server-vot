@@ -31,10 +31,10 @@ import java.util.Set;
 })
 public class Company extends AbstractEntity<Company> {
 
-    @OneToOne(mappedBy = "company")
+    @OneToOne(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Person owner;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Machine> machines = new HashSet<>();
 
     public Company() {
@@ -65,5 +65,30 @@ public class Company extends AbstractEntity<Company> {
         this.machines.add(machine);
         machine.setCompany(this);
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Company company = (Company) o;
+
+        if (getOwner() != null ? !getOwner().equals(company.getOwner()) : company.getOwner() != null) return false;
+        return getMachines() != null ? getMachines().equals(company.getMachines()) : company.getMachines() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getOwner() != null ? getOwner().hashCode() : 0);
+        result = 31 * result + (getMachines() != null ? getMachines().hashCode() : 0);
+        return result;
+    }
+
+    @PreRemove
+    void preRemove() {
+        owner.setCompany(null);
     }
 }
