@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import java.util.Optional;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -106,7 +107,7 @@ public class LogInRouterTest extends IntegrationTest {
         assertTrue(restResult.getSuccess());
         String token = (String) restResult.getData();
         String tokenEmail = JWT.decode(token).getClaim(JWTTokenGenerator.EMAIL_CLAIM).asString();
-        assertEquals(EMAIL, tokenEmail);
+        assertThat(tokenEmail, equalTo(EMAIL));
 
         Optional<Person> byEmail = repository.findByEmail(EMAIL);
         repository.delete(byEmail.get().getId());
