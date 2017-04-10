@@ -23,6 +23,7 @@ import com.vendingontime.backend.repositories.*;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.*;
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.ListMachinesService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -110,6 +111,7 @@ public class ConfigModule extends AbstractModule {
     private void bindServices() {
         bind(SignUpService.class);
         bind(LogInService.class);
+        bind(ListMachinesService.class);
     }
 
     private void bindMiddleware() {
