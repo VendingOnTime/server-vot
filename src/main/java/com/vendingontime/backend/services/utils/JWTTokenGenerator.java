@@ -16,6 +16,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
@@ -39,7 +40,7 @@ import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_L
  */
 public class JWTTokenGenerator implements TokenGenerator {
 
-    private static final String EMAIL_CLAIM = "email";
+    public static final String EMAIL_CLAIM = "email";
 
     private final ServerConfig config;
     private final PersonRepository repository;
@@ -55,6 +56,7 @@ public class JWTTokenGenerator implements TokenGenerator {
         try {
             return JWT.create()
                     .withIssuer(config.getString(ServerVariable.JWT_ISSUER))
+                    .withIssuedAt(new Date())
                     .withClaim(EMAIL_CLAIM, userData.getEmail())
                     .sign(getAlgorithm());
         } catch (UnsupportedEncodingException | JWTCreationException ex) {

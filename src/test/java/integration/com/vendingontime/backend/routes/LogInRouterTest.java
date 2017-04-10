@@ -1,5 +1,6 @@
 package integration.com.vendingontime.backend.routes;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
@@ -9,6 +10,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
+import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import com.vendingontime.backend.services.utils.TokenGenerator;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.After;
@@ -21,6 +23,7 @@ import javax.inject.Inject;
 
 import java.util.Optional;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -102,7 +105,9 @@ public class LogInRouterTest extends IntegrationTest {
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
 
         assertTrue(restResult.getSuccess());
-        assertEquals(tokenGenerator.generateFrom(logInData), restResult.getData());
+        String token = (String) restResult.getData();
+        String tokenEmail = JWT.decode(token).getClaim(JWTTokenGenerator.EMAIL_CLAIM).asString();
+        assertThat(tokenEmail, equalTo(EMAIL));
 
         Optional<Person> byEmail = repository.findByEmail(EMAIL);
         repository.delete(byEmail.get().getId());

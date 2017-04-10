@@ -38,17 +38,17 @@ public class JPAPersonRepository extends JPARepository<Person> implements Person
 
     @Override
     public Optional<Person> findByEmail(String email) {
-        return findByQuery("findByEmail", "email", email);
+        return findOneBy("findByEmail", "email", email);
     }
 
     @Override
     public Optional<Person> findByUsername(String username) {
-        return findByQuery("findByUsername", "username", username);
+        return findOneBy("findByUsername", "username", username);
     }
 
     @Override
     public Optional<Person> findByDni(String dni) {
-        return findByQuery("findByDni", "dni", dni);
+        return findOneBy("findByDni", "dni", dni);
     }
 
     @Override
