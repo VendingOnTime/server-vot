@@ -1,9 +1,11 @@
 package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
@@ -29,10 +31,12 @@ import javax.inject.Inject;
 public class SignUpService {
 
     private PersonRepository repository;
+    private CompanyRepository companyRepository;
 
     @Inject
-    public SignUpService(PersonRepository repository) {
+    public SignUpService(PersonRepository repository, CompanyRepository companyRepository) {
         this.repository = repository;
+        this.companyRepository = companyRepository;
     }
 
     public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
@@ -47,9 +51,16 @@ public class SignUpService {
         }
 
         Person person = new Person(personCandidate);
+        Company company = new Company();
 
         try {
-            repository.create(person);
+            person = repository.create(person);
+            company = companyRepository.create(company);
+
+            person = repository.findById(person.getId()).get();
+
+            company.setOwner(person);
+            companyRepository.update(company);
         } catch (PersonCollisionException ex) {
             throw new BusinessLogicException(ex.getCauses());
         }
