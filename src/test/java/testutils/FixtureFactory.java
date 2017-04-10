@@ -18,6 +18,9 @@ package testutils;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.bodymodels.person.LogInData;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
@@ -45,22 +48,22 @@ public class FixtureFactory {
     // PERSON METHODS
 
     public static Person generateSupervisor() {
-        return instance.generatePerson()
+        return new Person(generateSignUpData())
                 .setRole(PersonRole.SUPERVISOR);
     }
 
     public static Person generateTechnician() {
-        return instance.generatePerson()
+        return new Person(generateSignUpData())
                 .setRole(PersonRole.TECHNICIAN);
     }
 
     public static Person generateCustomer() {
-        return instance.generatePerson()
+        return new Person(generateSignUpData())
                 .setRole(PersonRole.CUSTOMER);
     }
 
-    private Person generatePerson() {
-        return new Person()
+    public static SignUpData generateSignUpData() {
+        return new SignUpData()
                 .setDni("11111111A")
                 .setName("NAME")
                 .setSurnames("SURNAME")
@@ -69,18 +72,24 @@ public class FixtureFactory {
                 .setPassword("PASSWORD");
     }
 
+    public static LogInData generateLogInData() {
+        return new LogInData()
+                .setEmail("person@example.com")
+                .setPassword("PASSWORD");
+    }
+
     // MACHINE METHODS
 
     public static Machine generateMachine() {
-        return instance.generateBasicMachine();
+        return new Machine(generateAddMachineData());
     }
 
-    private Machine generateBasicMachine() {
-        return new Machine()
+    public static AddMachineData generateAddMachineData() {
+        return new AddMachineData()
                 .setDescription("DESCRIPTION")
-                .setType(MachineType.COFFEE)
-                .setState(MachineState.OPERATIVE)
-                .setLocation(instance.generateBasicLocation());
+                .setMachineType(MachineType.COFFEE)
+                .setMachineState(MachineState.OPERATIVE)
+                .setMachineLocation(instance.generateBasicLocation());
     }
 
     // MACHINE LOCATION METHODS
