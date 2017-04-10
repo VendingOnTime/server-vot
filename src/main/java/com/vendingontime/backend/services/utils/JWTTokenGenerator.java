@@ -40,7 +40,7 @@ import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_L
  */
 public class JWTTokenGenerator implements TokenGenerator {
 
-    private static final String EMAIL_CLAIM = "email";
+    public static final String EMAIL_CLAIM = "email";
 
     private final ServerConfig config;
     private final PersonRepository repository;
