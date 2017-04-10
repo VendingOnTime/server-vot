@@ -40,7 +40,17 @@ public class SignUpService {
     }
 
     public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
-        return createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+        Person person = createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+        Company company = new Company();
+
+        company = companyRepository.create(company);
+
+        person = repository.findById(person.getId()).get();
+        company.setOwner(person);
+
+        companyRepository.update(company);
+
+        return person;
     }
 
     private Person createPerson(SignUpData personCandidate, PersonRole role) {
@@ -51,16 +61,9 @@ public class SignUpService {
         }
 
         Person person = new Person(personCandidate);
-        Company company = new Company();
 
         try {
             person = repository.create(person);
-            company = companyRepository.create(company);
-
-            person = repository.findById(person.getId()).get();
-
-            company.setOwner(person);
-            companyRepository.update(company);
         } catch (PersonCollisionException ex) {
             throw new BusinessLogicException(ex.getCauses());
         }
