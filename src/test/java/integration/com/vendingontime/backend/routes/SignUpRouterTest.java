@@ -8,7 +8,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

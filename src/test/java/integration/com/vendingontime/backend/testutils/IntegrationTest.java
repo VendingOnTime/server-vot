@@ -1,4 +1,4 @@
-package integration.com.vendingontime.backend.repositories.testutils;
+package integration.com.vendingontime.backend.testutils;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

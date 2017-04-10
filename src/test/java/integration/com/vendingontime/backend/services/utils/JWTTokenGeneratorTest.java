@@ -7,7 +7,7 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.JWTTokenGenerator;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

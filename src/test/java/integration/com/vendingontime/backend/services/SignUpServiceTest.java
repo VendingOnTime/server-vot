@@ -5,7 +5,7 @@ import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.SignUpService;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

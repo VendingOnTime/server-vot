@@ -12,7 +12,7 @@ import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import com.vendingontime.backend.services.utils.TokenGenerator;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

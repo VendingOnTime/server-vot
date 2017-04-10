@@ -8,7 +8,7 @@ import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.repositories.JPACompanyRepository;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.*;
 
 import java.util.List;

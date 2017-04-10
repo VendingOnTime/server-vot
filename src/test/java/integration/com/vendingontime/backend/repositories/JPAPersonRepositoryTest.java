@@ -7,7 +7,7 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.*;
 
 import java.util.Optional;
