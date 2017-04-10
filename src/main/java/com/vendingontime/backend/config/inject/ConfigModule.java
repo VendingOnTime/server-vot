@@ -123,6 +123,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(SignUpRouter.class);
         routerBinder.addBinding().to(LogInRouter.class);
         routerBinder.addBinding().to(UserProfileRouter.class);
+        routerBinder.addBinding().to(ListMachinesRouter.class);
     }
 
     private void bindPlugins() {
