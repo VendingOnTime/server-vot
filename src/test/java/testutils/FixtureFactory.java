@@ -52,6 +52,10 @@ public class FixtureFactory {
                 .setRole(PersonRole.SUPERVISOR);
     }
 
+    public static Person generateSupervisorWithCompany() {
+        return generateCompanyWithOwner().getOwner();
+    }
+
     public static Person generateTechnician() {
         return new Person(generateSignUpData())
                 .setRole(PersonRole.TECHNICIAN);
