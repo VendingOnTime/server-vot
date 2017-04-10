@@ -21,6 +21,7 @@ import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 
 import javax.persistence.EntityManager;
+import java.util.LinkedList;
 import java.util.List;
 
 public class JPAMachineRepository extends JPARepository<Machine> implements MachineRepository {
@@ -32,6 +33,7 @@ public class JPAMachineRepository extends JPARepository<Machine> implements Mach
 
     @Override
     public List<Machine> findMachinesByCompany(Company company) {
+        if (company == null) return new LinkedList<>();
         return findManyBy("findByCompany", "companyId", company.getId());
     }
 }

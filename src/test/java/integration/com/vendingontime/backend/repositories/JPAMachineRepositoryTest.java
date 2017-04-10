@@ -177,6 +177,18 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
     }
 
     @Test
+    public void findByCompany_nullCompany_returnsEmpty() throws Exception {
+        List<Machine> machines = repository.findMachinesByCompany(null);
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_noSavedCompany_returnsEmpty() throws Exception {
+        List<Machine> machines = repository.findMachinesByCompany(new Company());
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
     public void findByCompany_companyExistsWithNoMachines_returnsEmpty() throws Exception {
         Company company = companyRepository.create(new Company());
         List<Machine> machines = repository.findMachinesByCompany(company);
