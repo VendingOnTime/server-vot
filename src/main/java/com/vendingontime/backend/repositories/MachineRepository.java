@@ -16,8 +16,11 @@ package com.vendingontime.backend.repositories;/*
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 
-public interface MachineRepository extends Repository<Machine> {
+import java.util.List;
 
+public interface MachineRepository extends Repository<Machine> {
+    List<Machine> findMachinesByCompany(Company company);
 }
