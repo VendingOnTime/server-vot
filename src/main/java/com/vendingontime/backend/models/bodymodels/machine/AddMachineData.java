@@ -4,6 +4,8 @@ import com.vendingontime.backend.models.bodymodels.Validable;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -50,6 +52,15 @@ public class AddMachineData implements Validable {
     private MachineType machineType;
     private MachineState machineState;
     private String description;
+    private Person requester;
+
+    public boolean requesterIsAuthorized() {
+        if (requester == null) return false;
+        if (requester.getRole() != PersonRole.SUPERVISOR) return false;
+        if (requester.getCompany() == null) return false;
+
+        return true;
+    }
 
     @Override
     public String[] validate() {
@@ -57,7 +68,6 @@ public class AddMachineData implements Validable {
 
         causes.addAll(validateMachineLocation());
         causes.addAll(validateMachineDescription());
-
 
         return causes.toArray(new String[causes.size()]);
     }
@@ -126,6 +136,15 @@ public class AddMachineData implements Validable {
         return this;
     }
 
+    public Person getRequester() {
+        return requester;
+    }
+
+    public AddMachineData setRequester(Person requester) {
+        this.requester = requester;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -137,7 +156,9 @@ public class AddMachineData implements Validable {
             return false;
         if (getMachineType() != that.getMachineType()) return false;
         if (getMachineState() != that.getMachineState()) return false;
-        return getDescription() != null ? getDescription().equals(that.getDescription()) : that.getDescription() == null;
+        if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
+            return false;
+        return getRequester() != null ? getRequester().equals(that.getRequester()) : that.getRequester() == null;
     }
 
     @Override
@@ -146,6 +167,7 @@ public class AddMachineData implements Validable {
         result = 31 * result + (getMachineType() != null ? getMachineType().hashCode() : 0);
         result = 31 * result + (getMachineState() != null ? getMachineState().hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getRequester() != null ? getRequester().hashCode() : 0);
         return result;
     }
 
@@ -156,6 +178,7 @@ public class AddMachineData implements Validable {
                 ", machineType=" + machineType +
                 ", machineState=" + machineState +
                 ", description='" + description + '\'' +
+                ", requester=" + requester +
                 '}';
     }
 }

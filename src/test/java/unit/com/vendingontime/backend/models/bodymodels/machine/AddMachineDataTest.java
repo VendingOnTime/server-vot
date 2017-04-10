@@ -1,13 +1,15 @@
 package unit.com.vendingontime.backend.models.bodymodels.machine;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.utils.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static org.junit.Assert.*;
 import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.*;
@@ -29,26 +31,26 @@ import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 public class AddMachineDataTest {
-    private final static String DESCRIPTION = "DESCRIPTION";
-    private final static String LOCATION = "LOCATION";
+    private final static String COMPANY_ID = "COMPANY_ID";
+    private final static String PERSON_ID = "PERSON_ID";
 
-    private final static MachineLocation MACHINE_LOCATION = new MachineLocation().setName(LOCATION);
-
-    public AddMachineData machineData;
+    private AddMachineData machineData;
+    private Person person;
+    private Company company;
 
     @Before
     public void setUp() throws Exception {
-        machineData = new AddMachineData();
-
-        machineData.setDescription(DESCRIPTION);
-        machineData.setMachineState(MachineState.OPERATIVE);
-        machineData.setMachineType(MachineType.COFFEE);
-        machineData.setMachineLocation(MACHINE_LOCATION);
+        company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
+        person = company.getOwner().setId(PERSON_ID);
+        machineData = FixtureFactory.generateAddMachineData().setRequester(person);
     }
 
     @After
     public void tearDown() throws Exception {
+        company = null;
+        person = null;
         machineData = null;
     }
 
@@ -137,7 +139,8 @@ public class AddMachineDataTest {
 
     //TODO enum tests and complete test with all kind of errors
 
-    @Test public void validate_invalid_variousErrors() {
+    @Test
+    public void validate_invalid_variousErrors() {
         MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_MACHINE_LOCATION_NAME_LENGTH + 1));
         String invalidDescription = StringUtils.createFilled(MAX_MACHINE_DESCRIPTION_LENGTH + 1);
 
@@ -145,4 +148,31 @@ public class AddMachineDataTest {
 
         assertArrayEquals(new String[]{LONG_MACHINE_LOCATION_NAME, LONG_MACHINE_DESCRIPTION}, machineData.validate());
     }
+
+    @Test
+    public void validRequester() {
+        assertTrue(machineData.requesterIsAuthorized());
+    }
+
+    @Test
+    public void invalidRequester_WithNullRequester() {
+        machineData.setRequester(null);
+
+        assertFalse(machineData.requesterIsAuthorized());
+    }
+
+    @Test
+    public void invalidRequester_WithIncorrectRole() {
+        machineData.getRequester().setRole(PersonRole.CUSTOMER);
+
+        assertFalse(machineData.requesterIsAuthorized());
+    }
+
+    @Test
+    public void invalidRequester_WithNullCompany() {
+        machineData.getRequester().setCompany(null);
+
+        assertFalse(machineData.requesterIsAuthorized());
+    }
+
 }
