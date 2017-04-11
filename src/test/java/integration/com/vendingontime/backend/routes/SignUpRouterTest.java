@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import spark.Request;
 import spark.Response;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -55,19 +56,14 @@ public class SignUpRouterTest extends IntegrationTest {
     @Before
     public void setUp() throws Exception {
         mapper = new ObjectMapper();
-        supervisor = new SignUpData()
-                .setRole(PersonRole.SUPERVISOR)
-                .setEmail("user@example.com")
-                .setUsername("user")
-                .setPassword("12345")
-                .setName("name")
-                .setSurnames("surnames");
+        supervisor = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
         stringifiedSupervisor = mapper.writeValueAsString(supervisor);
     }
 
     @After
     public void tearDown() throws Exception {
         supervisor = null;
+        mapper = null;
         stringifiedSupervisor = null;
     }
 

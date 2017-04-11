@@ -1,7 +1,6 @@
 package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.SignUpService;
@@ -9,6 +8,7 @@ import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -34,25 +34,17 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 public class SignUpServiceTest extends IntegrationTest {
+    @Inject
+    private SignUpService service;
 
     @Inject
-    SignUpService service;
-
-    @Inject
-    PersonRepository repository;
+    private PersonRepository repository;
 
     private SignUpData supervisor;
 
     @Before
     public void setUp() throws Exception {
-        supervisor = new SignUpData()
-                .setRole(PersonRole.SUPERVISOR)
-                .setEmail("user@example.com")
-                .setUsername("user")
-                .setPassword("12345")
-                .setName("name")
-                .setSurnames("surnames");
-
+        supervisor = FixtureFactory.generateSignUpData();
     }
 
     @After

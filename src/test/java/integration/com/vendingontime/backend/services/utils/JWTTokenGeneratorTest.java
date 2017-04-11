@@ -11,13 +11,13 @@ import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
 import java.util.Optional;
 
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
 
 /*
@@ -39,11 +39,6 @@ import static org.junit.Assert.*;
  */
 
 public class JWTTokenGeneratorTest extends IntegrationTest {
-
-    private static final String EMAIL = "supervisor@example.com";
-    private static final String USERNAME = "supervisor1";
-    private static final String PASSWORD = "password";
-
     @Inject
     private JWTTokenGenerator tokenGenerator;
 
@@ -58,14 +53,8 @@ public class JWTTokenGeneratorTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        signUpData = new SignUpData()
-                .setUsername(USERNAME)
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD);
-
-        logInData = new LogInData()
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD);
+        signUpData = FixtureFactory.generateSignUpData();
+        logInData = FixtureFactory.generateLogInData();
     }
 
     @After
@@ -78,7 +67,7 @@ public class JWTTokenGeneratorTest extends IntegrationTest {
     public void generate() throws Exception {
         String token = tokenGenerator.generateFrom(logInData);
         String tokenEmail = JWT.decode(token).getClaim(JWTTokenGenerator.EMAIL_CLAIM).asString();
-        assertThat(tokenEmail, equalTo(EMAIL));
+        assertThat(tokenEmail, equalTo(logInData.getEmail()));
     }
 
     @Test

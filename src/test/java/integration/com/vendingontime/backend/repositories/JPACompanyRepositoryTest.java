@@ -10,6 +10,7 @@ import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -55,9 +56,9 @@ public class JPACompanyRepositoryTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        company = new Company();
-        owner = new Person();
-        machine = new Machine();
+        company = FixtureFactory.generateCompany();
+        owner = FixtureFactory.generateSupervisor();
+        machine = FixtureFactory.generateMachine();
     }
 
     @After

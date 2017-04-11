@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
@@ -18,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import spark.Request;
 import spark.Response;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -46,11 +46,6 @@ import static org.mockito.Mockito.mock;
  */
 
 public class LogInRouterTest extends IntegrationTest {
-
-    private static final String EMAIL = "user@example.com";
-    private static final String PASSWORD = "12345";
-
-
     @Inject
     private SignUpService signUpService;
 
@@ -73,17 +68,9 @@ public class LogInRouterTest extends IntegrationTest {
 
         mapper = new ObjectMapper();
 
-        signUpData = new SignUpData()
-                .setRole(PersonRole.SUPERVISOR)
-                .setEmail(EMAIL)
-                .setUsername("user")
-                .setPassword(PASSWORD)
-                .setName("name")
-                .setSurnames("surnames");
+        signUpData = FixtureFactory.generateSignUpData();
 
-        logInData = new LogInData()
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD);
+        logInData = FixtureFactory.generateLogInData();
 
         stringifiedLogInData = mapper.writeValueAsString(logInData);
     }
@@ -107,9 +94,9 @@ public class LogInRouterTest extends IntegrationTest {
         assertTrue(restResult.getSuccess());
         String token = (String) restResult.getData();
         String tokenEmail = JWT.decode(token).getClaim(JWTTokenGenerator.EMAIL_CLAIM).asString();
-        assertThat(tokenEmail, equalTo(EMAIL));
+        assertThat(tokenEmail, equalTo(logInData.getEmail()));
 
-        Optional<Person> byEmail = repository.findByEmail(EMAIL);
+        Optional<Person> byEmail = repository.findByEmail(logInData.getEmail());
         repository.delete(byEmail.get().getId());
     }
 

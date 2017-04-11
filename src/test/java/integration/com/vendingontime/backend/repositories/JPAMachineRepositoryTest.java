@@ -10,6 +10,7 @@ import com.vendingontime.backend.repositories.JPACompanyRepository;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.*;
+import testutils.FixtureFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +36,6 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 public class JPAMachineRepositoryTest extends IntegrationTest {
-    private static final String NAME = "NAME";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final MachineState STATE = MachineState.OPERATIVE;
-    private static final MachineType TYPE = MachineType.COFFEE;
-
-
     @Inject
     private JPAMachineRepository repository;
 
@@ -52,25 +47,14 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        MachineLocation location = new MachineLocation();
-        location.setName(NAME);
-
-        machineOne = new Machine();
-        machineOne.setLocation(location);
-        machineOne.setDescription(DESCRIPTION);
-        machineOne.setState(STATE);
-        machineOne.setType(TYPE);
-
-        machineTwo = new Machine();
-        machineTwo.setLocation(location);
-        machineTwo.setDescription(DESCRIPTION);
-        machineTwo.setState(STATE);
-        machineTwo.setType(TYPE);
+        machineOne = FixtureFactory.generateMachine();
+        machineTwo = FixtureFactory.generateMachine();
     }
 
     @After
     public void tearDown() throws Exception {
         repository = null;
+        companyRepository = null;
         machineOne = null;
         machineTwo = null;
     }
