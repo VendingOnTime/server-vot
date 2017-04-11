@@ -1,11 +1,14 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.repositories.CompanyRepository;
+import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.SignUpRouter;
+import com.vendingontime.backend.routes.AddMachineRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
@@ -18,11 +21,11 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
-
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -41,45 +44,38 @@ import static org.mockito.Mockito.mock;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class SignUpRouterTest extends IntegrationTest {
+
+public class AddMachineRouterTest extends IntegrationTest {
+    @Inject
+    private AddMachineRouter router;
 
     @Inject
-    SignUpRouter router;
+    private PersonRepository personRepository;
 
     @Inject
-    PersonRepository repository;
-
-    private ObjectMapper mapper;
-    private SignUpData supervisor;
-    private String stringifiedSupervisor;
-
-    @Before
-    public void setUp() throws Exception {
-        mapper = new ObjectMapper();
-        supervisor = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
-        stringifiedSupervisor = mapper.writeValueAsString(supervisor);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        supervisor = null;
-        mapper = null;
-        stringifiedSupervisor = null;
-    }
+    private CompanyRepository companyRepository;
 
     @Test
-    public void signUpSupervisor() throws Exception {
-        AppRoute post = router.signUpSupervisor(stringifiedSupervisor);
+    public void addMachine() throws Exception {
+        Person owner = personRepository.create(FixtureFactory.generateSupervisor());
+        Company company = companyRepository.create(FixtureFactory.generateCompany());
+
+        Person savedOwner = personRepository.findByDni(owner.getDni()).get();
+
+        company.setOwner(savedOwner);
+        companyRepository.update(company);
+
+        ObjectMapper mapper = new ObjectMapper();
+        AddMachineData machineData = FixtureFactory.generateAddMachineData();
+        String stringifiedMachine = mapper.writeValueAsString(machineData);
+
+        AppRoute post = router.addMachine(stringifiedMachine, savedOwner);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
-
         assertTrue(restResult.getSuccess());
 
-        Optional<Person> byEmail = repository.findByEmail(supervisor.getEmail());
-        assertTrue(byEmail.isPresent());
-
-        repository.delete(byEmail.get().getId());
+        personRepository.delete(savedOwner.getId());
     }
 
 }

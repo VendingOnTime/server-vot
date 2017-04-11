@@ -9,13 +9,10 @@ import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.ListMachinesService;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
-import org.junit.After;
-import org.junit.Before;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.core.IsEqual.equalTo;

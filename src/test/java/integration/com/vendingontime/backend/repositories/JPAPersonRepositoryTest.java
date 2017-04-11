@@ -7,8 +7,9 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.*;
+import testutils.FixtureFactory;
 
 import java.util.Optional;
 
@@ -36,12 +37,6 @@ import static org.junit.Assert.assertArrayEquals;
  * specific language governing permissions and limitations under the License.
  */
 public class JPAPersonRepositoryTest extends IntegrationTest {
-    private static final String DNI = "DNI";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "EMAIL";
-    private static final String NAME = "NAME";
-    private static final String SURNAME = "SURNAME";
-    private static final String PASSWORD = "PASSWORD";
     private static final PersonRole ROLE = PersonRole.SUPERVISOR;
 
     private static final String DNI2 = "DNI2";
@@ -56,21 +51,13 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        SignUpData payload = new SignUpData();
-        payload.setDni(DNI);
-        payload.setUsername(USERNAME);
-        payload.setEmail(EMAIL);
-        payload.setName(NAME);
-        payload.setSurnames(SURNAME);
-        payload.setPassword(PASSWORD);
-        payload.setRole(ROLE);
+        SignUpData payload = FixtureFactory.generateSignUpData().setRole(ROLE);
 
         personOne = new Person(payload);
-        personTwo = new Person(payload);
-
-        personTwo.setDni(DNI2);
-        personTwo.setEmail(EMAIL2);
-        personTwo.setUsername(USERNAME2);
+        personTwo = new Person(payload)
+                .setDni(DNI2)
+                .setEmail(EMAIL2)
+                .setUsername(USERNAME2);
     }
 
     @After
@@ -112,7 +99,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        personTwo.setEmail(EMAIL);
+        personTwo.setEmail(personOne.getEmail());
 
         try {
             repository.create(personTwo);
@@ -129,7 +116,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        personTwo.setUsername(USERNAME);
+        personTwo.setUsername(personOne.getUsername());
 
         try {
             repository.create(personTwo);
@@ -146,7 +133,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        personTwo.setDni(DNI);
+        personTwo.setDni(personOne.getDni());
 
         try {
             repository.create(personTwo);
@@ -163,9 +150,9 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(personOne);
         String personId = person.getId();
 
-        personTwo.setEmail(EMAIL);
-        personTwo.setUsername(USERNAME);
-        personTwo.setDni(DNI);
+        personTwo.setEmail(personOne.getEmail());
+        personTwo.setUsername(personOne.getUsername());
+        personTwo.setDni(personOne.getDni());
 
         try {
             repository.create(personTwo);
@@ -200,9 +187,9 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
 
-        Optional<Person> possiblePerson = repository.findByEmail(EMAIL);
+        Optional<Person> possiblePerson = repository.findByEmail(personOne.getEmail());
         assertTrue(possiblePerson.isPresent());
-        assertEquals(EMAIL, possiblePerson.get().getEmail());
+        assertEquals(personOne.getEmail(), possiblePerson.get().getEmail());
 
         repository.delete(personId);
     }
@@ -218,9 +205,9 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
 
-        Optional<Person> possiblePerson = repository.findByUsername(USERNAME);
+        Optional<Person> possiblePerson = repository.findByUsername(personOne.getUsername());
         assertTrue(possiblePerson.isPresent());
-        assertEquals(USERNAME, possiblePerson.get().getUsername());
+        assertEquals(personOne.getUsername(), possiblePerson.get().getUsername());
 
         repository.delete(personId);
     }
@@ -236,9 +223,9 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
 
-        Optional<Person> possiblePerson = repository.findByDni(DNI);
+        Optional<Person> possiblePerson = repository.findByDni(personOne.getDni());
         assertTrue(possiblePerson.isPresent());
-        assertEquals(DNI, possiblePerson.get().getDni());
+        assertEquals(personOne.getDni(), possiblePerson.get().getDni());
 
         repository.delete(personId);
     }

@@ -1,9 +1,9 @@
-package com.vendingontime.backend.models.bodymodels.machine;
+package integration.com.vendingontime.backend.testutils;
 
-import com.vendingontime.backend.models.bodymodels.Validable;
-import com.vendingontime.backend.models.location.MachineLocation;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.vendingontime.backend.config.inject.ConfigModule;
+import org.junit.Before;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,16 +22,11 @@ import com.vendingontime.backend.models.machine.MachineType;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class NewMachineData implements Validable {
-    private MachineLocation machineLocation; // Minimo 2, max 140
-    private MachineType machineType;  // --
-    private MachineState machineState; // --
-    private String description; // Minimo 0, max 300
+public abstract class IntegrationTest {
+    private static final Injector injector = Guice.createInjector(new ConfigModule());
 
-    @Override
-    public String[] validate() {
-        return null;
+    @Before
+    public void injectContext() throws Exception {
+        injector.injectMembers(this);
     }
-
-
 }

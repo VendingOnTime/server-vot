@@ -4,6 +4,7 @@ import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static org.junit.Assert.*;
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.*;
@@ -26,14 +27,11 @@ import static com.vendingontime.backend.models.bodymodels.person.LogInData.*;
  * specific language governing permissions and limitations under the License.
  */
 public class LogInDataTest {
-    public LogInData user;
+    private LogInData user;
 
     @Before
     public void setUp() throws Exception {
-        user = new LogInData();
-
-        user.setEmail("user@example.com");
-        user.setPassword("12345");
+        user = FixtureFactory.generateLogInData();
     }
 
     @After

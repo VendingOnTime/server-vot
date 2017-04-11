@@ -11,18 +11,14 @@ import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.ListMachinesRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
-import com.vendingontime.backend.services.ListMachinesService;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
 import spark.Request;
 import spark.Response;
 
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 

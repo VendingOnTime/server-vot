@@ -18,12 +18,18 @@ import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
 
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.*;
+
 import com.vendingontime.backend.routes.utils.*;
+import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.ListMachinesService;
+import com.vendingontime.backend.routes.LogInRouter;
+import com.vendingontime.backend.routes.SignUpRouter;
+import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -106,11 +112,13 @@ public class ConfigModule extends AbstractModule {
         bind(new TypeLiteral<Repository<Company>>(){}).to(JPACompanyRepository.class);
 
         bind(MachineRepository.class).to(JPAMachineRepository.class);
+        bind(new TypeLiteral<Repository<Machine>>(){}).to(JPAMachineRepository.class);
     }
 
     private void bindServices() {
         bind(SignUpService.class);
         bind(LogInService.class);
+        bind(AddMachineService.class);
         bind(ListMachinesService.class);
     }
 
@@ -124,6 +132,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(LogInRouter.class);
         routerBinder.addBinding().to(UserProfileRouter.class);
         routerBinder.addBinding().to(ListMachinesRouter.class);
+        routerBinder.addBinding().to(AddMachineRouter.class);
     }
 
     private void bindPlugins() {

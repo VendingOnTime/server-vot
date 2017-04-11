@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 
 import javax.persistence.*;
 
@@ -31,10 +32,10 @@ import javax.persistence.*;
         @NamedQuery(name = "Machine.findByCompany", query = "SELECT m FROM Machine m WHERE m.company.id = :companyId")
 })
 public class Machine extends AbstractEntity<Machine> {
-    @Embedded private MachineLocation location; // Minimo 2, max 140
-    @Column @Enumerated private MachineType type;  // --
-    @Column @Enumerated private MachineState state; // --
-    @Column private String description; // Minimo 0, max 300
+    @Embedded private MachineLocation location;
+    @Column @Enumerated private MachineType type;
+    @Column @Enumerated private MachineState state;
+    @Column private String description;
 
     @ManyToOne
     @JsonIgnore
@@ -44,7 +45,12 @@ public class Machine extends AbstractEntity<Machine> {
         super();
     }
 
-    // TODO Constructor with NewMachineData
+    public Machine(AddMachineData addMachineData) {
+        this.location = addMachineData.getMachineLocation();
+        this.description = addMachineData.getDescription();
+        this.type = addMachineData.getMachineType();
+        this.state = addMachineData.getMachineState();
+    }
 
     public void update(Machine machine) {
         this.location = machine.getLocation();

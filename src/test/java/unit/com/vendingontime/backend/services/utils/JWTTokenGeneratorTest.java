@@ -9,6 +9,7 @@ import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import java.util.Optional;
 
@@ -36,9 +37,6 @@ import static org.mockito.Mockito.*;
  */
 
 public class JWTTokenGeneratorTest {
-    private static final String EMAIL = "example@email.com";
-    private static final String PASSWORD = "123456";
-
     private JWTTokenGenerator generator;
 
     private ServerConfig serverConfig;
@@ -52,13 +50,11 @@ public class JWTTokenGeneratorTest {
 
         generator = new JWTTokenGenerator(serverConfig, repository);
 
-        logInData = new LogInData()
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD);
+        logInData = FixtureFactory.generateLogInData();
 
         when(serverConfig.getString(ServerVariable.JWT_SECRET)).thenReturn("dummy");
         when(serverConfig.getString(ServerVariable.JWT_ISSUER)).thenReturn("issuer");
-        when(repository.findByEmail(EMAIL)).thenReturn(Optional.of(new Person().setEmail(EMAIL)));
+        when(repository.findByEmail(logInData.getEmail())).thenReturn(Optional.of(new Person().setEmail(logInData.getEmail())));
     }
 
     @After
@@ -66,6 +62,7 @@ public class JWTTokenGeneratorTest {
         serverConfig = null;
         logInData = null;
         generator = null;
+        logInData = null;
     }
 
     @Test
@@ -79,9 +76,9 @@ public class JWTTokenGeneratorTest {
         String token = generator.generateFrom(logInData);
         Optional<Person> person = generator.recoverFrom(token);
 
-        verify(repository, times(1)).findByEmail(EMAIL);
+        verify(repository, times(1)).findByEmail(logInData.getEmail());
         assertThat(person.isPresent(), is(true));
-        assertThat(person.get().getEmail(), equalTo(EMAIL));
+        assertThat(person.get().getEmail(), equalTo(logInData.getEmail()));
     }
 
     @Test

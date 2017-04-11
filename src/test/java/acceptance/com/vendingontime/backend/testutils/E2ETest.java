@@ -2,7 +2,7 @@ package acceptance.com.vendingontime.backend.testutils;
 
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

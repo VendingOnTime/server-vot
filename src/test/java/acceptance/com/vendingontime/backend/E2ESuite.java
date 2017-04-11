@@ -32,7 +32,8 @@ import spark.Spark;
 @Suite.SuiteClasses({
         E2ESignUpSupervisorTest.class,
         E2ELogInTest.class,
-        E2EUserProfileTest.class
+        E2EUserProfileTest.class,
+        E2EAddMachineTest.class
 })
 public class E2ESuite {
 
