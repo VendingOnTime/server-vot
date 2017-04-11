@@ -1,6 +1,7 @@
 package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
@@ -26,7 +27,7 @@ import javax.inject.Inject;
  * specific language governing permissions and limitations under the License.
  */
 
-public class AddMachineService {
+public class AddMachineService extends AbstractService {
     private MachineRepository repository;
     private CompanyRepository companyRepository;
 
@@ -37,21 +38,21 @@ public class AddMachineService {
     }
 
     public Machine createMachine(AddMachineData machineCandidate) {
-//        if (!requesterIsValid()) throw new BusinessLogicException()
+        if (!machineCandidate.requesterIsAuthorized()) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         String[] signUpErrors = machineCandidate.validate();
         if(signUpErrors.length != 0) {
             throw new BusinessLogicException(signUpErrors);
         }
 
-        Machine machine = new Machine(machineCandidate);
+        Machine machine = repository.create(new Machine(machineCandidate));
+        Company company = machineCandidate.getRequester().getCompany();
 
-        machine = repository.create(machine);
+        Machine savedMachine = repository.findById(machine.getId()).get();
+        company.addMachine(savedMachine);
+
+        companyRepository.update(company);
 
         return machine;
-    }
-
-    private boolean requesterIsValid() {
-        return false;
     }
 }

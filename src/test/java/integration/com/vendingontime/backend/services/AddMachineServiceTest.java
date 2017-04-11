@@ -1,21 +1,30 @@
 package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.repositories.JPACompanyRepository;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
+import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.AddMachineService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /*
@@ -42,17 +51,15 @@ public class AddMachineServiceTest extends IntegrationTest {
     private static final MachineLocation MACHINE_LOCATION = new MachineLocation().setName(LOCATION_NAME);
 
     @Inject private JPAMachineRepository repository;
+    @Inject private JPACompanyRepository companyRepository;
+    @Inject private JPAPersonRepository personRepository;
     @Inject private AddMachineService service;
 
     private AddMachineData addMachineData;
 
     @Before
     public void setUp() throws Exception {
-        addMachineData = new AddMachineData()
-                .setDescription(DESCRIPTION)
-                .setMachineLocation(MACHINE_LOCATION)
-                .setMachineType(MachineType.COFFEE)
-                .setMachineState(MachineState.OPERATIVE);
+        addMachineData = FixtureFactory.generateAddMachineData();
     }
 
     @After
@@ -62,14 +69,25 @@ public class AddMachineServiceTest extends IntegrationTest {
 
     @Test
     public void createMachine() {
-        Machine machine = service.createMachine(addMachineData);
+        Person owner = personRepository.create(FixtureFactory.generateSupervisor());
+
+        Company company = companyRepository.create(FixtureFactory.generateCompany());
+
+        Person savedOwner = personRepository.findById(owner.getId()).get();
+
+        company.setOwner(savedOwner);
+        companyRepository.update(company);
+
+        Machine machine = service.createMachine(addMachineData.setRequester(savedOwner));
 
         assertNotNull(machine);
 
-        Optional<Machine> byId = repository.findById(machine.getId());
-        assertTrue(byId.isPresent());
+        Machine savedMachine = repository.findById(machine.getId()).get();
+        Company savedCompany = companyRepository.findById(company.getId()).get();
 
-        assertEquals(machine, byId.get());
-        repository.delete(byId.get().getId());
+        assertNotNull(savedMachine.getId());
+        assertEquals(1, savedCompany.getMachines().size());
+
+        repository.delete(savedMachine.getId());
     }
 }

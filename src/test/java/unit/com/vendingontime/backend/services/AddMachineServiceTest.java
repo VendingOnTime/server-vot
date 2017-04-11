@@ -3,6 +3,7 @@ package unit.com.vendingontime.backend.services;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
+import com.vendingontime.backend.services.AbstractService;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
@@ -10,6 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import java.util.Optional;
+
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -50,8 +54,13 @@ public class AddMachineServiceTest {
 
         addMachineData = FixtureFactory.generateAddMachineData()
                 .setRequester(FixtureFactory.generateSupervisorWithCompany());
+        addMachineData.getRequester().getCompany().setId("COMPANY_ID");
+        addMachineData.getRequester().setId("PERSON_ID");
 
         machine = new Machine(addMachineData);
+
+        when(repository.create(any())).thenReturn(machine.setId("MACHINE_ID"));
+        when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
     }
 
     @After
@@ -64,9 +73,12 @@ public class AddMachineServiceTest {
 
     @Test
     public void createMachine() {
-        addMachineService.createMachine(addMachineData);
+        Machine machine = addMachineService.createMachine(addMachineData);
 
-        verify(repository, times(1)).create(machine);
+        assertThat(machine.getId(), notNullValue());
+
+        verify(repository, times(1)).create(any());
+        verify(companyRepository, times(1)).update(addMachineData.getRequester().getCompany());
     }
 
     @Test
@@ -79,11 +91,20 @@ public class AddMachineServiceTest {
             assertArrayEquals(new String[]{AddMachineData.SHORT_MACHINE_LOCATION_NAME}, ex.getCauses());
 
             verify(repository, never()).create(any());
+            verify(companyRepository, never()).update(any());
         }
     }
 
     @Test
-    public void createMachine_withNullRequester_throwsException() {
+    public void createMachine_withInvalidRequester_throwsException() {
+        try {
+            addMachineService.createMachine(addMachineData.setRequester(null));
+            fail();
+        } catch (BusinessLogicException ex) {
+            assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
 
+            verify(repository, never()).create(machine);
+            verify(companyRepository, never()).update(any());
+        }
     }
 }
