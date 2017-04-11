@@ -74,6 +74,8 @@ public class AddMachineRouterTest extends IntegrationTest {
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertTrue(restResult.getSuccess());
+
+        personRepository.delete(savedOwner.getId());
     }
 
 }

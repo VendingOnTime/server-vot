@@ -1,6 +1,7 @@
 package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
+import com.auth0.jwt.JWT;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
@@ -8,6 +9,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.SignUpService;
+import com.vendingontime.backend.services.utils.JWTTokenGenerator;
 import com.vendingontime.backend.services.utils.TokenGenerator;
 import org.junit.Test;
 import testutils.FixtureFactory;
@@ -17,6 +19,8 @@ import javax.inject.Inject;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -54,6 +58,8 @@ public class E2ELogInTest extends E2ETest {
 
         LogInData payload = FixtureFactory.generateLogInDataFrom(supervisor);
 
+
+
         given()
                 .body(payload)
         .when()
@@ -61,7 +67,7 @@ public class E2ELogInTest extends E2ETest {
         .then()
                 .statusCode(HttpResponse.StatusCode.OK)
                 .body("success", equalTo(true))
-                .body("data", equalTo(tokenGenerator.generateFrom(payload)))
+                .body("data", notNullValue())
                 .body("error", nullValue());
 
         repository.delete(supervisor.getId());

@@ -40,6 +40,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 public class E2EAddMachineTest extends E2ETest {
     @Inject
@@ -75,7 +77,12 @@ public class E2EAddMachineTest extends E2ETest {
         .when()
             .post(host + AddMachineRouter.V1_MACHINES)
         .then()
-            .statusCode(200);
+            .statusCode(201)
+            .body("data.id", notNullValue())
+            .body("data.location.name", is(payload.getMachineLocation().getName()))
+            .body("data.type", is(payload.getMachineType().toValue()))
+            .body("data.state", is(payload.getMachineState().toValue()))
+            .body("data.description", is(payload.getDescription()));
 
         List<Machine> machinesByCompany = repository.findMachinesByCompany(savedSupervisor.getCompany());
 

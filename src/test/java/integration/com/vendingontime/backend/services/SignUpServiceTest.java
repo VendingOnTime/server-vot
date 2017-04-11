@@ -1,7 +1,9 @@
 package integration.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
@@ -33,12 +35,16 @@ import static org.junit.Assert.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 public class SignUpServiceTest extends IntegrationTest {
     @Inject
     private SignUpService service;
 
     @Inject
     private PersonRepository repository;
+
+    @Inject
+    private CompanyRepository companyRepository;
 
     private SignUpData supervisor;
 
@@ -59,7 +65,11 @@ public class SignUpServiceTest extends IntegrationTest {
         assertNotNull(user);
 
         Optional<Person> byEmail = repository.findByEmail(supervisor.getEmail());
+        Optional<Company> userCompany = companyRepository.findById(user.getCompany().getId());
+
         assertTrue(byEmail.isPresent());
+        assertTrue(userCompany.isPresent());
+        assertNotNull(userCompany.get().getId());
 
         repository.delete(user.getId());
     }
