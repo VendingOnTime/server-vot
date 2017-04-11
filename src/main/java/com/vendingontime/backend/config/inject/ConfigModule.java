@@ -26,6 +26,7 @@ import com.vendingontime.backend.routes.*;
 
 import com.vendingontime.backend.routes.utils.*;
 import com.vendingontime.backend.services.AddMachineService;
+import com.vendingontime.backend.services.ListMachinesService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
@@ -115,6 +116,7 @@ public class ConfigModule extends AbstractModule {
         bind(SignUpService.class);
         bind(LogInService.class);
         bind(AddMachineService.class);
+        bind(ListMachinesService.class);
     }
 
     private void bindMiddleware() {
@@ -126,6 +128,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(SignUpRouter.class);
         routerBinder.addBinding().to(LogInRouter.class);
         routerBinder.addBinding().to(UserProfileRouter.class);
+        routerBinder.addBinding().to(ListMachinesRouter.class);
     }
 
     private void bindPlugins() {

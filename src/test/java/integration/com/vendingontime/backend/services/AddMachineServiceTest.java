@@ -1,14 +1,13 @@
 package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.machine.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
 import com.vendingontime.backend.services.AddMachineService;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +17,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

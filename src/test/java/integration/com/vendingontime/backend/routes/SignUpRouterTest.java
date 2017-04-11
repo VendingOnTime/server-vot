@@ -68,7 +68,7 @@ public class SignUpRouterTest extends IntegrationTest {
     }
 
     @Test
-    public void post() throws Exception {
+    public void signUpSupervisor() throws Exception {
         AppRoute post = router.signUpSupervisor(stringifiedSupervisor);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
