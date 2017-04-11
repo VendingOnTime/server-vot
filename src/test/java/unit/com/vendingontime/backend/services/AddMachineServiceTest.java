@@ -1,16 +1,14 @@
 package unit.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
-import com.vendingontime.backend.repositories.JPAMachineRepository;
+import com.vendingontime.backend.repositories.*;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,11 +34,9 @@ import static org.mockito.Mockito.*;
  */
 
 public class AddMachineServiceTest {
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String LOCATION_NAME = "LOCATION_NAME";
-    private static final MachineLocation MACHINE_LOCATION = new MachineLocation().setName(LOCATION_NAME);
+    private MachineRepository repository;
+    private CompanyRepository companyRepository;
 
-    private JPAMachineRepository repository;
     private AddMachineService addMachineService;
     private AddMachineData addMachineData;
     private Machine machine;
@@ -48,14 +44,12 @@ public class AddMachineServiceTest {
     @Before
     public void setUp() throws Exception {
         repository = mock(JPAMachineRepository.class);
+        companyRepository = mock(JPACompanyRepository.class);
 
-        addMachineService = new AddMachineService(repository);
+        addMachineService = new AddMachineService(repository, companyRepository);
 
-        addMachineData = new AddMachineData()
-                .setDescription(DESCRIPTION)
-                .setMachineLocation(MACHINE_LOCATION)
-                .setMachineType(MachineType.COFFEE)
-                .setMachineState(MachineState.OPERATIVE);
+        addMachineData = FixtureFactory.generateAddMachineData()
+                .setRequester(FixtureFactory.generateSupervisorWithCompany());
 
         machine = new Machine(addMachineData);
     }
@@ -63,6 +57,7 @@ public class AddMachineServiceTest {
     @After
     public void tearDown() throws Exception {
         repository = null;
+        companyRepository = null;
         addMachineService = null;
         addMachineData = null;
     }
@@ -85,7 +80,10 @@ public class AddMachineServiceTest {
 
             verify(repository, never()).create(any());
         }
+    }
 
+    @Test
+    public void createMachine_withNullRequester_throwsException() {
 
     }
 }

@@ -2,6 +2,7 @@ package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
@@ -27,15 +28,18 @@ import javax.inject.Inject;
 
 public class AddMachineService {
     private MachineRepository repository;
+    private CompanyRepository companyRepository;
 
     @Inject
-    public AddMachineService(MachineRepository machineRepository) {
+    public AddMachineService(MachineRepository machineRepository, CompanyRepository companyRepository) {
         this.repository = machineRepository;
+        this.companyRepository = companyRepository;
     }
 
     public Machine createMachine(AddMachineData machineCandidate) {
-        String[] signUpErrors = machineCandidate.validate();
+//        if (!requesterIsValid()) throw new BusinessLogicException()
 
+        String[] signUpErrors = machineCandidate.validate();
         if(signUpErrors.length != 0) {
             throw new BusinessLogicException(signUpErrors);
         }
@@ -45,5 +49,9 @@ public class AddMachineService {
         machine = repository.create(machine);
 
         return machine;
+    }
+
+    private boolean requesterIsValid() {
+        return false;
     }
 }
