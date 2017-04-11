@@ -1,5 +1,6 @@
 package integration.com.vendingontime.backend.services.utils;
 
+import com.auth0.jwt.JWT;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
 
 /*
@@ -70,6 +72,22 @@ public class JWTTokenGeneratorTest extends IntegrationTest {
     public void tearDown() throws Exception {
         signUpData = null;
         logInData = null;
+    }
+
+    @Test
+    public void generate() throws Exception {
+        String token = tokenGenerator.generateFrom(logInData);
+        String tokenEmail = JWT.decode(token).getClaim(JWTTokenGenerator.EMAIL_CLAIM).asString();
+        assertThat(tokenEmail, equalTo(EMAIL));
+    }
+
+    @Test
+    public void generate_twoDoNotMatch() throws Exception {
+        String token1 = tokenGenerator.generateFrom(logInData);
+        Thread.sleep(1000);
+        String token2 = tokenGenerator.generateFrom(logInData);
+
+        assertNotEquals(token1, token2);
     }
 
     @Test

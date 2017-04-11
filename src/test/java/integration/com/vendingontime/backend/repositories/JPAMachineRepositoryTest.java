@@ -1,16 +1,20 @@
 package integration.com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.repositories.JPACompanyRepository;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
 import integration.com.vendingontime.backend.repositories.testutils.IntegrationTest;
 import org.junit.*;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /*
@@ -39,6 +43,9 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
 
     @Inject
     private JPAMachineRepository repository;
+
+    @Inject
+    private JPACompanyRepository companyRepository;
 
     private Machine machineOne;
     private Machine machineTwo;
@@ -160,5 +167,52 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
     @Test(expected = NullPointerException.class)
     public void delete_null_returnsEmpty() throws Exception {
         repository.delete(null);
+    }
+
+    @Test
+    public void findByCompany_companyNotExists_returnsEmpty() throws Exception {
+        Company company = new Company().setId("FAKE_ID");
+        List<Machine> machines = repository.findMachinesByCompany(company);
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_nullCompany_returnsEmpty() throws Exception {
+        List<Machine> machines = repository.findMachinesByCompany(null);
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_noSavedCompany_returnsEmpty() throws Exception {
+        List<Machine> machines = repository.findMachinesByCompany(new Company());
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_companyExistsWithNoMachines_returnsEmpty() throws Exception {
+        Company company = companyRepository.create(new Company());
+        List<Machine> machines = repository.findMachinesByCompany(company);
+        assertThat(machines.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_companyExistsWithMachines_returnsMachines() throws Exception {
+        Company company = companyRepository.create(new Company());
+
+        Machine machine1 = repository.create(new Machine());
+        Machine machine2 = repository.create(new Machine());
+
+        Machine savedMachine1 = repository.findById(machine1.getId()).get();
+        Machine savedMachine2 = repository.findById(machine2.getId()).get();
+
+        company.addMachine(savedMachine1);
+        company.addMachine(savedMachine2);
+
+        companyRepository.update(company);
+
+        List<Machine> machines = repository.findMachinesByCompany(company);
+        assertThat(machines.size(), is(2));
+        assertThat(machines.contains(savedMachine1), is(true));
+        assertThat(machines.contains(savedMachine2), is(true));
     }
 }

@@ -23,6 +23,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class JPARepository<MODEL extends AbstractEntity> implements Repository<MODEL> {
@@ -54,7 +56,7 @@ public abstract class JPARepository<MODEL extends AbstractEntity> implements Rep
 
     @Override
     public Optional<MODEL> findById(String id) {
-        return findByQuery("findById", "id", id);
+        return findOneBy("findById", "id", id);
     }
 
     @Override
@@ -103,11 +105,12 @@ public abstract class JPARepository<MODEL extends AbstractEntity> implements Rep
      */
     protected void checkIfCollides(MODEL model) throws RuntimeException {}
 
-    protected Optional<MODEL> findByQuery(String queryName, String paramName, Object param) {
+    protected Optional<MODEL> findOneBy(String queryName, String paramName, Object param) {
         if (param == null) return Optional.empty();
 
-        TypedQuery<MODEL> query = em.createNamedQuery(entityClass.getSimpleName() + "." + queryName, entityClass);
+        TypedQuery<MODEL> query = buildQuery(queryName);
         query.setParameter(paramName, param);
+
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
@@ -115,4 +118,16 @@ public abstract class JPARepository<MODEL extends AbstractEntity> implements Rep
         }
     }
 
+    protected List<MODEL> findManyBy(String queryName, String paramName, Object param) {
+        if (param == null) return new LinkedList<MODEL>();
+
+        TypedQuery<MODEL> query = buildQuery(queryName);
+        query.setParameter(paramName, param);
+
+        return query.getResultList();
+    }
+
+    protected TypedQuery<MODEL> buildQuery(String queryName) {
+        return em.createNamedQuery(entityClass.getSimpleName() + "." + queryName, entityClass);
+    }
 }

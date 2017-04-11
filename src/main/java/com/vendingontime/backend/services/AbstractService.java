@@ -1,4 +1,5 @@
-package com.vendingontime.backend.repositories;/*
+package com.vendingontime.backend.services;
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,11 +17,6 @@ package com.vendingontime.backend.repositories;/*
  * specific language governing permissions and limitations under the License.
  */
 
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
-
-import java.util.List;
-
-public interface MachineRepository extends Repository<Machine> {
-    List<Machine> findMachinesByCompany(Company company);
+public class AbstractService {
+    public static final String INSUFFICIENT_PERMISSIONS = "INSUFFICIENT_PERMISSIONS";
 }

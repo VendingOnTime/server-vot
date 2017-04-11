@@ -28,7 +28,7 @@ import javax.inject.Inject;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class SignUpService {
+public class SignUpService extends AbstractService {
 
     private PersonRepository repository;
     private CompanyRepository companyRepository;
