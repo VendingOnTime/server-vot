@@ -52,7 +52,7 @@ public class LogInServiceTest extends IntegrationTest {
     @Before
     public void setUp() throws Exception {
         signUpData = FixtureFactory.generateSignUpData();
-        logInData = FixtureFactory.generateLogInData();
+        logInData = FixtureFactory.generateLogInDataFrom(signUpData);
     }
 
     @After

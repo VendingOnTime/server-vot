@@ -52,7 +52,7 @@ public class E2ELogInTest extends E2ETest {
 
         Person supervisor = signUpService.createSupervisor(signUpData);
 
-        LogInData payload = FixtureFactory.generateLogInData();
+        LogInData payload = FixtureFactory.generateLogInDataFrom(supervisor);
 
         given()
                 .body(payload)

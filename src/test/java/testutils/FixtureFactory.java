@@ -82,6 +82,18 @@ public class FixtureFactory {
                 .setPassword("PASSWORD");
     }
 
+    public static LogInData generateLogInDataFrom(Person person) {
+        return new LogInData()
+                .setEmail(person.getEmail())
+                .setPassword(person.getPassword());
+    }
+
+    public static LogInData generateLogInDataFrom(SignUpData signUpData) {
+        return new LogInData()
+                .setEmail(signUpData.getEmail())
+                .setPassword(signUpData.getPassword());
+    }
+
     // MACHINE METHODS
 
     public static Machine generateMachine() {

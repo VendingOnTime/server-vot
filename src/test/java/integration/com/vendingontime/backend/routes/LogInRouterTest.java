@@ -70,7 +70,7 @@ public class LogInRouterTest extends IntegrationTest {
 
         signUpData = FixtureFactory.generateSignUpData();
 
-        logInData = FixtureFactory.generateLogInData();
+        logInData = FixtureFactory.generateLogInDataFrom(signUpData);
 
         stringifiedLogInData = mapper.writeValueAsString(logInData);
     }

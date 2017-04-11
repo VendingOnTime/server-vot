@@ -54,7 +54,7 @@ public class E2EUserProfileTest extends E2ETest {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
 
-        LogInData logInData = FixtureFactory.generateLogInData();
+        LogInData logInData = FixtureFactory.generateLogInDataFrom(supervisor);
         String token = logInService.authorizeUser(logInData);
 
         given()
