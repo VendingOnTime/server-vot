@@ -6,6 +6,7 @@ import com.vendingontime.backend.utils.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.*;
 import static org.junit.Assert.*;
@@ -34,25 +35,9 @@ public class SignUpDataTest {
 
     @Before
     public void setUp() throws Exception {
-        customer = new SignUpData();
-        customer.setRole(PersonRole.CUSTOMER);
-
-        supervisor = new SignUpData();
-        supervisor.setRole(PersonRole.SUPERVISOR);
-        supervisor.setEmail("user@example.com");
-        supervisor.setUsername("user");
-        supervisor.setPassword("12345");
-        supervisor.setName("name");
-        supervisor.setSurnames("surnames");
-
-        technician = new SignUpData();
-        technician.setRole(PersonRole.TECHNICIAN);
-        technician.setEmail("user@example.com");
-        technician.setUsername("user");
-        technician.setPassword("12345");
-        technician.setName("name");
-        technician.setSurnames("surnames");
-        technician.setDni("11111111A");
+        customer = FixtureFactory.generateSignUpData().setRole(PersonRole.CUSTOMER);
+        supervisor = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
+        technician = FixtureFactory.generateSignUpData().setRole(PersonRole.TECHNICIAN);
     }
 
     @After

@@ -11,6 +11,7 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.INVALID_DNI;
 import static com.vendingontime.backend.routes.SignUpRouter.MALFORMED_JSON;
@@ -37,14 +38,6 @@ import static org.mockito.Mockito.verify;
  * specific language governing permissions and limitations under the License.
  */
 public class SignUpRouterTest {
-    private static final String DNI = "12345678B";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "username@test.com";
-    private static final String NAME = "NAME";
-    private static final String SURNAME = "SURNAME";
-    private static final String PASSWORD = "PASSWORD";
-    private static final PersonRole ROLE = PersonRole.SUPERVISOR;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private SignUpService service;
@@ -61,17 +54,8 @@ public class SignUpRouterTest {
         serviceResponse = mock(ServiceResponse.class);
         signUp = new SignUpRouter(service, serviceResponse);
 
-        payload = new SignUpData()
-                .setDni(DNI)
-                .setUsername(USERNAME)
-                .setEmail(EMAIL)
-                .setName(NAME)
-                .setSurnames(SURNAME)
-                .setPassword(PASSWORD)
-                .setRole(ROLE);
-
+        payload = FixtureFactory.generateSignUpData();
         person = new Person(payload);
-
         stringifiedPerson = objectMapper.writeValueAsString(payload);
     }
 

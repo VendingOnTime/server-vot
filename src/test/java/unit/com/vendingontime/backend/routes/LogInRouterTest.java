@@ -10,6 +10,7 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
 import static com.vendingontime.backend.routes.LogInRouter.MALFORMED_JSON;
@@ -57,9 +58,7 @@ public class LogInRouterTest {
 
         logInRouter = new LogInRouter(serviceResponse, logInService);
 
-        logInData = new LogInData();
-        logInData.setEmail(EMAIL);
-        logInData.setPassword(PASSWORD);
+        logInData = FixtureFactory.generateLogInData();
 
         stringifiedLogIn = objectMapper.writeValueAsString(logInData);
     }
