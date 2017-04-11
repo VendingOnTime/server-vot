@@ -41,6 +41,7 @@ public class AddMachineService extends AbstractService {
         if (!machineCandidate.requesterIsAuthorized()) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         String[] signUpErrors = machineCandidate.validate();
+
         if(signUpErrors.length != 0) {
             throw new BusinessLogicException(signUpErrors);
         }

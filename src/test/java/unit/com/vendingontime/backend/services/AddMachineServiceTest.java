@@ -4,6 +4,9 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
 import com.vendingontime.backend.services.AbstractService;
+import com.vendingontime.backend.models.machine.MachineState;
+import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.repositories.JPAMachineRepository;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
@@ -14,6 +17,7 @@ import testutils.FixtureFactory;
 import java.util.Optional;
 
 import static org.hamcrest.core.IsNull.notNullValue;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

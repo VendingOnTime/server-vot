@@ -168,6 +168,7 @@ public class AddMachineData implements Validable {
         result = 31 * result + (getMachineState() != null ? getMachineState().hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getRequester() != null ? getRequester().hashCode() : 0);
+
         return result;
     }
 

@@ -2,12 +2,8 @@ package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.JPACompanyRepository;
 import com.vendingontime.backend.repositories.JPAMachineRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
@@ -20,11 +16,6 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /*
@@ -46,10 +37,6 @@ import static org.junit.Assert.*;
  */
 
 public class AddMachineServiceTest extends IntegrationTest {
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String LOCATION_NAME = "LOCATION_NAME";
-    private static final MachineLocation MACHINE_LOCATION = new MachineLocation().setName(LOCATION_NAME);
-
     @Inject private JPAMachineRepository repository;
     @Inject private JPACompanyRepository companyRepository;
     @Inject private JPAPersonRepository personRepository;

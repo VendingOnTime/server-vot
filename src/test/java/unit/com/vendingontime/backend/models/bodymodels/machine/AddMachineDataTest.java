@@ -5,6 +5,8 @@ import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.models.machine.MachineState;
+import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.utils.StringUtils;
 import org.junit.After;
 import org.junit.Before;
