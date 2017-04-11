@@ -89,5 +89,6 @@ public class AddMachineServiceTest extends IntegrationTest {
         assertEquals(1, savedCompany.getMachines().size());
 
         repository.delete(savedMachine.getId());
+        personRepository.delete(savedOwner.getId());
     }
 }
