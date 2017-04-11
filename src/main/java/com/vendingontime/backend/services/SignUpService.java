@@ -1,9 +1,11 @@
 package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
@@ -29,18 +31,30 @@ import javax.inject.Inject;
 public class SignUpService extends AbstractService {
 
     private PersonRepository repository;
+    private CompanyRepository companyRepository;
 
     @Inject
-    public SignUpService(PersonRepository repository) {
+    public SignUpService(PersonRepository repository, CompanyRepository companyRepository) {
         this.repository = repository;
+        this.companyRepository = companyRepository;
     }
 
     public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
-        return createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+        Person person = createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+
+        Company company = companyRepository.create(new Company());
+
+        Person savedPerson = repository.findById(person.getId()).get();
+        company.setOwner(savedPerson);
+
+        companyRepository.update(company);
+
+        return savedPerson;
     }
 
     private Person createPerson(SignUpData personCandidate, PersonRole role) {
         personCandidate.setRole(role);
+
         String[] signUpErrors = personCandidate.validate();
         if(signUpErrors.length != 0) {
             throw new BusinessLogicException(signUpErrors);
@@ -49,11 +63,9 @@ public class SignUpService extends AbstractService {
         Person person = new Person(personCandidate);
 
         try {
-            repository.create(person);
+            return repository.create(person);
         } catch (PersonCollisionException ex) {
             throw new BusinessLogicException(ex.getCauses());
         }
-
-        return person;
     }
 }

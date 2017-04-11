@@ -1,24 +1,26 @@
 package unit.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 
 import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.SignUpService;
 
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import static com.vendingontime.backend.models.person.PersonCollisionException.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Optional;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -47,15 +49,22 @@ public class SignUpServiceTest {
     private static final PersonRole ROLE = PersonRole.SUPERVISOR;
 
     private JPAPersonRepository repository;
+    private CompanyRepository companyRepository;
     private SignUpService signUp;
     private SignUpData payload;
 
     private Person person;
+    private Company company;
 
     @Before
     public void setUp() throws Exception {
+        final String PERSON_ID = "PERSON_ID";
+        final String COMPANY_ID = "COMPANY_ID";
+
         repository = mock(JPAPersonRepository.class);
-        signUp = new SignUpService(repository);
+        companyRepository = mock(CompanyRepository.class);
+
+        signUp = new SignUpService(repository, companyRepository);
 
         payload = new SignUpData()
                 .setDni(DNI)
@@ -67,21 +76,34 @@ public class SignUpServiceTest {
                 .setRole(ROLE);
 
         person = new Person(payload);
+        company = new Company();
 
+        when(repository.create(any())).thenReturn(person.setId(PERSON_ID));
+        when(repository.findById(PERSON_ID)).thenReturn(Optional.of(person));
+        when(companyRepository.create(any())).thenReturn(company.setId(COMPANY_ID));
+        when(companyRepository.update(any())).thenReturn(Optional.of(company.setOwner(person)));
     }
 
     @After
     public void tearDown() throws Exception {
         repository = null;
+        companyRepository = null;
         signUp = null;
         payload = null;
+        person = null;
+        company = null;
     }
 
     @Test
     public void createSupervisor() {
         signUp.createSupervisor(payload);
 
-        verify(repository, times(1)).create(person);
+        verify(repository, times(1)).create(any());
+        verify(companyRepository, times(1)).create(any());
+        verify(companyRepository, times(1)).update(any());
+
+        assertNotNull(person.getCompany().getId());
+        assertNotNull(companyRepository.findById(person.getCompany().getId()));
     }
 
     @Test
@@ -89,8 +111,13 @@ public class SignUpServiceTest {
         payload.setRole(null);
         Person supervisor = signUp.createSupervisor(payload);
 
-        verify(repository, times(1)).create(person);
+        verify(repository, times(1)).create(any());
+        verify(companyRepository, times(1)).create(any());
+        verify(companyRepository, times(1)).update(any());
+
         assertEquals(PersonRole.SUPERVISOR, supervisor.getRole());
+        assertNotNull(supervisor.getCompany().getId());
+        assertNotNull(companyRepository.findById(supervisor.getCompany().getId()));
     }
 
     @Test
