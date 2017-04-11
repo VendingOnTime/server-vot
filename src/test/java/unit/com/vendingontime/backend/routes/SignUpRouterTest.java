@@ -94,7 +94,7 @@ public class SignUpRouterTest {
         signUp.signUpSupervisor(stringifiedPerson);
 
         verify(serviceResponse, never()).created(person);
-        verify(serviceResponse, times(1)).badRequest(any());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
         verify(service, never()).createSupervisor(payload);
     }
 
