@@ -10,6 +10,7 @@ import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.TokenGenerator;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -36,14 +37,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
  */
 
 public class E2ELogInTest extends E2ETest {
-
-    private static final String DNI = "12345678B";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "username@test.com";
-    private static final String NAME = "NAME";
-    private static final String SURNAME = "SURNAME";
-    private static final String PASSWORD = "PASSWORD";
-
     @Inject
     private SignUpService signUpService;
 
@@ -55,19 +48,11 @@ public class E2ELogInTest extends E2ETest {
 
     @Test
     public void logInUser() throws Exception {
-        SignUpData signUpData = new SignUpData()
-                .setDni(DNI)
-                .setUsername(USERNAME)
-                .setEmail(EMAIL)
-                .setName(NAME)
-                .setSurnames(SURNAME)
-                .setPassword(PASSWORD);
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
 
         Person supervisor = signUpService.createSupervisor(signUpData);
 
-        LogInData payload = new LogInData()
-                .setEmail(EMAIL)
-                .setPassword(PASSWORD);
+        LogInData payload = FixtureFactory.generateLogInData();
 
         given()
                 .body(payload)

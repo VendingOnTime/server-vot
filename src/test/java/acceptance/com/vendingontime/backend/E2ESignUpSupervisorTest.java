@@ -8,6 +8,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
@@ -36,27 +37,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * specific language governing permissions and limitations under the License.
  */
 public class E2ESignUpSupervisorTest extends E2ETest {
-
-    private static final String DNI = "12345678B";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "username@test.com";
-    private static final String NAME = "NAME";
-    private static final String SURNAME = "SURNAME";
-    private static final String PASSWORD = "PASSWORD";
-
     @Inject
-    PersonRepository repository;
+    private PersonRepository repository;
 
     @Test
     public void createSupervisor() throws Exception {
-
-        SignUpData payload = new SignUpData()
-                .setDni(DNI)
-                .setUsername(USERNAME)
-                .setEmail(EMAIL)
-                .setName(NAME)
-                .setSurnames(SURNAME)
-                .setPassword(PASSWORD);
+        SignUpData payload = FixtureFactory.generateSignUpData();
 
         given()
                 .body(payload)
@@ -65,16 +51,16 @@ public class E2ESignUpSupervisorTest extends E2ETest {
         .then()
                 .statusCode(HttpResponse.StatusCode.CREATED)
                 .body("success", is(true))
-                .body("data.dni", equalTo(DNI))
-                .body("data.username", equalTo(USERNAME))
-                .body("data.email", equalTo(EMAIL))
-                .body("data.name", equalTo(NAME))
-                .body("data.surnames", equalTo(SURNAME))
+                .body("data.dni", equalTo(payload.getDni()))
+                .body("data.username", equalTo(payload.getUsername()))
+                .body("data.email", equalTo(payload.getEmail()))
+                .body("data.name", equalTo(payload.getName()))
+                .body("data.surnames", equalTo(payload.getSurnames()))
                 .body("data.password", nullValue())
                 .body("data.role", equalTo(PersonRole.SUPERVISOR.toString().toLowerCase()))
                 .body("error", nullValue());
 
-        Optional<Person> byEmail = repository.findByEmail(EMAIL);
+        Optional<Person> byEmail = repository.findByEmail(payload.getEmail());
         repository.delete(byEmail.get().getId());
     }
 
