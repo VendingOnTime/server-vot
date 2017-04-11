@@ -110,7 +110,6 @@ public class SignUpServiceTest {
     public void createSupervisor_withNoRole_returnsSupervisor() throws Exception {
         payload.setRole(null);
         Person supervisor = signUp.createSupervisor(payload);
-        System.out.println(supervisor.getCompany());
 
         verify(repository, times(1)).create(any());
         verify(companyRepository, times(1)).create(any());
