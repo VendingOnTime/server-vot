@@ -65,7 +65,8 @@ public class AddMachineServiceTest extends IntegrationTest {
         company.setOwner(savedOwner);
         companyRepository.update(company);
 
-        Machine machine = service.createMachine(addMachineData.setRequester(savedOwner));
+        addMachineData.setRequester(savedOwner);
+        Machine machine = service.createMachine(addMachineData);
 
         assertNotNull(machine);
 

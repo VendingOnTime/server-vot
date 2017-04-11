@@ -4,9 +4,6 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
 import com.vendingontime.backend.services.AbstractService;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
-import com.vendingontime.backend.repositories.JPAMachineRepository;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
@@ -51,8 +48,8 @@ public class AddMachineServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        repository = mock(JPAMachineRepository.class);
-        companyRepository = mock(JPACompanyRepository.class);
+        repository = mock(MachineRepository.class);
+        companyRepository = mock(CompanyRepository.class);
 
         addMachineService = new AddMachineService(repository, companyRepository);
 
