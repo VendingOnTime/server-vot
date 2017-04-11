@@ -29,7 +29,7 @@ import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_L
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class LogInService {
+public class LogInService extends AbstractService {
     private PersonRepository repository;
     private PasswordEncryptor passwordEncryptor;
     private TokenGenerator tokenGenerator;
