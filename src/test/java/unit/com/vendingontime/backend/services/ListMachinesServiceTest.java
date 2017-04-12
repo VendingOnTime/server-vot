@@ -10,6 +10,7 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,11 +51,9 @@ public class ListMachinesServiceTest {
         repository = mock(MachineRepository.class);
         listMachinesService = new ListMachinesService(repository);
 
-        owner = new Person().setRole(PersonRole.SUPERVISOR);
-        customer = new Person().setRole(PersonRole.CUSTOMER);
-
-        company = new Company();
-        company.setOwner(owner);
+        company = FixtureFactory.generateCompanyWithOwner();
+        owner = company.getOwner();
+        customer = FixtureFactory.generateCustomer();
 
     }
 

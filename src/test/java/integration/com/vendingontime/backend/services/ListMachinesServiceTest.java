@@ -4,13 +4,13 @@ import com.google.inject.Inject;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.ListMachinesService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,23 +52,22 @@ public class ListMachinesServiceTest extends IntegrationTest {
 
     @Test
     public void listFor_owner() throws Exception {
-        Person owner = personRepository.create(new Person().setRole(PersonRole.SUPERVISOR));
+        Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
+        Machine machine1 = machineRepository.create(FixtureFactory.generateMachine());
+        Machine machine2 = machineRepository.create(FixtureFactory.generateMachine());
 
-        Company company = companyRepository.create(new Company());
-        Machine machine1 = machineRepository.create(new Machine());
-        Machine machine2 = machineRepository.create(new Machine());
-
-        Person savedOwner = personRepository.findById(owner.getId()).get();
+        Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
         Machine savedMachine1 = machineRepository.findById(machine1.getId()).get();
         Machine savedMachine2 = machineRepository.findById(machine2.getId()).get();
 
-        company.setOwner(savedOwner);
         company.addMachine(savedMachine1);
         company.addMachine(savedMachine2);
         companyRepository.update(company);
 
         List<Machine> machines = service.listFor(savedOwner);
         assertThat(new HashSet<>(machines), equalTo(company.getMachines()));
+
+        personRepository.delete(savedOwner.getId());
     }
 
 }

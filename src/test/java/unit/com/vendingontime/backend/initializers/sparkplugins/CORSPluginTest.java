@@ -4,10 +4,8 @@ import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import spark.Filter;
 import spark.Request;
 import spark.Response;
-import spark.Service;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
