@@ -10,7 +10,6 @@ import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.JWTTokenGenerator;
-import com.vendingontime.backend.services.utils.TokenGenerator;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
@@ -55,9 +54,6 @@ public class LogInRouterTest extends IntegrationTest {
     @Inject
     private PersonRepository repository;
 
-    @Inject
-    private TokenGenerator tokenGenerator;
-
     private ObjectMapper mapper;
     private SignUpData signUpData;
     private LogInData logInData;
@@ -77,6 +73,7 @@ public class LogInRouterTest extends IntegrationTest {
 
     @After
     public void tearDown() throws Exception {
+        mapper = null;
         signUpData = null;
         logInData = null;
         stringifiedLogInData = null;

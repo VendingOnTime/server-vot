@@ -3,7 +3,6 @@ package unit.com.vendingontime.backend.routes;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.routes.ListMachinesRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.ListMachinesService;
@@ -16,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /*

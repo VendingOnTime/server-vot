@@ -14,7 +14,6 @@ import testutils.FixtureFactory;
 
 import static com.vendingontime.backend.models.bodymodels.person.LogInData.BAD_LOGIN;
 import static com.vendingontime.backend.routes.LogInRouter.MALFORMED_JSON;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -39,9 +38,6 @@ import static org.mockito.Mockito.verify;
  */
 
 public class LogInRouterTest {
-    private static final String EMAIL = "username@test.com";
-    private static final String PASSWORD = "PASSWORD";
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private ServiceResponse serviceResponse;

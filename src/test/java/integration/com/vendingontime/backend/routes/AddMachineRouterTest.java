@@ -3,25 +3,19 @@ package integration.com.vendingontime.backend.routes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
-import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.AddMachineRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import spark.Request;
 import spark.Response;
 import testutils.FixtureFactory;
 
 import javax.inject.Inject;
-
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -57,13 +51,8 @@ public class AddMachineRouterTest extends IntegrationTest {
 
     @Test
     public void addMachine() throws Exception {
-        Person owner = personRepository.create(FixtureFactory.generateSupervisor());
-        Company company = companyRepository.create(FixtureFactory.generateCompany());
-
-        Person savedOwner = personRepository.findByDni(owner.getDni()).get();
-
-        company.setOwner(savedOwner);
-        companyRepository.update(company);
+        Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
+        Person savedOwner = personRepository.findByDni(company.getOwner().getDni()).get();
 
         ObjectMapper mapper = new ObjectMapper();
         AddMachineData machineData = FixtureFactory.generateAddMachineData();

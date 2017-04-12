@@ -56,14 +56,8 @@ public class AddMachineServiceTest extends IntegrationTest {
 
     @Test
     public void createMachine() {
-        Person owner = personRepository.create(FixtureFactory.generateSupervisor());
-
-        Company company = companyRepository.create(FixtureFactory.generateCompany());
-
-        Person savedOwner = personRepository.findById(owner.getId()).get();
-
-        company.setOwner(savedOwner);
-        companyRepository.update(company);
+        Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
+        Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
 
         addMachineData.setRequester(savedOwner);
         Machine machine = service.createMachine(addMachineData);

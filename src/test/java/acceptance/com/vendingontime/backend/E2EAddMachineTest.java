@@ -20,7 +20,6 @@ package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -28,7 +27,6 @@ import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.AddMachineRouter;
-import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
@@ -42,6 +40,7 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class E2EAddMachineTest extends E2ETest {
     @Inject
@@ -78,11 +77,13 @@ public class E2EAddMachineTest extends E2ETest {
             .post(host + AddMachineRouter.V1_MACHINES)
         .then()
             .statusCode(201)
+            .body("success", is(true))
             .body("data.id", notNullValue())
             .body("data.location.name", is(payload.getMachineLocation().getName()))
             .body("data.type", is(payload.getMachineType().toValue()))
             .body("data.state", is(payload.getMachineState().toValue()))
-            .body("data.description", is(payload.getDescription()));
+            .body("data.description", is(payload.getDescription()))
+            .body("error", nullValue());
 
         List<Machine> machinesByCompany = repository.findMachinesByCompany(savedSupervisor.getCompany());
 
