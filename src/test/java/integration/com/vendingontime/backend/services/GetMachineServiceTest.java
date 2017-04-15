@@ -1,19 +1,28 @@
-package unit.com.vendingontime.backend.services;
+package integration.com.vendingontime.backend.services;
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.GetMachineService;
+import com.vendingontime.backend.services.ListMachinesService;
+import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
-import javax.crypto.Mac;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 
@@ -35,121 +44,33 @@ import static org.mockito.Mockito.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class GetMachineServiceTest {
-    private final String COMPANY_ID = "COMPANY_ID";
-    private final String OWNER_ID = "OWNER_ID";
-    private final String MACHINE_ID = "MACHINE_ID";
-
-    private MachineRepository repository;
+public class GetMachineServiceTest extends IntegrationTest {
+    @Inject
     private GetMachineService service;
 
-    private Machine machine;
-    private Person owner;
-    private Company company;
+    @Inject
+    private MachineRepository repository;
 
-    @Before
-    public void setUp() throws Exception {
-        repository = mock(MachineRepository.class);
-        service = new GetMachineService(repository);
+    @Inject
+    private PersonRepository personRepository;
 
-        company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
-        owner = company.getOwner().setId(OWNER_ID);
-        machine = FixtureFactory.generateMachine().setId(MACHINE_ID).setCompany(company);
-
-        when(repository.findById(MACHINE_ID)).thenReturn(Optional.of(machine));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        repository = null;
-        service = null;
-
-        machine = null;
-    }
+    @Inject
+    private CompanyRepository companyRepository;
 
     @Test
     public void getMachineData_forValidMachineId_andAuthorizedUser() {
-        Machine foundMachine = service.getDataFrom(MACHINE_ID, owner).get();
+        Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
+        Machine machine = repository.create(FixtureFactory.generateMachine());
 
-        verify(repository, times(1)).findById(MACHINE_ID);
-        assertEquals(machine, foundMachine);
-    }
+        Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
+        Machine savedMachine = repository.findById(machine.getId()).get();
 
-    @Test
-    public void getMachineData_forInvalidMachineId() {
-        Optional<Machine> foundMachine = service.getDataFrom("INVALID_ID", owner);
+        company.addMachine(savedMachine);
+        companyRepository.update(company);
 
-        verify(repository, times(1)).findById("INVALID_ID");
-        assertFalse(foundMachine.isPresent());
-    }
+        Machine foundMachine = service.getDataFrom(machine.getId(), savedOwner).get();
+        assertThat(savedMachine, equalTo(foundMachine));
 
-    @Test
-    public void getMachineData_forValidMachineId_andNotAuthorizedUser() {
-        Company randomCompany = FixtureFactory.generateCompanyWithOwner().setId("RANDOM_COMPANY");
-        Person randomUser = randomCompany.getOwner().setId("RANDOM_USER");
-
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, randomUser);
-
-        verify(repository, times(1)).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forNullPerson() {
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, null);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullId() {
-        Person invalidUser = FixtureFactory.generateSupervisor().setId(null);
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, invalidUser);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forPersonWithEmptyId() {
-        Person invalidUser = FixtureFactory.generateSupervisor().setId("");
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, invalidUser);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullCompany() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setCompany(null);
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, invalidUser);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullCompanyId() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setCompany(FixtureFactory.generateCompany().setId(null));
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, invalidUser);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
-    }
-
-    @Test
-    public void getMachineData_forPersonWithEmptyCompanyId() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setCompany(FixtureFactory.generateCompany().setId(""));
-        Optional<Machine> foundMachine = service.getDataFrom(MACHINE_ID, invalidUser);
-
-        verify(repository, never()).findById(MACHINE_ID);
-        assertFalse(foundMachine.isPresent());
+        personRepository.delete(savedOwner.getId());
     }
 }

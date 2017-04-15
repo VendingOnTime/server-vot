@@ -19,19 +19,38 @@ package com.vendingontime.backend.services;
  */
 
 import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
-public class ObtainMachineService extends AbstractService {
+public class GetMachineService extends AbstractService {
     private MachineRepository repository;
 
     @Inject
-    public ObtainMachineService(MachineRepository repository) {
+    public GetMachineService(MachineRepository repository) {
         this.repository = repository;
     }
 
-    public Machine getDataFrom(String machineId) {
-        return null;
+    public Optional<Machine> getDataFrom(String machineId, Person person) {
+        if (!isValidPerson(person)) return Optional.empty();
+
+        Optional<Machine> possibleMachine = repository.findById(machineId);
+        if (!possibleMachine.isPresent()) return Optional.empty();
+
+        Machine foundMachine = possibleMachine.get();
+        if (!foundMachine.getCompany().equals(person.getCompany())) return Optional.empty();
+
+        return possibleMachine;
+    }
+
+    private boolean isValidPerson(Person person) {
+        if (person == null) return false;
+        if (person.getId() == null || person.getId().isEmpty()) return false;
+        if (person.getCompany() == null) return false;
+        if (person.getCompany().getId() == null || person.getCompany().getId().isEmpty()) return false;
+
+        return true;
     }
 }
