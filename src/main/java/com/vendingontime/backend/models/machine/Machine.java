@@ -136,6 +136,7 @@ public class Machine extends AbstractEntity<Machine> {
                 ", type=" + type +
                 ", state=" + state +
                 ", description='" + description + '\'' +
-                "} " + super.toString();
+                ", company=" + company +
+                '}';
     }
 }
