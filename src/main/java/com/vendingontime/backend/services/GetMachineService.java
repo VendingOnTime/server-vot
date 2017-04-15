@@ -1,5 +1,12 @@
 package com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.repositories.MachineRepository;
+
+import javax.inject.Inject;
+import java.util.Optional;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -17,13 +24,6 @@ package com.vendingontime.backend.services;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.MachineRepository;
-
-import javax.inject.Inject;
-import java.util.Optional;
 
 public class GetMachineService extends AbstractService {
     private MachineRepository repository;

@@ -8,23 +8,12 @@ import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.GetMachineService;
-import com.vendingontime.backend.services.ListMachinesService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
-
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

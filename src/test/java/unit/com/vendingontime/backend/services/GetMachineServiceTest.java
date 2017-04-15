@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
-import javax.crypto.Mac;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -36,8 +35,6 @@ import static org.mockito.Mockito.*;
  */
 
 public class GetMachineServiceTest {
-    private final String COMPANY_ID = "COMPANY_ID";
-    private final String OWNER_ID = "OWNER_ID";
     private final String MACHINE_ID = "MACHINE_ID";
 
     private MachineRepository repository;
@@ -45,14 +42,16 @@ public class GetMachineServiceTest {
 
     private Machine machine;
     private Person owner;
-    private Company company;
 
     @Before
     public void setUp() throws Exception {
+        final String COMPANY_ID = "COMPANY_ID";
+        final String OWNER_ID = "OWNER_ID";
+
         repository = mock(MachineRepository.class);
         service = new GetMachineService(repository);
 
-        company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
+        Company company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
         owner = company.getOwner().setId(OWNER_ID);
         machine = FixtureFactory.generateMachine().setId(MACHINE_ID).setCompany(company);
 
@@ -64,6 +63,7 @@ public class GetMachineServiceTest {
         repository = null;
         service = null;
 
+        owner = null;
         machine = null;
     }
 
