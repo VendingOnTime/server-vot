@@ -3,6 +3,7 @@ package com.vendingontime.backend.services;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -34,13 +35,13 @@ public class GetMachineService extends AbstractService {
     }
 
     public Optional<Machine> getDataFrom(String machineId, Person person) {
-        if (!isValidPerson(person)) return Optional.empty();
+        if (!isValidPerson(person)) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         Optional<Machine> possibleMachine = repository.findById(machineId);
         if (!possibleMachine.isPresent()) return Optional.empty();
 
         Machine foundMachine = possibleMachine.get();
-        if (!foundMachine.getCompany().equals(person.getCompany())) return Optional.empty();
+        if (!foundMachine.getCompany().equals(person.getCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleMachine;
     }
