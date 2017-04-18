@@ -52,9 +52,9 @@ public class GetMachineRouter extends AbstractSparkRouter {
                 getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute getMachine(String idCandidate, Person person) {
+    public AppRoute getMachine(String idCandidate, Person requester) {
         try {
-            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, person);
+            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, requester);
 
             return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException ex) {
