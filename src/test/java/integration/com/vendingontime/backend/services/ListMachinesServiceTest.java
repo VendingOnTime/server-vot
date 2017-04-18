@@ -67,7 +67,9 @@ public class ListMachinesServiceTest extends IntegrationTest {
         List<Machine> machines = service.listFor(savedOwner);
         assertThat(new HashSet<>(machines), equalTo(company.getMachines()));
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
 }

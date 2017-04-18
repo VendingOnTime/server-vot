@@ -82,12 +82,8 @@ public class E2EAddMachineTest extends E2ETest {
             .body("data.description", is(payload.getDescription()))
             .body("error", nullValue());
 
-        List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine machine : machinesByCompany) {
-            repository.delete(machine.getId());
-        }
-
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        repository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

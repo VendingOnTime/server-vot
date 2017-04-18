@@ -84,12 +84,8 @@ public class E2EListMachinesTest extends E2ETest {
                 .body("data[0].description", equalTo(machine.getDescription()))
                 .body("error", nullValue());
 
-        List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine companyMachine : machinesByCompany) {
-            repository.delete(companyMachine.getId());
-        }
-
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        repository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

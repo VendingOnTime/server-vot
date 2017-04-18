@@ -78,7 +78,9 @@ public class ListMachinesRouterTest extends IntegrationTest {
         List machines = (List) restResult.getData();
         assertThat(machines.size(), is(2));
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
 }
