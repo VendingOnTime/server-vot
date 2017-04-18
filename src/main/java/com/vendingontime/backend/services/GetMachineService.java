@@ -34,23 +34,23 @@ public class GetMachineService extends AbstractService {
         this.repository = repository;
     }
 
-    public Optional<Machine> getDataFrom(String machineId, Person person) {
-        if (!isValidPerson(person)) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+    public Optional<Machine> getDataFrom(String machineId, Person requester) {
+        if (!isAuthorized(requester)) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         Optional<Machine> possibleMachine = repository.findById(machineId);
         if (!possibleMachine.isPresent()) return Optional.empty();
 
         Machine foundMachine = possibleMachine.get();
-        if (!foundMachine.getCompany().equals(person.getCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+        if (!foundMachine.getCompany().equals(requester.getCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleMachine;
     }
 
-    private boolean isValidPerson(Person person) {
-        if (person == null) return false;
-        if (person.getId() == null || person.getId().isEmpty()) return false;
-        if (person.getCompany() == null) return false;
-        if (person.getCompany().getId() == null || person.getCompany().getId().isEmpty()) return false;
+    private boolean isAuthorized(Person requester) {
+        if (requester == null) return false;
+        if (requester.getId() == null || requester.getId().isEmpty()) return false;
+        if (requester.getCompany() == null) return false;
+        if (requester.getCompany().getId() == null || requester.getCompany().getId().isEmpty()) return false;
 
         return true;
     }
