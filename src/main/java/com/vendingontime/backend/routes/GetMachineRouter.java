@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public class GetMachineRouter extends AbstractSparkRouter {
-    public static final String ID_PARAM = ":id";
     public static final String V1_MACHINES = V1 + "/machines/";
 
     private final GetMachineService service;
