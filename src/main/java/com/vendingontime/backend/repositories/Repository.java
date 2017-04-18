@@ -26,4 +26,5 @@ public interface Repository<MODEL extends AbstractEntity> {
     Optional<MODEL> findById(String id);
     Optional<MODEL> update(MODEL model);
     Optional<MODEL> delete(String id);
+    void deleteAll();
 }

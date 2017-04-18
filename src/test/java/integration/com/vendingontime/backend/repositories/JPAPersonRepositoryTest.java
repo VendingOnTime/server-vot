@@ -338,7 +338,8 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person person = repository.create(this.personOne);
         String personId = person.getId();
 
-        repository.delete(personId);
+        Optional<Person> possibleDeleted = repository.delete(personId);
+        assertTrue(possibleDeleted.isPresent());
 
         Optional<Person> possiblePerson = repository.findById(personId);
         assertFalse(possiblePerson.isPresent());
@@ -347,5 +348,16 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
     @Test(expected = NullPointerException.class)
     public void delete_null_returnsEmpty() throws Exception {
         repository.delete(null);
+    }
+
+    @Test
+    public void deleteAll() throws Exception {
+        Person person = repository.create(this.personOne);
+        String personId = person.getId();
+
+        repository.deleteAll();
+
+        Optional<Person> possiblePerson = repository.findById(personId);
+        assertFalse(possiblePerson.isPresent());
     }
 }
