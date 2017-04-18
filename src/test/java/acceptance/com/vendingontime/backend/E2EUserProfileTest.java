@@ -40,14 +40,10 @@ import static org.hamcrest.core.IsEqual.equalTo;
  */
 
 public class E2EUserProfileTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private LogInService logInService;
-
-    @Inject
-    private PersonRepository repository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private PersonRepository repository;
 
     @Test
     public void retrieveUserProfile() throws Exception {

@@ -37,21 +37,19 @@ import static org.junit.Assert.assertArrayEquals;
  * specific language governing permissions and limitations under the License.
  */
 public class JPAPersonRepositoryTest extends IntegrationTest {
-    private static final PersonRole ROLE = PersonRole.SUPERVISOR;
 
     private static final String DNI2 = "DNI2";
     private static final String USERNAME2 = "USERNAME2";
     private static final String EMAIL2 = "EMAIL2";
 
-    @Inject
-    private JPAPersonRepository repository;
+    @Inject private JPAPersonRepository repository;
 
     private Person personOne;
     private Person personTwo;
 
     @Before
     public void setUp() throws Exception {
-        SignUpData payload = FixtureFactory.generateSignUpData().setRole(ROLE);
+        SignUpData payload = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
 
         personOne = new Person(payload);
         personTwo = new Person(payload)

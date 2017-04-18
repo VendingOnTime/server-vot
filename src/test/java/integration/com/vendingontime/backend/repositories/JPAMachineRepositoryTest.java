@@ -33,11 +33,9 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 public class JPAMachineRepositoryTest extends IntegrationTest {
-    @Inject
-    private JPAMachineRepository repository;
 
-    @Inject
-    private JPACompanyRepository companyRepository;
+    @Inject private JPAMachineRepository repository;
+    @Inject private JPACompanyRepository companyRepository;
 
     private Machine machineOne;
     private Machine machineTwo;

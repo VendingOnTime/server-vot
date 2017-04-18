@@ -38,17 +38,10 @@ import static org.junit.Assert.*;
 
 public class ListMachinesServiceTest extends IntegrationTest {
 
-    @Inject
-    private ListMachinesService service;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private ListMachinesService service;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void listFor_owner() throws Exception {

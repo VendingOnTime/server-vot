@@ -44,20 +44,11 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 public class E2EAddMachineTest extends E2ETest {
 
-    @Inject
-    private SignUpService signUpService;
-
-    @Inject
-    private LogInService logInService;
-
-    @Inject
-    private MachineRepository repository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private MachineRepository repository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
     public void addMachine() {

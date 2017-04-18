@@ -42,17 +42,10 @@ import static org.mockito.Mockito.mock;
 
 public class ListMachinesRouterTest extends IntegrationTest {
 
-    @Inject
-    private ListMachinesRouter router;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private ListMachinesRouter router;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void listFor_owner() throws Exception {

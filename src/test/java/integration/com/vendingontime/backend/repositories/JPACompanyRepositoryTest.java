@@ -41,14 +41,9 @@ import static org.junit.Assert.*;
 
 public class JPACompanyRepositoryTest extends IntegrationTest {
 
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private PersonRepository personRepository;
+    @Inject private MachineRepository machineRepository;
 
     private Company company;
     private Person owner;

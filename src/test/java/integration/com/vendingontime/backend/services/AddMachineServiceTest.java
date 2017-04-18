@@ -37,6 +37,7 @@ import static org.junit.Assert.*;
  */
 
 public class AddMachineServiceTest extends IntegrationTest {
+
     @Inject private JPAMachineRepository machineRepository;
     @Inject private JPACompanyRepository companyRepository;
     @Inject private JPAPersonRepository personRepository;

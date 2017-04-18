@@ -41,17 +41,11 @@ import static org.mockito.Mockito.mock;
  */
 
 public class AddMachineRouterTest extends IntegrationTest {
-    @Inject
-    private AddMachineRouter router;
 
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private AddMachineRouter router;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void addMachine() throws Exception {
