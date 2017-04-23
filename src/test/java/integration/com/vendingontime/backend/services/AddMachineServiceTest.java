@@ -38,7 +38,7 @@ public class AddMachineServiceTest extends IntegrationTest {
 
     @Inject private AddMachineService service;
 
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private CompanyRepository companyRepository;
     @Inject private PersonRepository personRepository;
 
@@ -64,13 +64,13 @@ public class AddMachineServiceTest extends IntegrationTest {
 
         assertNotNull(machine);
 
-        Machine savedMachine = repository.findById(machine.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
         assertNotNull(savedMachine.getId());
         assertEquals(1, savedCompany.getMachines().size());
 
-        repository.delete(savedMachine.getId());
+        machineRepository.delete(savedMachine.getId());
         personRepository.delete(savedOwner.getId());
     }
 }
