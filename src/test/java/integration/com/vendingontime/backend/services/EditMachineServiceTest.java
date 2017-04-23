@@ -1,19 +1,25 @@
 package integration.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.*;
+import com.vendingontime.backend.repositories.CompanyRepository;
+import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.AddMachineService;
+import com.vendingontime.backend.services.EditMachineService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /*
@@ -34,43 +40,39 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class AddMachineServiceTest extends IntegrationTest {
+public class EditMachineServiceTest extends IntegrationTest {
 
-    @Inject private AddMachineService service;
+    @Inject private AddMachineService addMachineService;
+    @Inject private EditMachineService editMachineService;
 
     @Inject private MachineRepository repository;
     @Inject private CompanyRepository companyRepository;
     @Inject private PersonRepository personRepository;
-
-    private AddMachineData addMachineData;
-
-    @Before
-    public void setUp() throws Exception {
-        addMachineData = FixtureFactory.generateAddMachineData();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        addMachineData = null;
-    }
 
     @Test
     public void createMachine() {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
         Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
 
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
         addMachineData.setRequester(savedOwner);
-        Machine machine = service.createMachine(addMachineData);
+        Machine machine = addMachineService.createMachine(addMachineData);
 
-        assertNotNull(machine);
+        EditMachineData editMachineData = FixtureFactory.generateEditMachineDataFrom(machine);
+        editMachineData.setRequester(savedOwner);
+
+        String newDescription = "NEW_DESCRIPTION";
+        editMachineData.setDescription(newDescription);
+        Optional<Machine> possibleUpdatedMachine = editMachineService.updateMachine(editMachineData);
+
+        assertThat(possibleUpdatedMachine.isPresent(), is(true));
+        assertThat(possibleUpdatedMachine.get().getDescription(), equalTo(newDescription));
 
         Machine savedMachine = repository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
-        assertNotNull(savedMachine.getId());
-        assertEquals(1, savedCompany.getMachines().size());
-
         repository.delete(savedMachine.getId());
         personRepository.delete(savedOwner.getId());
+        companyRepository.delete(savedCompany.getId());
     }
 }

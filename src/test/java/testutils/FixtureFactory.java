@@ -119,6 +119,18 @@ public class FixtureFactory {
                 .setMachineLocation(amd.getMachineLocation());
     }
 
+    public static EditMachineData generateEditMachineDataFrom(Machine machine) {
+        EditMachineData editMachineData = new EditMachineData();
+
+        editMachineData.setId(machine.getId());
+        editMachineData.setDescription(machine.getDescription());
+        editMachineData.setMachineLocation(machine.getLocation());
+        editMachineData.setMachineState(machine.getState());
+        editMachineData.setMachineType(machine.getType());
+
+        return editMachineData;
+    }
+
     // MACHINE LOCATION METHODS
 
     private MachineLocation generateBasicLocation() {
