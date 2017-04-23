@@ -71,6 +71,7 @@ public class EditMachineServiceTest extends IntegrationTest {
         Machine savedMachine = repository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
+        // TODO: 23/4/17 Replace with deleteAll methods
         repository.delete(savedMachine.getId());
         personRepository.delete(savedOwner.getId());
         companyRepository.delete(savedCompany.getId());
