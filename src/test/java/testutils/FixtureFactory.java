@@ -19,6 +19,7 @@ package testutils;
  */
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
@@ -106,6 +107,16 @@ public class FixtureFactory {
                 .setMachineType(MachineType.COFFEE)
                 .setMachineState(MachineState.OPERATIVE)
                 .setMachineLocation(instance.generateBasicLocation());
+    }
+
+    public static EditMachineData generateEditMachineData() {
+        AddMachineData amd = generateAddMachineData();
+
+        return (EditMachineData) new EditMachineData()
+                .setDescription(amd.getDescription())
+                .setMachineType(amd.getMachineType())
+                .setMachineState(amd.getMachineState())
+                .setMachineLocation(amd.getMachineLocation());
     }
 
     // MACHINE LOCATION METHODS
