@@ -56,6 +56,7 @@ public class EditMachineRouter extends AbstractSparkRouter {
                 map((req, res) -> updateMachine(req.body(), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
+    // FIXME: 24/4/17 Should the ID be passed as a parameter too?
     public AppRoute updateMachine(String body, Person requester) {
         try {
             EditMachineData editMachineData = mapper.readValue(body, EditMachineData.class);
