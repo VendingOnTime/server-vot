@@ -35,14 +35,14 @@ public class RemoveMachineService extends AbstractService {
         this.repository = machineRepository;
     }
 
-    public boolean removeMachine(String id, Person requester) {
+    public Optional<Machine> removeMachine(String id, Person requester) {
         BusinessLogicException insufficientPermissionsException =
                 new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         if (requester == null) throw insufficientPermissionsException;
 
         Optional<Machine> machineById = repository.findById(id);
-        if (!machineById.isPresent()) return false;
+        if (!machineById.isPresent()) return machineById;
 
         Machine machine = machineById.get();
         Company requesterCompany = requester.getCompany();
@@ -50,6 +50,6 @@ public class RemoveMachineService extends AbstractService {
         if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
 
         machine.setDisabled(true);
-        return repository.update(machine).isPresent();
+        return repository.update(machine);
     }
 }

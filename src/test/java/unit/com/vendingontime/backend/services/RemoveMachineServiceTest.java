@@ -69,9 +69,9 @@ public class RemoveMachineServiceTest {
 
     @Test
     public void removeMachine() {
-        boolean removed = removeMachineService.removeMachine(machine.getId(), requester);
+        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(this.machine.getId(), requester);
 
-        assertThat(removed, is(true));
+        assertThat(possibleRemoved.isPresent(), is(true));
 
         verify(repository, times(1)).findById(this.machine.getId());
         verify(repository, times(1)).update(any());
@@ -96,9 +96,9 @@ public class RemoveMachineServiceTest {
     @Test
     public void removeMachine_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
-        boolean removed = removeMachineService.removeMachine(unknownId, requester);
+        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(unknownId, requester);
 
-        assertThat(removed, is(false));
+        assertThat(possibleRemoved.isPresent(), is(false));
 
         verify(repository, times(1)).findById(unknownId);
         verify(repository, never()).update(any());

@@ -1,5 +1,6 @@
 package com.vendingontime.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ import javax.persistence.MappedSuperclass;
 @UuidGenerator(name = "PER_ID_GEN")
 public abstract class AbstractEntity<T extends AbstractEntity> {
     @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;
-    @Column private boolean disabled;
+    @Column @JsonIgnore private boolean disabled;
 
     public String getId() {
         return id;
