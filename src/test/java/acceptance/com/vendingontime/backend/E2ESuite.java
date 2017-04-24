@@ -34,7 +34,8 @@ import spark.Spark;
         E2ELogInTest.class,
         E2EUserProfileTest.class,
         E2EAddMachineTest.class,
-        E2EListMachinesTest.class
+        E2EListMachinesTest.class,
+        E2ERemoveMachineTest.class
 })
 public class E2ESuite {
 
