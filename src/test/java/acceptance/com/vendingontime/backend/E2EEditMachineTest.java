@@ -22,6 +22,7 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.machine.MachineState;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
@@ -64,6 +65,8 @@ public class E2EEditMachineTest extends E2ETest {
 
         EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
         payload.setDescription("NEW_DESCRIPTION");
+        payload.setMachineState(MachineState.OUT_OF_SERVICE);
+        payload.setId(null);
 
         given()
                 .header("Authorization", "JWT " + token)

@@ -53,13 +53,14 @@ public class EditMachineRouter extends AbstractSparkRouter {
     public void configure(Service http) {
         protector.protect(V1_EDIT_MACHINES + ID_PARAM);
         http.put(V1_EDIT_MACHINES + ID_PARAM,
-                map((req, res) -> updateMachine(req.body(), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
+                map((req, res) -> updateMachine(req.params(ID_PARAM),
+                        req.body(), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    // FIXME: 24/4/17 Should the ID be passed as a parameter too?
-    public AppRoute updateMachine(String body, Person requester) {
+    public AppRoute updateMachine(String id, String body, Person requester) {
         try {
             EditMachineData editMachineData = mapper.readValue(body, EditMachineData.class);
+            editMachineData.setId(id);
             editMachineData.setRequester(requester);
 
             Optional<Machine> possibleMachine = service.updateMachine(editMachineData);

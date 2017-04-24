@@ -68,10 +68,11 @@ public class EditMachineRouterTest extends IntegrationTest {
 
         ObjectMapper mapper = new ObjectMapper();
         EditMachineData editMachineData = FixtureFactory.generateEditMachineDataFrom(machine);
+        editMachineData.setId(null);
         editMachineData.setDescription("NEW_DESCRIPTION");
         String stringifiedMachine = mapper.writeValueAsString(editMachineData);
 
-        AppRoute post = router.updateMachine(stringifiedMachine, savedOwner);
+        AppRoute post = router.updateMachine(machine.getId(), stringifiedMachine, savedOwner);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);

@@ -42,6 +42,9 @@ import static org.mockito.Mockito.verify;
  */
 
 public class EditMachineRouterTest {
+
+    private static final String MACHINE_ID = "MACHINE_ID";
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private EditMachineService service;
@@ -62,7 +65,6 @@ public class EditMachineRouterTest {
         router = new EditMachineRouter(serviceResponse, service, protector);
 
         payload = FixtureFactory.generateEditMachineData();
-        payload.setId("MACHINE_ID");
         machine = new Machine(payload);
         person = FixtureFactory.generateSupervisorWithCompany();
         stringifiedMachine = objectMapper.writeValueAsString(payload);
@@ -83,10 +85,10 @@ public class EditMachineRouterTest {
     public void editMachine_withValidData() {
         when(service.updateMachine(any())).thenReturn(Optional.ofNullable(machine));
 
-        router.updateMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
         verify(service, times(1))
-                .updateMachine((EditMachineData) payload.setRequester(person));
+                .updateMachine((EditMachineData) payload.setId(MACHINE_ID).setRequester(person));
         verify(serviceResponse, times(1)).ok(machine);
     }
 
@@ -95,10 +97,10 @@ public class EditMachineRouterTest {
         String[] expectedErrors = new String[]{ INVALID_MACHINE_DESCRIPTION };
 
         doThrow(new BusinessLogicException(expectedErrors))
-                .when(service).updateMachine((EditMachineData) payload.setRequester(person));
-        router.updateMachine(stringifiedMachine, person);
+                .when(service).updateMachine((EditMachineData) payload.setId(MACHINE_ID).setRequester(person));
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(service, times(1)).updateMachine(payload);
+        verify(service, times(1)).updateMachine(payload.setId(MACHINE_ID));
         verify(serviceResponse, times(1)).badRequest(expectedErrors);
     }
 
@@ -106,7 +108,7 @@ public class EditMachineRouterTest {
     public void editMachine_withNotExistingMachine_returnsNotFound() throws Exception {
         when(service.updateMachine(payload)).thenReturn(Optional.empty());
 
-        router.updateMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
         verify(serviceResponse, times(1)).notFound();
     }
@@ -115,21 +117,21 @@ public class EditMachineRouterTest {
     public void editMachine_withEmptyJSON() {
         stringifiedMachine = "";
 
-        router.updateMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(serviceResponse, never()).ok(machine);
+        verify(serviceResponse, never()).ok(any());
         verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
-        verify(service, never()).updateMachine(payload);
+        verify(service, never()).updateMachine(any());
     }
 
     @Test
     public void editMachine_withInvalidJSONField() {
         stringifiedMachine = "{\"invalid\":\"1234\"}";
 
-        router.updateMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(serviceResponse, never()).ok(machine);
+        verify(serviceResponse, never()).ok(any());
         verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
-        verify(service, never()).updateMachine(payload);
+        verify(service, never()).updateMachine(any());
     }
 }
