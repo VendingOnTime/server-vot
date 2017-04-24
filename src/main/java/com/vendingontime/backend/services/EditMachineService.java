@@ -34,7 +34,7 @@ public class EditMachineService extends AbstractService {
         this.repository = machineRepository;
     }
 
-    public Optional<Machine> updateMachine(EditMachineData machineUpdateCandidate) {
+    public Optional<Machine> updateMachine(EditMachineData machineUpdateCandidate) throws BusinessLogicException {
         BusinessLogicException insufficientPermissionsException =
                 new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 

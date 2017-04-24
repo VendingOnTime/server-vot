@@ -55,7 +55,7 @@ public class E2EEditMachineTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void addMachine() {
+    public void editMachine() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));

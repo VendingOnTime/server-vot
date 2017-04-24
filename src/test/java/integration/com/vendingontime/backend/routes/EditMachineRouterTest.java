@@ -58,12 +58,12 @@ public class EditMachineRouterTest extends IntegrationTest {
     @Inject private MachineRepository machineRepository;
 
     @Test
-    public void addMachine() throws Exception {
+    public void editMachine() throws Exception {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
-        Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
+        Person requester = personRepository.findById(company.getOwner().getId()).get();
 
         AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
-        addMachineData.setRequester(savedOwner);
+        addMachineData.setRequester(requester);
         Machine machine = addMachineService.createMachine(addMachineData);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -72,7 +72,7 @@ public class EditMachineRouterTest extends IntegrationTest {
         editMachineData.setDescription("NEW_DESCRIPTION");
         String stringifiedMachine = mapper.writeValueAsString(editMachineData);
 
-        AppRoute post = router.updateMachine(machine.getId(), stringifiedMachine, savedOwner);
+        AppRoute post = router.updateMachine(machine.getId(), stringifiedMachine, requester);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
@@ -83,7 +83,7 @@ public class EditMachineRouterTest extends IntegrationTest {
 
         // TODO: 23/4/17 Replace with deleteAll methods
         machineRepository.delete(savedMachine.getId());
-        personRepository.delete(savedOwner.getId());
+        personRepository.delete(requester.getId());
         companyRepository.delete(savedCompany.getId());
     }
 }

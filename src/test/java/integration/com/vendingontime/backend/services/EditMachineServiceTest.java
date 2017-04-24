@@ -45,12 +45,12 @@ public class EditMachineServiceTest extends IntegrationTest {
     @Inject private AddMachineService addMachineService;
     @Inject private EditMachineService editMachineService;
 
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private CompanyRepository companyRepository;
     @Inject private PersonRepository personRepository;
 
     @Test
-    public void createMachine() {
+    public void editMachine() {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
         Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
 
@@ -68,11 +68,11 @@ public class EditMachineServiceTest extends IntegrationTest {
         assertThat(possibleUpdatedMachine.isPresent(), is(true));
         assertThat(possibleUpdatedMachine.get().getDescription(), equalTo(newDescription));
 
-        Machine savedMachine = repository.findById(machine.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
         // TODO: 23/4/17 Replace with deleteAll methods
-        repository.delete(savedMachine.getId());
+        machineRepository.delete(savedMachine.getId());
         personRepository.delete(savedOwner.getId());
         companyRepository.delete(savedCompany.getId());
     }
