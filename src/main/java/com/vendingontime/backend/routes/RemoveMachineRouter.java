@@ -27,9 +27,10 @@ import com.vendingontime.backend.services.RemoveMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
-public class RemoveMachinesRouter extends AbstractSparkRouter {
+public class RemoveMachineRouter extends AbstractSparkRouter {
 
     // TODO: 24/4/17 Grab this from parent class
     private static final String ID_PARAM = ":id";
@@ -39,8 +40,9 @@ public class RemoveMachinesRouter extends AbstractSparkRouter {
     private final RemoveMachineService service;
     private final EndpointProtector protector;
 
-    public RemoveMachinesRouter(ServiceResponse serviceResponse,
-                                RemoveMachineService service, EndpointProtector protector) {
+    @Inject
+    public RemoveMachineRouter(ServiceResponse serviceResponse,
+                               RemoveMachineService service, EndpointProtector protector) {
         super(serviceResponse);
         this.service = service;
         this.protector = protector;

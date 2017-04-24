@@ -3,7 +3,7 @@ package unit.com.vendingontime.backend.routes;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.RemoveMachinesRouter;
+import com.vendingontime.backend.routes.RemoveMachineRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.RemoveMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
@@ -35,12 +35,12 @@ import static org.mockito.Mockito.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class RemoveMachinesRouterTest {
+public class RemoveMachineRouterTest {
     private static final String MACHINE_ID = "MACHINE_ID";
 
     private RemoveMachineService service;
     private ServiceResponse serviceResponse;
-    private RemoveMachinesRouter router;
+    private RemoveMachineRouter router;
     private Machine machine;
     private Person requester;
 
@@ -50,7 +50,7 @@ public class RemoveMachinesRouterTest {
         serviceResponse = mock(ServiceResponse.class);
         EndpointProtector protector = mock(EndpointProtector.class);
 
-        router = new RemoveMachinesRouter(serviceResponse, service, protector);
+        router = new RemoveMachineRouter(serviceResponse, service, protector);
 
         machine = new Machine(FixtureFactory.generateAddMachineData()).setId(MACHINE_ID);
         requester = FixtureFactory.generateSupervisorWithCompany();
