@@ -35,7 +35,7 @@ public class RemoveMachineService extends AbstractService {
         this.repository = machineRepository;
     }
 
-    public Optional<Machine> removeMachine(String id, Person requester) {
+    public Optional<Machine> removeMachine(String id, Person requester) throws BusinessLogicException {
         BusinessLogicException insufficientPermissionsException =
                 new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
