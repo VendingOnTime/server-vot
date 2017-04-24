@@ -53,7 +53,7 @@ public class E2ERemoveMachineTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void addMachine() {
+    public void removeMachine() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
