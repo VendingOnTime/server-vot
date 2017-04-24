@@ -50,7 +50,7 @@ public class RemoveMachineRouterTest extends IntegrationTest {
     @Inject private MachineRepository machineRepository;
 
     @Test
-    public void addMachine() throws Exception {
+    public void removeMachine() throws Exception {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
         Person requester = personRepository.findById(company.getOwner().getId()).get();
 
@@ -65,12 +65,12 @@ public class RemoveMachineRouterTest extends IntegrationTest {
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertTrue(restResult.getSuccess());
 
-        Machine savedMachine = machineRepository.findById(machine.getId()).get();
+//        Machine savedMachine = machineRepository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
         // TODO: 23/4/17 Replace with deleteAll methods
-        machineRepository.delete(savedMachine.getId());
+//        machineRepository.delete(savedMachine.getId());
         personRepository.delete(requester.getId());
-        companyRepository.delete(savedCompany.getId());
+//        companyRepository.delete(savedCompany.getId());
     }
 }

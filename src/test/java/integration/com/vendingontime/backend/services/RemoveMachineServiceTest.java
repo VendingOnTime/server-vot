@@ -42,12 +42,12 @@ public class RemoveMachineServiceTest extends IntegrationTest{
     @Inject private AddMachineService addMachineService;
     @Inject private RemoveMachineService removeMachineService;
 
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private CompanyRepository companyRepository;
     @Inject private PersonRepository personRepository;
 
     @Test
-    public void createMachine() {
+    public void removeMachine() {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
         Person requester = personRepository.findById(company.getOwner().getId()).get();
 
@@ -60,12 +60,12 @@ public class RemoveMachineServiceTest extends IntegrationTest{
         assertThat(possibleRemovedMachine.isPresent(), is(true));
         assertThat(possibleRemovedMachine.get().isDisabled(), is(true));
 
-        Machine savedMachine = repository.findById(machine.getId()).get();
+//        Machine savedMachine = machineRepository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
         // TODO: 24/4/17 Replace with deleteAll methods
-        repository.delete(savedMachine.getId());
+//        machineRepository.delete(savedMachine.getId());
         personRepository.delete(requester.getId());
-        companyRepository.delete(savedCompany.getId());
+//        companyRepository.delete(savedCompany.getId());
     }
 }
