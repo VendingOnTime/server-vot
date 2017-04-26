@@ -5,6 +5,7 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
+import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.AddMachineRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
@@ -40,14 +41,11 @@ import static org.mockito.Mockito.mock;
  */
 
 public class AddMachineRouterTest extends IntegrationTest {
-    @Inject
-    private AddMachineRouter router;
 
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private AddMachineRouter router;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void addMachine() throws Exception {
@@ -64,7 +62,9 @@ public class AddMachineRouterTest extends IntegrationTest {
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertTrue(restResult.getSuccess());
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
 }

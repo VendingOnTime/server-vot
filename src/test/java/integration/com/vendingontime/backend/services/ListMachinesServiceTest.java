@@ -38,17 +38,10 @@ import static org.junit.Assert.*;
 
 public class ListMachinesServiceTest extends IntegrationTest {
 
-    @Inject
-    private ListMachinesService service;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private ListMachinesService service;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void listFor_owner() throws Exception {
@@ -67,7 +60,9 @@ public class ListMachinesServiceTest extends IntegrationTest {
         List<Machine> machines = service.listFor(savedOwner);
         assertThat(new HashSet<>(machines), equalTo(company.getMachines()));
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
 }
