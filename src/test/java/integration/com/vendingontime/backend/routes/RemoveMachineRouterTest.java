@@ -45,9 +45,9 @@ public class RemoveMachineRouterTest extends IntegrationTest {
 
     @Inject private AddMachineService addMachineService;
 
+    @Inject private MachineRepository machineRepository;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
-    @Inject private MachineRepository machineRepository;
 
     @Test
     public void removeMachine() throws Exception {
@@ -65,12 +65,8 @@ public class RemoveMachineRouterTest extends IntegrationTest {
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertTrue(restResult.getSuccess());
 
-//        Machine savedMachine = machineRepository.findById(machine.getId()).get();
-        Company savedCompany = companyRepository.findById(company.getId()).get();
-
-        // TODO: 23/4/17 Replace with deleteAll methods
-//        machineRepository.delete(savedMachine.getId());
-        personRepository.delete(requester.getId());
-//        companyRepository.delete(savedCompany.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

@@ -33,7 +33,7 @@ public class CORSPlugin implements SparkPlugin {
     // FIXME: 30/3/17 Make this more restrictive
     private static final String ORIGIN = "*";
     private static final String METHODS = "GET, POST, PUT, DELETE";
-    private static final String HEADERS = "Origin, X-Requested-With, Content-Type, Accept";
+    private static final String HEADERS = "Origin, X-Requested-With, Content-Type, Accept, Authorization";
 
     @Override
     public void enable(Service http) {

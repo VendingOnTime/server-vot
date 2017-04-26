@@ -60,12 +60,8 @@ public class RemoveMachineServiceTest extends IntegrationTest{
         assertThat(possibleRemovedMachine.isPresent(), is(true));
         assertThat(possibleRemovedMachine.get().isDisabled(), is(true));
 
-//        Machine savedMachine = machineRepository.findById(machine.getId()).get();
-        Company savedCompany = companyRepository.findById(company.getId()).get();
-
-        // TODO: 24/4/17 Replace with deleteAll methods
-//        machineRepository.delete(savedMachine.getId());
-        personRepository.delete(requester.getId());
-//        companyRepository.delete(savedCompany.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

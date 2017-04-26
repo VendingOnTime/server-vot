@@ -52,10 +52,10 @@ public class AddMachineRouter extends AbstractSparkRouter {
         http.post(V1_MACHINES, map((req, res) -> addMachine(req.body(), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute addMachine(String body, Person person) {
+    public AppRoute addMachine(String body, Person requester) {
         try {
             AddMachineData machineCandidate = mapper.readValue(body, AddMachineData.class);
-            machineCandidate.setRequester(person);
+            machineCandidate.setRequester(requester);
 
             return serviceResponse.created(service.createMachine(machineCandidate));
         } catch (BusinessLogicException e) {

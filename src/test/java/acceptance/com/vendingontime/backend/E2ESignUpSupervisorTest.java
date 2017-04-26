@@ -37,8 +37,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * specific language governing permissions and limitations under the License.
  */
 public class E2ESignUpSupervisorTest extends E2ETest {
-    @Inject
-    private PersonRepository repository;
+
+    @Inject private PersonRepository repository;
 
     @Test
     public void createSupervisor() throws Exception {

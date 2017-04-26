@@ -37,14 +37,10 @@ import static org.junit.Assert.*;
  */
 
 public class LogInServiceTest extends IntegrationTest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private LogInService logInService;
-
-    @Inject
-    private PersonRepository repository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private PersonRepository repository;
 
     private SignUpData signUpData;
     private LogInData logInData;

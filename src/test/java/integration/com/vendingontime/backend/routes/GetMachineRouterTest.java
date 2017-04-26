@@ -1,14 +1,13 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.ListMachinesRouter;
+import com.vendingontime.backend.routes.GetMachineRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
@@ -16,11 +15,12 @@ import spark.Request;
 import spark.Response;
 import testutils.FixtureFactory;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -40,36 +40,34 @@ import static org.mockito.Mockito.mock;
  * specific language governing permissions and limitations under the License.
  */
 
-public class ListMachinesRouterTest extends IntegrationTest {
+public class GetMachineRouterTest extends IntegrationTest {
 
-    @Inject private ListMachinesRouter router;
+    @Inject private GetMachineRouter router;
+
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
     @Inject private MachineRepository machineRepository;
 
     @Test
-    public void listFor_owner() throws Exception {
+    public void getMachine() throws Exception {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
-        Machine machine1 = machineRepository.create(FixtureFactory.generateMachine());
-        Machine machine2 = machineRepository.create(FixtureFactory.generateMachine());
+        Machine machine = machineRepository.create(FixtureFactory.generateMachine());
 
         Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
-        Machine savedMachine1 = machineRepository.findById(machine1.getId()).get();
-        Machine savedMachine2 = machineRepository.findById(machine2.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
 
-        company.addMachine(savedMachine1);
-        company.addMachine(savedMachine2);
+        company.addMachine(savedMachine);
         companyRepository.update(company);
 
-        String result = (String) router.listFor(savedOwner)
+        String result = (String) router.getMachine(savedMachine.getId(), savedOwner)
                 .handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertThat(restResult.getSuccess(), is(true));
 
-        List machines = (List) restResult.getData();
-        assertThat(machines.size(), is(2));
+        //TODO Change with solution to casting problem
+        assertNotNull(restResult.getData());
 
         machineRepository.deleteAll();
         personRepository.deleteAll();

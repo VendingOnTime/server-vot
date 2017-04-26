@@ -1,4 +1,5 @@
 package com.vendingontime.backend.routes;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -23,23 +24,22 @@ import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.RemoveMachineService;
+import com.vendingontime.backend.services.GetMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class RemoveMachineRouter extends AbstractSparkRouter {
+public class GetMachineRouter extends AbstractSparkRouter {
+    public static final String V1_MACHINES = V1 + "/machines/";
 
-    public static final String V1_REMOVE_MACHINE = V1 + "/machines/";
-
-    private final RemoveMachineService service;
+    private final GetMachineService service;
     private final EndpointProtector protector;
 
     @Inject
-    public RemoveMachineRouter(ServiceResponse serviceResponse,
-                               RemoveMachineService service, EndpointProtector protector) {
+    public GetMachineRouter(ServiceResponse serviceResponse,
+                               GetMachineService service, EndpointProtector protector) {
         super(serviceResponse);
         this.service = service;
         this.protector = protector;
@@ -47,17 +47,18 @@ public class RemoveMachineRouter extends AbstractSparkRouter {
 
     @Override
     public void configure(Service http) {
-        protector.protect(V1_REMOVE_MACHINE + ID_PARAM);
-        http.delete(V1_REMOVE_MACHINE + ID_PARAM, map((req, res) ->
-                removeMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
+        protector.protect(V1_MACHINES + ID_PARAM);
+        http.get(V1_MACHINES + ID_PARAM, map((req, res) ->
+                getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute removeMachine(String id, Person requester) {
+    public AppRoute getMachine(String idCandidate, Person requester) {
         try {
-            Optional<Machine> possibleRemovedMachine = service.removeMachine(id, requester);
-            return possibleRemovedMachine.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
-        } catch (BusinessLogicException e) {
-            return serviceResponse.badRequest(e.getCauses());
+            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, requester);
+
+            return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
+        } catch (BusinessLogicException ex) {
+            return serviceResponse.badRequest(ex.getCauses());
         }
     }
 }

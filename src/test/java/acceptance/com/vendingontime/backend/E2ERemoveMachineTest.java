@@ -78,13 +78,8 @@ public class E2ERemoveMachineTest extends E2ETest {
         Optional<Machine> byId = machineRepository.findById(machine.getId());
         assertThat(byId.isPresent(), is(false));
 
-        // TODO: 24/4/17 Replace with repositories deleteAll
-        List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine savedMachine : machinesByCompany) {
-            machineRepository.delete(savedMachine.getId());
-        }
-
-        personRepository.delete(supervisor.getId());
-//        companyRepository.delete(supervisor.getCompany().getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }
