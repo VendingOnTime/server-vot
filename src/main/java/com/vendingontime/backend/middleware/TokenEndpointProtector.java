@@ -59,6 +59,9 @@ public class TokenEndpointProtector implements EndpointProtector, SparkMiddlewar
     public void configure(Service service) {
         if (endpointUri == null) throw new IllegalStateException("Endpoint must call protect first");
         service.before(endpointUri, (request, response) -> {
+            if (request.requestMethod().equals("OPTIONS")) {
+                return;
+            }
             if (!fillRequestWithPersonIfAuthorized(request)) {
                 service.halt(HttpResponse.StatusCode.UNAUTHORIZED, "Unauthorized");
             }
