@@ -62,6 +62,7 @@ public class RemoveMachineRouterTest {
         serviceResponse = null;
         router = null;
         machine = null;
+        requester = null;
     }
 
     @Test
