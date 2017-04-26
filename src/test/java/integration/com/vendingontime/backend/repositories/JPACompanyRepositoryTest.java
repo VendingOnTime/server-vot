@@ -41,14 +41,9 @@ import static org.junit.Assert.*;
 
 public class JPACompanyRepositoryTest extends IntegrationTest {
 
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private PersonRepository personRepository;
+    @Inject private MachineRepository machineRepository;
 
     private Company company;
     private Person owner;
@@ -171,5 +166,16 @@ public class JPACompanyRepositoryTest extends IntegrationTest {
     @Test(expected = NullPointerException.class)
     public void delete_withNull_returnsException() throws Exception {
         companyRepository.delete(null);
+    }
+
+    @Test
+    public void deleteAll() throws Exception {
+        Company company = companyRepository.create(this.company);
+        String companyId = company.getId();
+
+        companyRepository.deleteAll();
+
+        Optional<Company> byId = companyRepository.findById(companyId);
+        assertThat(byId.isPresent(), is(false));
     }
 }

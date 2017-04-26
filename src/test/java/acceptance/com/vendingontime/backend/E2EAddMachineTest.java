@@ -44,20 +44,11 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 public class E2EAddMachineTest extends E2ETest {
 
-    @Inject
-    private SignUpService signUpService;
-
-    @Inject
-    private LogInService logInService;
-
-    @Inject
-    private MachineRepository repository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private MachineRepository repository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
     public void addMachine() {
@@ -82,12 +73,8 @@ public class E2EAddMachineTest extends E2ETest {
             .body("data.description", is(payload.getDescription()))
             .body("error", nullValue());
 
-        List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine machine : machinesByCompany) {
-            repository.delete(machine.getId());
-        }
-
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        repository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

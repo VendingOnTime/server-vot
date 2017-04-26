@@ -41,17 +41,12 @@ import static org.mockito.Mockito.mock;
  */
 
 public class GetMachineRouterTest extends IntegrationTest {
-    @Inject
-    private GetMachineRouter router;
 
-    @Inject
-    private PersonRepository personRepository;
+    @Inject private GetMachineRouter router;
 
-    @Inject
-    private CompanyRepository companyRepository;
-
-    @Inject
-    private MachineRepository machineRepository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
 
     @Test
     public void getMachine() throws Exception {
@@ -74,7 +69,9 @@ public class GetMachineRouterTest extends IntegrationTest {
         //TODO Change with solution to casting problem
         assertNotNull(restResult.getData());
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
 }

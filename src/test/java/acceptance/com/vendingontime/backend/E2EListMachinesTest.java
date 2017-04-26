@@ -42,23 +42,13 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.nullValue;
 
 public class E2EListMachinesTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private LogInService logInService;
-
-    @Inject
-    private AddMachineService addMachineService;
-
-    @Inject
-    private MachineRepository repository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private AddMachineService addMachineService;
+    @Inject private MachineRepository repository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
     public void listMachine() {
@@ -84,12 +74,8 @@ public class E2EListMachinesTest extends E2ETest {
                 .body("data[0].description", equalTo(machine.getDescription()))
                 .body("error", nullValue());
 
-        List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine companyMachine : machinesByCompany) {
-            repository.delete(companyMachine.getId());
-        }
-
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        repository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

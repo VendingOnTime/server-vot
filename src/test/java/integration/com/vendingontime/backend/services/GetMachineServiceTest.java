@@ -34,25 +34,20 @@ import static org.junit.Assert.assertThat;
  */
 
 public class GetMachineServiceTest extends IntegrationTest {
-    @Inject
-    private GetMachineService service;
 
-    @Inject
-    private MachineRepository repository;
+    @Inject private GetMachineService service;
 
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
     public void getMachineData_forValidMachineId_andAuthorizedUser() {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
-        Machine machine = repository.create(FixtureFactory.generateMachine());
+        Machine machine = machineRepository.create(FixtureFactory.generateMachine());
 
         Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
-        Machine savedMachine = repository.findById(machine.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
 
         company.addMachine(savedMachine);
         companyRepository.update(company);
@@ -60,6 +55,8 @@ public class GetMachineServiceTest extends IntegrationTest {
         Machine foundMachine = service.getDataFrom(machine.getId(), savedOwner).get();
         assertThat(savedMachine, equalTo(foundMachine));
 
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

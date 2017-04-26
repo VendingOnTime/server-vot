@@ -44,23 +44,14 @@ import static org.hamcrest.core.IsNull.nullValue;
  */
 
 public class E2EGetMachineTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private LogInService logInService;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInService logInService;
+    @Inject private AddMachineService addMachineService;
 
-    @Inject
-    private AddMachineService addMachineService;
-
-    @Inject
-    private MachineRepository repository;
-
-    @Inject
-    private PersonRepository personRepository;
-
-    @Inject
-    private CompanyRepository companyRepository;
+    @Inject private MachineRepository machineRepository;
+    @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
     public void getMachine() {
@@ -72,7 +63,7 @@ public class E2EGetMachineTest extends E2ETest {
         addMachineData.setRequester(supervisor);
         final Machine machine = addMachineService.createMachine(addMachineData);
 
-        final List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
         final String savedMachineId = machinesByCompany.get(0).getId();
 
         given()
@@ -89,11 +80,8 @@ public class E2EGetMachineTest extends E2ETest {
             .body("data.description", equalTo(machine.getDescription()))
             .body("error", nullValue());
 
-        for (Machine foundMachine : machinesByCompany) {
-            repository.delete(foundMachine.getId());
-        }
-
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

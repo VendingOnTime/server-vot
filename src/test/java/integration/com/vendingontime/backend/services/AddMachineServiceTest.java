@@ -37,7 +37,8 @@ import static org.junit.Assert.*;
  */
 
 public class AddMachineServiceTest extends IntegrationTest {
-    @Inject private JPAMachineRepository repository;
+
+    @Inject private JPAMachineRepository machineRepository;
     @Inject private JPACompanyRepository companyRepository;
     @Inject private JPAPersonRepository personRepository;
     @Inject private AddMachineService service;
@@ -64,13 +65,14 @@ public class AddMachineServiceTest extends IntegrationTest {
 
         assertNotNull(machine);
 
-        Machine savedMachine = repository.findById(machine.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
         Company savedCompany = companyRepository.findById(company.getId()).get();
 
         assertNotNull(savedMachine.getId());
         assertEquals(1, savedCompany.getMachines().size());
 
-        repository.delete(savedMachine.getId());
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

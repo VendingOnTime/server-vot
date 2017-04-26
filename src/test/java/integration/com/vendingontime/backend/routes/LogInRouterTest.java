@@ -45,14 +45,10 @@ import static org.mockito.Mockito.mock;
  */
 
 public class LogInRouterTest extends IntegrationTest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private LogInRouter logInRouter;
-
-    @Inject
-    private PersonRepository repository;
+    @Inject private SignUpService signUpService;
+    @Inject private LogInRouter logInRouter;
+    @Inject private PersonRepository repository;
 
     private ObjectMapper mapper;
     private SignUpData signUpData;
