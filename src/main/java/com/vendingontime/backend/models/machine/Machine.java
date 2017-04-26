@@ -2,6 +2,7 @@ package com.vendingontime.backend.models.machine;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
@@ -50,6 +51,11 @@ public class Machine extends AbstractEntity<Machine> {
         this.description = addMachineData.getDescription();
         this.type = addMachineData.getMachineType();
         this.state = addMachineData.getMachineState();
+    }
+
+    public Machine(EditMachineData editMachineData) {
+        this((AddMachineData) editMachineData);
+        this.setId(editMachineData.getId());
     }
 
     public void update(Machine machine) {

@@ -148,7 +148,7 @@ public class AddMachineData implements Validable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AddMachineData)) return false;
 
         AddMachineData that = (AddMachineData) o;
 
@@ -168,7 +168,6 @@ public class AddMachineData implements Validable {
         result = 31 * result + (getMachineState() != null ? getMachineState().hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getRequester() != null ? getRequester().hashCode() : 0);
-
         return result;
     }
 

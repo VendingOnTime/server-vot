@@ -2,22 +2,26 @@ package unit.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.middleware.EndpointProtector;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.AddMachineRouter;
+import com.vendingontime.backend.routes.EditMachineRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.AddMachineService;
+import com.vendingontime.backend.services.EditMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import java.util.Optional;
+
 import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_MACHINE_DESCRIPTION;
 import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -37,27 +41,30 @@ import static org.mockito.Mockito.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class AddMachineRouterTest {
+public class EditMachineRouterTest {
+
+    private static final String MACHINE_ID = "MACHINE_ID";
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private AddMachineService service;
+    private EditMachineService service;
     private ServiceResponse serviceResponse;
     private EndpointProtector protector;
-    private AddMachineRouter router;
-    private AddMachineData payload;
+    private EditMachineRouter router;
+    private EditMachineData payload;
     private Machine machine;
     private Person person;
     private String stringifiedMachine;
 
     @Before
     public void setUp() throws Exception {
-        service = mock(AddMachineService.class);
+        service = mock(EditMachineService.class);
         serviceResponse = mock(ServiceResponse.class);
         protector = mock(EndpointProtector.class);
 
-        router = new AddMachineRouter(serviceResponse, service, protector);
+        router = new EditMachineRouter(serviceResponse, service, protector);
 
-        payload = FixtureFactory.generateAddMachineData();
+        payload = FixtureFactory.generateEditMachineData();
         machine = new Machine(payload);
         person = FixtureFactory.generateSupervisorWithCompany();
         stringifiedMachine = objectMapper.writeValueAsString(payload);
@@ -71,50 +78,61 @@ public class AddMachineRouterTest {
         router = null;
         payload = null;
         machine = null;
+        person = null;
         stringifiedMachine = null;
     }
 
     @Test
-    public void addMachine_withValidData() {
-        when(service.createMachine(any())).thenReturn(machine);
+    public void editMachine_withValidData() {
+        when(service.updateMachine(any())).thenReturn(Optional.ofNullable(machine));
 
-        router.addMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(serviceResponse, times(1)).created(machine);
-        verify(service, times(1)).createMachine(payload.setRequester(person));
+        verify(service, times(1))
+                .updateMachine((EditMachineData) payload.setId(MACHINE_ID).setRequester(person));
+        verify(serviceResponse, times(1)).ok(machine);
     }
 
     @Test
-    public void addMachine_withInvalidData() {
+    public void editMachine_withInvalidData() {
         String[] expectedErrors = new String[]{ INVALID_MACHINE_DESCRIPTION };
 
         doThrow(new BusinessLogicException(expectedErrors))
-                .when(service).createMachine(payload.setRequester(person));
-        router.addMachine(stringifiedMachine, person);
+                .when(service).updateMachine((EditMachineData) payload.setId(MACHINE_ID).setRequester(person));
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(service, times(1)).createMachine(payload);
+        verify(service, times(1)).updateMachine(payload.setId(MACHINE_ID));
         verify(serviceResponse, times(1)).badRequest(expectedErrors);
     }
 
     @Test
-    public void addMachine_withEmptyJSON() {
-        stringifiedMachine = "";
+    public void editMachine_withNotExistingMachine_returnsNotFound() throws Exception {
+        when(service.updateMachine(payload)).thenReturn(Optional.empty());
 
-        router.addMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(serviceResponse, never()).created(machine);
-        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
-        verify(service, never()).createMachine(payload);
+        verify(serviceResponse, times(1)).notFound();
     }
 
     @Test
-    public void addMachine_withInvalidJSONField() {
-        stringifiedMachine = "{\"id\":\"1234\"}";
+    public void editMachine_withEmptyJSON() {
+        stringifiedMachine = "";
 
-        router.addMachine(stringifiedMachine, person);
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
 
-        verify(serviceResponse, never()).created(machine);
+        verify(serviceResponse, never()).ok(any());
         verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
-        verify(service, never()).createMachine(payload);
+        verify(service, never()).updateMachine(any());
+    }
+
+    @Test
+    public void editMachine_withInvalidJSONField() {
+        stringifiedMachine = "{\"invalid\":\"1234\"}";
+
+        router.updateMachine(MACHINE_ID, stringifiedMachine, person);
+
+        verify(serviceResponse, never()).ok(any());
+        verify(serviceResponse, times(1)).badRequest(MALFORMED_JSON);
+        verify(service, never()).updateMachine(any());
     }
 }
