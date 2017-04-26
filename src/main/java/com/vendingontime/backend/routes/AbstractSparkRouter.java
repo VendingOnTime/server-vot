@@ -26,7 +26,10 @@ import spark.Route;
 
 public abstract class AbstractSparkRouter implements SparkRouter {
     public final static String MALFORMED_JSON = "MALFORMED_JSON";
+
     protected final static String V1 = "/api-v1";
+
+    protected static final String ID_PARAM = ":id";
 
     protected final ServiceResponse serviceResponse;
     protected final ObjectMapper mapper;

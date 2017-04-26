@@ -1,4 +1,5 @@
 package com.vendingontime.backend.routes;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -17,26 +18,28 @@ package com.vendingontime.backend.routes;
  * specific language governing permissions and limitations under the License.
  */
 
-import com.google.inject.Inject;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.ListMachinesService;
+import com.vendingontime.backend.services.GetMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
-public class ListMachinesRouter extends AbstractSparkRouter {
+import javax.inject.Inject;
+import java.util.Optional;
 
-    public static final String V1_MACHINES = V1 + "/machines";
+public class GetMachineRouter extends AbstractSparkRouter {
+    public static final String V1_MACHINES = V1 + "/machines/";
 
+    private final GetMachineService service;
     private final EndpointProtector protector;
-    private final ListMachinesService service;
 
     @Inject
-    public ListMachinesRouter(ServiceResponse serviceResponse,
-                              ListMachinesService service, EndpointProtector protector) {
+    public GetMachineRouter(ServiceResponse serviceResponse,
+                               GetMachineService service, EndpointProtector protector) {
         super(serviceResponse);
         this.service = service;
         this.protector = protector;
@@ -44,15 +47,18 @@ public class ListMachinesRouter extends AbstractSparkRouter {
 
     @Override
     public void configure(Service http) {
-        protector.protect(V1_MACHINES);
-        http.get(V1_MACHINES, map((req, res) -> listFor(req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
+        protector.protect(V1_MACHINES + ID_PARAM);
+        http.get(V1_MACHINES + ID_PARAM, map((req, res) ->
+                getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute listFor(Person requester) {
+    public AppRoute getMachine(String idCandidate, Person requester) {
         try {
-            return serviceResponse.ok(service.listFor(requester));
-        } catch (BusinessLogicException e) {
-            return serviceResponse.badRequest(e.getCauses());
+            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, requester);
+
+            return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
+        } catch (BusinessLogicException ex) {
+            return serviceResponse.badRequest(ex.getCauses());
         }
     }
 }
