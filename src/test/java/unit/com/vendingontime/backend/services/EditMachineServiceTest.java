@@ -69,6 +69,7 @@ public class EditMachineServiceTest {
         repository = null;
         editMachineService = null;
         editMachineData = null;
+        machine = null;
     }
 
     @Test

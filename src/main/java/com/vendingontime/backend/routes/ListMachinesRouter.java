@@ -48,9 +48,9 @@ public class ListMachinesRouter extends AbstractSparkRouter {
         http.get(V1_MACHINES, map((req, res) -> listFor(req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute listFor(Person person) {
+    public AppRoute listFor(Person requester) {
         try {
-            return serviceResponse.ok(service.listFor(person));
+            return serviceResponse.ok(service.listFor(requester));
         } catch (BusinessLogicException e) {
             return serviceResponse.badRequest(e.getCauses());
         }

@@ -1,4 +1,5 @@
 package com.vendingontime.backend.routes;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -19,54 +20,45 @@ package com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.EditMachineService;
+import com.vendingontime.backend.services.GetMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Optional;
 
-public class EditMachineRouter extends AbstractSparkRouter {
+public class GetMachineRouter extends AbstractSparkRouter {
+    public static final String V1_MACHINES = V1 + "/machines/";
 
-    public static final String V1_EDIT_MACHINES = V1 + "/machines/";
-
-    private final EditMachineService service;
+    private final GetMachineService service;
     private final EndpointProtector protector;
 
     @Inject
-    public EditMachineRouter(ServiceResponse serviceResponse,
-                             EditMachineService service, EndpointProtector protector) {
+    public GetMachineRouter(ServiceResponse serviceResponse,
+                               GetMachineService service, EndpointProtector protector) {
         super(serviceResponse);
-        this.service  = service;
+        this.service = service;
         this.protector = protector;
     }
 
     @Override
     public void configure(Service http) {
-        protector.protect(V1_EDIT_MACHINES + ID_PARAM);
-        http.put(V1_EDIT_MACHINES + ID_PARAM,
-                map((req, res) -> updateMachine(req.params(ID_PARAM),
-                        req.body(), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
+        protector.protect(V1_MACHINES + ID_PARAM);
+        http.get(V1_MACHINES + ID_PARAM, map((req, res) ->
+                getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute updateMachine(String id, String body, Person requester) {
+    public AppRoute getMachine(String idCandidate, Person requester) {
         try {
-            EditMachineData editMachineData = mapper.readValue(body, EditMachineData.class);
-            editMachineData.setId(id);
-            editMachineData.setRequester(requester);
+            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, requester);
 
-            Optional<Machine> possibleMachine = service.updateMachine(editMachineData);
-            return possibleMachine.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
-        } catch (BusinessLogicException e) {
-            return serviceResponse.badRequest(e.getCauses());
-        } catch (IOException e) {
-            return serviceResponse.badRequest(MALFORMED_JSON);
+            return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
+        } catch (BusinessLogicException ex) {
+            return serviceResponse.badRequest(ex.getCauses());
         }
     }
 }

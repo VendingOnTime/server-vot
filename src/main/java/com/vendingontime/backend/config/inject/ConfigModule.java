@@ -17,7 +17,6 @@ import com.vendingontime.backend.initializers.sparkplugins.CORSPlugin;
 import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.*;
@@ -119,6 +118,7 @@ public class ConfigModule extends AbstractModule {
         bind(AddMachineService.class);
         bind(ListMachinesService.class);
         bind(EditMachineService.class);
+        bind(GetMachineService.class);
     }
 
     private void bindMiddleware() {
@@ -133,6 +133,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(ListMachinesRouter.class);
         routerBinder.addBinding().to(AddMachineRouter.class);
         routerBinder.addBinding().to(EditMachineRouter.class);
+        routerBinder.addBinding().to(GetMachineRouter.class);
     }
 
     private void bindPlugins() {

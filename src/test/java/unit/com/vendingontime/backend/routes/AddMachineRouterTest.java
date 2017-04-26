@@ -97,7 +97,7 @@ public class AddMachineRouterTest {
     }
 
     @Test
-    public void editMachine_withEmptyJSON() {
+    public void addMachine_withEmptyJSON() {
         stringifiedMachine = "";
 
         router.addMachine(stringifiedMachine, person);
@@ -108,7 +108,7 @@ public class AddMachineRouterTest {
     }
 
     @Test
-    public void editMachine_withInvalidJSONField() {
+    public void addMachine_withInvalidJSONField() {
         stringifiedMachine = "{\"id\":\"1234\"}";
 
         router.addMachine(stringifiedMachine, person);

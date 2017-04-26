@@ -43,11 +43,8 @@ import static org.mockito.Mockito.mock;
  */
 public class SignUpRouterTest extends IntegrationTest {
 
-    @Inject
-    SignUpRouter router;
-
-    @Inject
-    PersonRepository repository;
+    @Inject private SignUpRouter router;
+    @Inject private PersonRepository repository;
 
     private ObjectMapper mapper;
     private SignUpData supervisor;

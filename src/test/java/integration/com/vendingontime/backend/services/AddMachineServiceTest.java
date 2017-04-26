@@ -70,7 +70,8 @@ public class AddMachineServiceTest extends IntegrationTest {
         assertNotNull(savedMachine.getId());
         assertEquals(1, savedCompany.getMachines().size());
 
-        machineRepository.delete(savedMachine.getId());
-        personRepository.delete(savedOwner.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

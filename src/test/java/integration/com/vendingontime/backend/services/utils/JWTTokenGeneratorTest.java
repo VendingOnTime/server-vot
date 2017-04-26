@@ -39,14 +39,10 @@ import static org.junit.Assert.*;
  */
 
 public class JWTTokenGeneratorTest extends IntegrationTest {
-    @Inject
-    private JWTTokenGenerator tokenGenerator;
 
-    @Inject
-    private SignUpService service;
-
-    @Inject
-    private PersonRepository repository;
+    @Inject private JWTTokenGenerator tokenGenerator;
+    @Inject private SignUpService service;
+    @Inject private PersonRepository repository;
 
     private SignUpData signUpData;
     private LogInData logInData;

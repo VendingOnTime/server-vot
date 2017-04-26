@@ -1,6 +1,5 @@
-package integration.com.vendingontime.backend.routes;
+package integration.com.vendingontime.backend.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
@@ -8,19 +7,13 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.ListMachinesRouter;
-import com.vendingontime.backend.routes.utils.RESTResult;
+import com.vendingontime.backend.services.GetMachineService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
-import spark.Request;
-import spark.Response;
 import testutils.FixtureFactory;
 
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -40,40 +33,30 @@ import static org.mockito.Mockito.mock;
  * specific language governing permissions and limitations under the License.
  */
 
-public class ListMachinesRouterTest extends IntegrationTest {
+public class GetMachineServiceTest extends IntegrationTest {
 
-    @Inject private ListMachinesRouter router;
+    @Inject private GetMachineService service;
+
+    @Inject private MachineRepository machineRepository;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
-    @Inject private MachineRepository machineRepository;
 
     @Test
-    public void listFor_owner() throws Exception {
+    public void getMachineData_forValidMachineId_andAuthorizedUser() {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
-        Machine machine1 = machineRepository.create(FixtureFactory.generateMachine());
-        Machine machine2 = machineRepository.create(FixtureFactory.generateMachine());
+        Machine machine = machineRepository.create(FixtureFactory.generateMachine());
 
         Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
-        Machine savedMachine1 = machineRepository.findById(machine1.getId()).get();
-        Machine savedMachine2 = machineRepository.findById(machine2.getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
 
-        company.addMachine(savedMachine1);
-        company.addMachine(savedMachine2);
+        company.addMachine(savedMachine);
         companyRepository.update(company);
 
-        String result = (String) router.listFor(savedOwner)
-                .handle(mock(Request.class), mock(Response.class));
-
-        ObjectMapper mapper = new ObjectMapper();
-        RESTResult restResult = mapper.readValue(result, RESTResult.class);
-        assertThat(restResult.getSuccess(), is(true));
-
-        List machines = (List) restResult.getData();
-        assertThat(machines.size(), is(2));
+        Machine foundMachine = service.getDataFrom(machine.getId(), savedOwner).get();
+        assertThat(savedMachine, equalTo(foundMachine));
 
         machineRepository.deleteAll();
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }
-
 }

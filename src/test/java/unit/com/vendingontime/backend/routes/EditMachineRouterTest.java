@@ -78,6 +78,7 @@ public class EditMachineRouterTest {
         router = null;
         payload = null;
         machine = null;
+        person = null;
         stringifiedMachine = null;
     }
 

@@ -1,19 +1,14 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.AddMachineRouter;
-import com.vendingontime.backend.routes.EditMachineRouter;
-import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.GetMachineRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
-import com.vendingontime.backend.services.AddMachineService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
 import spark.Request;
@@ -22,12 +17,10 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
-
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -47,39 +40,38 @@ import static org.mockito.Mockito.mock;
  * specific language governing permissions and limitations under the License.
  */
 
-public class EditMachineRouterTest extends IntegrationTest {
+public class GetMachineRouterTest extends IntegrationTest {
 
-    @Inject private EditMachineRouter router;
-
-    @Inject private AddMachineService addMachineService;
+    @Inject private GetMachineRouter router;
 
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
     @Inject private MachineRepository machineRepository;
 
     @Test
-    public void editMachine() throws Exception {
+    public void getMachine() throws Exception {
         Company company = companyRepository.create(FixtureFactory.generateCompanyWithOwner());
-        Person requester = personRepository.findById(company.getOwner().getId()).get();
+        Machine machine = machineRepository.create(FixtureFactory.generateMachine());
 
-        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
-        addMachineData.setRequester(requester);
-        Machine machine = addMachineService.createMachine(addMachineData);
+        Person savedOwner = personRepository.findById(company.getOwner().getId()).get();
+        Machine savedMachine = machineRepository.findById(machine.getId()).get();
+
+        company.addMachine(savedMachine);
+        companyRepository.update(company);
+
+        String result = (String) router.getMachine(savedMachine.getId(), savedOwner)
+                .handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();
-        EditMachineData editMachineData = FixtureFactory.generateEditMachineDataFrom(machine);
-        editMachineData.setId(null);
-        editMachineData.setDescription("NEW_DESCRIPTION");
-        String stringifiedMachine = mapper.writeValueAsString(editMachineData);
-
-        AppRoute post = router.updateMachine(machine.getId(), stringifiedMachine, requester);
-        String result = (String) post.handle(mock(Request.class), mock(Response.class));
-
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
-        assertTrue(restResult.getSuccess());
+        assertThat(restResult.getSuccess(), is(true));
+
+        //TODO Change with solution to casting problem
+        assertNotNull(restResult.getData());
 
         machineRepository.deleteAll();
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }
+
 }

@@ -3,6 +3,8 @@ package acceptance.com.vendingontime.backend.testutils;
 import com.vendingontime.backend.config.variables.MemoryServerConfig;
 import com.vendingontime.backend.config.variables.ServerVariable;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,4 +26,14 @@ import integration.com.vendingontime.backend.testutils.IntegrationTest;
 public abstract class E2ETest extends IntegrationTest {
     protected static final String host = "http://localhost:"
             + new MemoryServerConfig().getString(ServerVariable.PORT);
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        E2EApplicationWrapper.getInstance().start();
+    }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        E2EApplicationWrapper.getInstance().stop();
+    }
 }

@@ -33,11 +33,9 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 public class JPAMachineRepositoryTest extends IntegrationTest {
-    @Inject
-    private JPAMachineRepository repository;
 
-    @Inject
-    private JPACompanyRepository companyRepository;
+    @Inject private JPAMachineRepository repository;
+    @Inject private JPACompanyRepository companyRepository;
 
     private Machine machineOne;
     private Machine machineTwo;
@@ -139,7 +137,8 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         Machine machine = repository.create(this.machineOne);
         String machineId = machine.getId();
 
-        repository.delete(machineId);
+        Optional<Machine> possibleDeleted = repository.delete(machineId);
+        assertThat(possibleDeleted.isPresent(), is(true));
 
         Optional<Machine> possiblePerson = repository.findById(machineId);
         assertFalse(possiblePerson.isPresent());
@@ -195,5 +194,16 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         assertThat(machines.size(), is(2));
         assertThat(machines.contains(savedMachine1), is(true));
         assertThat(machines.contains(savedMachine2), is(true));
+    }
+
+    @Test
+    public void deleteAll() throws Exception {
+        Machine machine = repository.create(this.machineOne);
+        String machineId = machine.getId();
+
+        repository.deleteAll();
+
+        Optional<Machine> possibleMachine = repository.findById(machineId);
+        assertFalse(possibleMachine.isPresent());
     }
 }

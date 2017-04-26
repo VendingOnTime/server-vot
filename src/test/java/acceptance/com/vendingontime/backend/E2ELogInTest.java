@@ -37,11 +37,9 @@ import static org.hamcrest.core.IsNull.notNullValue;
  */
 
 public class E2ELogInTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
 
-    @Inject
-    private PersonRepository repository;
+    @Inject private SignUpService signUpService;
+    @Inject private PersonRepository repository;
 
     @Test
     public void logInUser() throws Exception {

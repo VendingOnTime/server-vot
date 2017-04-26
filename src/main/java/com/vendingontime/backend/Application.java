@@ -25,14 +25,21 @@ import com.vendingontime.backend.initializers.SparkPluginInitializer;
  */
 public class Application {
 
+    private Injector injector;
+
     public static void main(String[] args) {
         new Application().start();
     }
 
-    private void start() {
-        Injector injector = Guice.createInjector(new ConfigModule());
+    public void start() {
+        injector = Guice.createInjector(new ConfigModule());
 
         injector.getInstance(RouteInitializer.class).setUp();
         injector.getInstance(SparkPluginInitializer.class).setUp();
+    }
+
+    public void stop() {
+        if (injector == null) return;
+        injector.getInstance(RESTContext.class).stop();
     }
 }

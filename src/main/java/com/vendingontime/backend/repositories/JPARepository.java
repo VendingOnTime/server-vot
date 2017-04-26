@@ -95,6 +95,15 @@ public abstract class JPARepository<MODEL extends AbstractEntity> implements Rep
         return possibleModel;
     }
 
+    // FIXME: 18/4/17 Add a warning to avoid using this method in production
+    @Override
+    public void deleteAll() {
+        EntityTransaction tr = em.getTransaction();
+        tr.begin();
+        em.createQuery("DELETE FROM " + entityClass.getSimpleName()).executeUpdate();
+        tr.commit();
+    }
+
     private void checkModelNullity(MODEL model) {
         if (model == null) throw new NullPointerException(entityClass.getSimpleName().toLowerCase());
     }

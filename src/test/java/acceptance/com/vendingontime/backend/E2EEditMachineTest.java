@@ -27,7 +27,6 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.AddMachineRouter;
 import com.vendingontime.backend.routes.EditMachineRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.AddMachineService;
@@ -37,7 +36,6 @@ import org.junit.Test;
 import testutils.FixtureFactory;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
@@ -50,7 +48,7 @@ public class E2EEditMachineTest extends E2ETest {
     @Inject private LogInService logInService;
     @Inject private AddMachineService addMachineService;
 
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
 
@@ -83,12 +81,9 @@ public class E2EEditMachineTest extends E2ETest {
                 .body("data.description", is(payload.getDescription()))
                 .body("error", nullValue());
 
-        List<Machine> machinesByCompany = repository.findMachinesByCompany(supervisor.getCompany());
-        for (Machine savedMachine : machinesByCompany) {
-            repository.delete(savedMachine.getId());
-        }
 
-        companyRepository.delete(supervisor.getCompany().getId());
-        personRepository.delete(supervisor.getId());
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }
