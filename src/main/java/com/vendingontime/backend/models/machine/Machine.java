@@ -29,8 +29,8 @@ import javax.persistence.*;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "Machine.findById", query = "SELECT m FROM Machine m WHERE m.id = :id"),
-        @NamedQuery(name = "Machine.findByCompany", query = "SELECT m FROM Machine m WHERE m.company.id = :companyId")
+        @NamedQuery(name = "Machine.findById", query = "SELECT m FROM Machine m WHERE m.id = :id AND m.disabled = false"),
+        @NamedQuery(name = "Machine.findByCompany", query = "SELECT m FROM Machine m WHERE m.company.id = :companyId  AND m.disabled = false")
 })
 public class Machine extends AbstractEntity<Machine> {
     @Embedded private MachineLocation location;

@@ -1,7 +1,9 @@
 package com.vendingontime.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.eclipse.persistence.annotations.UuidGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -27,6 +29,7 @@ import javax.persistence.MappedSuperclass;
 @UuidGenerator(name = "PER_ID_GEN")
 public abstract class AbstractEntity<T extends AbstractEntity> {
     @Id @GeneratedValue(generator = "PER_ID_GEN") private String id;
+    @Column @JsonIgnore private boolean disabled;
 
     public String getId() {
         return id;
@@ -37,9 +40,13 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
         return (T) this;
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public T setDisabled(boolean disabled) {
+        this.disabled = disabled;
+        return (T) this;
     }
 
     @Override
@@ -47,9 +54,17 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
         if (this == o) return true;
         if (!(o instanceof AbstractEntity)) return false;
 
-        AbstractEntity that = (AbstractEntity) o;
+        AbstractEntity<?> that = (AbstractEntity<?>) o;
 
+        if (isDisabled() != that.isDisabled()) return false;
         return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (isDisabled() ? 1 : 0);
+        return result;
     }
 
     public abstract void update(T entity);
@@ -58,6 +73,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
     public String toString() {
         return "AbstractEntity{" +
                 "id='" + id + '\'' +
+                ", disabled=" + disabled +
                 '}';
     }
 }

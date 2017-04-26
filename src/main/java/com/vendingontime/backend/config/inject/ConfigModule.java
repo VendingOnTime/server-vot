@@ -117,6 +117,7 @@ public class ConfigModule extends AbstractModule {
         bind(LogInService.class);
         bind(AddMachineService.class);
         bind(ListMachinesService.class);
+        bind(RemoveMachineService.class);
         bind(EditMachineService.class);
         bind(GetMachineService.class);
     }
@@ -132,6 +133,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(UserProfileRouter.class);
         routerBinder.addBinding().to(ListMachinesRouter.class);
         routerBinder.addBinding().to(AddMachineRouter.class);
+        routerBinder.addBinding().to(RemoveMachineRouter.class);
         routerBinder.addBinding().to(EditMachineRouter.class);
         routerBinder.addBinding().to(GetMachineRouter.class);
     }

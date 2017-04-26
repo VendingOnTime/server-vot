@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "Company.findById", query = "SELECT c FROM Company c WHERE c.id = :id")
+        @NamedQuery(name = "Company.findById", query = "SELECT c FROM Company c WHERE c.id = :id AND c.disabled = false")
 })
 public class Company extends AbstractEntity<Company> {
 
