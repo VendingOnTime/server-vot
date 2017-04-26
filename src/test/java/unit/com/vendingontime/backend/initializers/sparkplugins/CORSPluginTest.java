@@ -74,7 +74,7 @@ public class CORSPluginTest {
 
         verify(response, times(1)).header("Access-Control-Allow-Origin", "*");
         verify(response, times(1)).header("Access-Control-Request-Method", "GET, POST, PUT, DELETE");
-        verify(response, times(1)).header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        verify(response, times(1)).header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     }
 
 }
