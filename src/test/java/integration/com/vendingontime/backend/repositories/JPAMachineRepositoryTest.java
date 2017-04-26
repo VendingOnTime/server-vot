@@ -203,7 +203,7 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
 
         repository.deleteAll();
 
-        Optional<Machine> possiblePerson = repository.findById(machineId);
-        assertFalse(possiblePerson.isPresent());
+        Optional<Machine> possibleMachine = repository.findById(machineId);
+        assertFalse(possibleMachine.isPresent());
     }
 }

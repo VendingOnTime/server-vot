@@ -77,19 +77,6 @@ public class GetMachineRouterTest {
     }
 
     @Test
-    public void getMachine_withInvalidUser_returnBadRequest() throws Exception {
-        Person invalidUser = new Person();
-
-        String[] causes = {INSUFFICIENT_PERMISSIONS};
-        doThrow(new BusinessLogicException(causes))
-                .when(service).getDataFrom(MACHINE_ID, invalidUser);
-
-        router.getMachine(MACHINE_ID, invalidUser);
-
-        verify(serviceResponse, times(1)).badRequest(causes);
-    }
-
-    @Test
     public void getMachine_withExistingId_andUnauthorizedUser_returnsBadRequest() throws Exception {
         Person unauthorizedUser = FixtureFactory.generateSupervisor();
 
