@@ -37,6 +37,8 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
+import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
+import static com.vendingontime.backend.routes.utils.HttpResponse.NOT_FOUND;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -53,7 +55,7 @@ public class E2EEditMachineTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void editMachine() {
+    public void editMachine_withValidData() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -86,4 +88,87 @@ public class E2EEditMachineTest extends E2ETest {
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }
+
+    @Test
+    //It also throws AddMachineData's validation errors
+    public void editMachine_withInvalidID() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
+
+        EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
+        payload.setId(null);
+
+        given()
+            .header("Authorization", "JWT " + token)
+            .body(payload)
+        .when()
+            .put(host + EditMachineRouter.V1_EDIT_MACHINES + "INVALID_ID")
+        .then()
+            .statusCode(HttpResponse.StatusCode.NOT_FOUND)
+            .body("success", is(false))
+            .body("data", nullValue())
+            .body("error", is(NOT_FOUND));
+
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void editMachine_withInvalidJSON() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
+
+        given()
+            .header("Authorization", "JWT " + token)
+            .body("")
+        .when()
+            .put(host + EditMachineRouter.V1_EDIT_MACHINES + machine.getId())
+        .then()
+            .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+            .body("success", is(false))
+            .body("data", nullValue())
+            .body("error", is(MALFORMED_JSON));
+
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void editMachine_withInvalidToken() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
+
+        EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
+        payload.setDescription("NEW_DESCRIPTION");
+        payload.setMachineState(MachineState.OUT_OF_SERVICE);
+        payload.setId(null);
+
+        given()
+            .header("Authorization", "JWT " + "INVALID TOKEN")
+            .body(payload)
+        .when()
+            .put(host + EditMachineRouter.V1_EDIT_MACHINES + machine.getId())
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
 }
