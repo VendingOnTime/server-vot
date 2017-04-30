@@ -113,11 +113,11 @@ public class E2ERemoveMachineTest extends E2ETest {
         addMachineService.createMachine(addMachineData.setRequester(supervisor));
 
         given()
-                .header("Authorization", "JWT " + token)
-                .when()
-                .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + "INVALID_ID")
-                .then()
-                .statusCode(HttpResponse.StatusCode.NOT_FOUND);
+            .header("Authorization", "JWT " + token)
+        .when()
+            .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + "INVALID_ID")
+        .then()
+            .statusCode(HttpResponse.StatusCode.NOT_FOUND);
 
         machineRepository.deleteAll();
         personRepository.deleteAll();
