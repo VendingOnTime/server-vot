@@ -53,7 +53,7 @@ public class E2ERemoveMachineTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void removeMachine() {
+    public void removeMachine_withValidId_andValidToken_returnsDeletedMachineData() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -64,7 +64,7 @@ public class E2ERemoveMachineTest extends E2ETest {
         given()
                 .header("Authorization", "JWT " + token)
         .when()
-                .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE+ machine.getId())
+                .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + machine.getId())
         .then()
                 .statusCode(HttpResponse.StatusCode.OK)
                 .body("success", is(true))
@@ -77,6 +77,47 @@ public class E2ERemoveMachineTest extends E2ETest {
 
         Optional<Machine> byId = machineRepository.findById(machine.getId());
         assertThat(byId.isPresent(), is(false));
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void removeMachine_withValidId_andInvalidToken_returnsUnauthorized() throws Exception {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
+
+        given()
+            .header("Authorization", "JWT " + "INVALID_TOKEN")
+        .when()
+            .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + machine.getId())
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void removeMachine_withInvalidId_andValidToken_returnsNotFound() throws Exception {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        addMachineService.createMachine(addMachineData.setRequester(supervisor));
+
+        given()
+                .header("Authorization", "JWT " + token)
+                .when()
+                .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + "INVALID_ID")
+                .then()
+                .statusCode(HttpResponse.StatusCode.NOT_FOUND);
 
         machineRepository.deleteAll();
         personRepository.deleteAll();
