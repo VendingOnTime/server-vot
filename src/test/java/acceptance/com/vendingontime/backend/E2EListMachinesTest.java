@@ -22,6 +22,7 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -30,6 +31,7 @@ import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
+import org.junit.Ignore;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
@@ -51,7 +53,7 @@ public class E2EListMachinesTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void listMachine() {
+    public void listMachines_withValidToken_andSupervisorRole_returnsListOfMachines() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -78,4 +80,33 @@ public class E2EListMachinesTest extends E2ETest {
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }
+
+    @Test
+    public void listMachines_withInvalidToken_returnsUnauthorized() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+
+        AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        addMachineData.setRequester(supervisor);
+        addMachineService.createMachine(addMachineData);
+
+        given()
+            .header("Authorization", "JWT " + "INVALID_TOKEN")
+        .when()
+            .get(host + ListMachinesRouter.V1_MACHINES)
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
+
+        repository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    //TODO miguel@30/04/2017 This is just a temporary functionality until technicians can be created.
+//    @Test
+//    public void listMachines_withValidToken_andTechnicianRole_returnsUnimplemented() {}
+
+    //TODO miguel@30/04/2017 Can not be tested until signUp and logIn methods are created.
+//    @Test
+//    public void listMachines_withValidToken_andUserRole_returnsUnauthorized() {}
 }
