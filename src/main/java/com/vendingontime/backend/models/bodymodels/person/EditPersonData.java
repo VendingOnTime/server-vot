@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class EditPersonData extends SignUpData {
-    public static final String EMPTY_PERSON_ID = "EMPTY_MACHINE_ID";
+    public static final String EMPTY_PERSON_ID = "EMPTY_PERSON_ID";
     public static final String EMPTY_REQUESTER = "EMPTY_REQUESTER";
 
     private String id;

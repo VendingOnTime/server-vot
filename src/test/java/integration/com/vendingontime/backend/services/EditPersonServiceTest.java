@@ -46,7 +46,7 @@ public class EditPersonServiceTest extends IntegrationTest {
         Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         EditPersonData editPersonData = FixtureFactory.generateEditPersonDataFrom(requester);
 
-        String newName = "NEW_NAME";
+        final String newName = "NEW_NAME";
         editPersonData.setName(newName);
 
         editPersonData.setRequester(requester);

@@ -51,7 +51,7 @@ public class EditMachineService extends AbstractService {
 
         if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
 
-        machine.update(machineUpdateCandidate);
+        machine.updateWith(machineUpdateCandidate);
         return repository.update(machine);
     }
 }

@@ -58,15 +58,15 @@ public class Machine extends AbstractEntity<Machine> {
         this.setId(editMachineData.getId());
     }
 
-    public void update(Machine machine) {
+    public void updateWith(Machine machine) {
         this.location = machine.getLocation();
         this.type = machine.getType();
         this.state = machine.getState();
         this.description = machine.getDescription();
     }
 
-    public void update(EditMachineData editMachineData) {
-        update(new Machine(editMachineData));
+    public void updateWith(EditMachineData editMachineData) {
+        updateWith(new Machine(editMachineData));
     }
 
     public MachineLocation getLocation() {

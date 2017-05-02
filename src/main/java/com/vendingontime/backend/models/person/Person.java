@@ -65,7 +65,7 @@ public class Person extends AbstractEntity<Person> {
         this.setId(editPersonData.getId());
     }
 
-    public void update(Person person) {
+    public void updateWith(Person person) {
         this.email = person.getEmail();
         this.username = person.getUsername();
         this.password = person.getPassword();
@@ -75,8 +75,8 @@ public class Person extends AbstractEntity<Person> {
         this.role = person.getRole();
     }
 
-    public void update(EditPersonData editPersonData) {
-        update(new Person(editPersonData));
+    public void updateWith(EditPersonData editPersonData) {
+        updateWith(new Person(editPersonData));
     }
 
     public String getEmail() {
