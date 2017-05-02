@@ -76,14 +76,14 @@ public class E2ELogInTest extends E2ETest {
                 .setEmail("another@example.com");
 
         given()
-                .body(payload)
-                .when()
-                .post(host + LogInRouter.V1_LOG_IN)
-                .then()
-                .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
-                .body("success", equalTo(false))
-                .body("data", nullValue())
-                .body("error", contains(BAD_LOGIN));
+            .body(payload)
+        .when()
+            .post(host + LogInRouter.V1_LOG_IN)
+        .then()
+            .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+            .body("success", equalTo(false))
+            .body("data", nullValue())
+            .body("error", contains(BAD_LOGIN));
 
         repository.delete(supervisor.getId());
     }

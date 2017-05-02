@@ -69,19 +69,19 @@ public class E2EEditMachineTest extends E2ETest {
         payload.setId(null);
 
         given()
-                .header("Authorization", "JWT " + token)
-                .body(payload)
+            .header("Authorization", "JWT " + token)
+            .body(payload)
         .when()
-                .put(host + EditMachineRouter.V1_EDIT_MACHINES + machine.getId())
+            .put(host + EditMachineRouter.V1_EDIT_MACHINES + machine.getId())
         .then()
-                .statusCode(HttpResponse.StatusCode.OK)
-                .body("success", is(true))
-                .body("data.id", notNullValue())
-                .body("data.location.name", is(payload.getMachineLocation().getName()))
-                .body("data.type", is(payload.getMachineType().toValue()))
-                .body("data.state", is(payload.getMachineState().toValue()))
-                .body("data.description", is(payload.getDescription()))
-                .body("error", nullValue());
+            .statusCode(HttpResponse.StatusCode.OK)
+            .body("success", is(true))
+            .body("data.id", notNullValue())
+            .body("data.location.name", is(payload.getMachineLocation().getName()))
+            .body("data.type", is(payload.getMachineType().toValue()))
+            .body("data.state", is(payload.getMachineState().toValue()))
+            .body("data.description", is(payload.getDescription()))
+            .body("error", nullValue());
 
 
         machineRepository.deleteAll();

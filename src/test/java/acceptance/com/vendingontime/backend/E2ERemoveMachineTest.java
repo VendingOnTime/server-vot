@@ -62,18 +62,18 @@ public class E2ERemoveMachineTest extends E2ETest {
         Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
 
         given()
-                .header("Authorization", "JWT " + token)
+            .header("Authorization", "JWT " + token)
         .when()
-                .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + machine.getId())
+            .delete(host + RemoveMachineRouter.V1_REMOVE_MACHINE + machine.getId())
         .then()
-                .statusCode(HttpResponse.StatusCode.OK)
-                .body("success", is(true))
-                .body("data.id", notNullValue())
-                .body("data.location.name", is(machine.getLocation().getName()))
-                .body("data.type", is(machine.getType().toValue()))
-                .body("data.state", is(machine.getState().toValue()))
-                .body("data.description", is(machine.getDescription()))
-                .body("error", nullValue());
+            .statusCode(HttpResponse.StatusCode.OK)
+            .body("success", is(true))
+            .body("data.id", notNullValue())
+            .body("data.location.name", is(machine.getLocation().getName()))
+            .body("data.type", is(machine.getType().toValue()))
+            .body("data.state", is(machine.getState().toValue()))
+            .body("data.description", is(machine.getDescription()))
+            .body("error", nullValue());
 
         Optional<Machine> byId = machineRepository.findById(machine.getId());
         assertThat(byId.isPresent(), is(false));

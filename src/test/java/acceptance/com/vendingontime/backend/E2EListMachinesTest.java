@@ -63,18 +63,18 @@ public class E2EListMachinesTest extends E2ETest {
         Machine machine = addMachineService.createMachine(addMachineData);
 
         given()
-                .header("Authorization", "JWT " + token)
+            .header("Authorization", "JWT " + token)
         .when()
-                .get(host + ListMachinesRouter.V1_MACHINES)
+            .get(host + ListMachinesRouter.V1_MACHINES)
         .then()
-                .statusCode(HttpResponse.StatusCode.OK)
-                .body("success", is(true))
-                .body("data[0].id", equalTo(machine.getId()))
-                .body("data[0].location.name", equalTo(machine.getLocation().getName()))
-                .body("data[0].type", equalTo(machine.getType().toValue()))
-                .body("data[0].state", equalTo(machine.getState().toValue()))
-                .body("data[0].description", equalTo(machine.getDescription()))
-                .body("error", nullValue());
+            .statusCode(HttpResponse.StatusCode.OK)
+            .body("success", is(true))
+            .body("data[0].id", equalTo(machine.getId()))
+            .body("data[0].location.name", equalTo(machine.getLocation().getName()))
+            .body("data[0].type", equalTo(machine.getType().toValue()))
+            .body("data[0].state", equalTo(machine.getState().toValue()))
+            .body("data[0].description", equalTo(machine.getDescription()))
+            .body("error", nullValue());
 
         repository.deleteAll();
         personRepository.deleteAll();
