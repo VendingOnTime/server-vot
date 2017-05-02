@@ -46,7 +46,7 @@ public class E2EUserProfileTest extends E2ETest {
     @Inject private PersonRepository repository;
 
     @Test
-    public void retrieveUserProfile() throws Exception {
+    public void retrieveUserProfile_withValidToken_returnsUserData() throws Exception {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
 
@@ -54,22 +54,36 @@ public class E2EUserProfileTest extends E2ETest {
         String token = logInService.authorizeUser(logInData);
 
         given()
-                .header("Authorization", "JWT " + token)
+            .header("Authorization", "JWT " + token)
         .when()
-                .get(host + UserProfileRouter.V1_PROFILE)
+            .get(host + UserProfileRouter.V1_PROFILE)
         .then()
-                .statusCode(HttpResponse.StatusCode.OK)
-                .body("success", is(true))
-                .body("data.id", notNullValue())
-                .body("data.dni", equalTo(supervisor.getDni()))
-                .body("data.username", equalTo(supervisor.getUsername()))
-                .body("data.email", equalTo(supervisor.getEmail()))
-                .body("data.name", equalTo(supervisor.getName()))
-                .body("data.surnames", equalTo(supervisor.getSurnames()))
-                .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
-                .body("error", nullValue());
+            .statusCode(HttpResponse.StatusCode.OK)
+            .body("success", is(true))
+            .body("data.id", notNullValue())
+            .body("data.dni", equalTo(supervisor.getDni()))
+            .body("data.username", equalTo(supervisor.getUsername()))
+            .body("data.email", equalTo(supervisor.getEmail()))
+            .body("data.name", equalTo(supervisor.getName()))
+            .body("data.surnames", equalTo(supervisor.getSurnames()))
+            .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
+            .body("error", nullValue());
 
-        repository.delete(supervisor.getId());
+        repository.deleteAll();
     }
 
+    @Test
+    public void retrieveUserProfile_withInvalidToken_returnsUnauthorized() throws Exception {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        signUpService.createSupervisor(signUpData);
+
+        given()
+            .header("Authorization", "JWT " + "INVALID_TOKEN")
+        .when()
+            .get(host + UserProfileRouter.V1_PROFILE)
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
+
+        repository.deleteAll();
+    }
 }
