@@ -119,6 +119,7 @@ public class ConfigModule extends AbstractModule {
         bind(RemoveMachineService.class);
         bind(EditMachineService.class);
         bind(GetMachineService.class);
+        bind(EditPersonService.class);
     }
 
     private void bindMiddleware() {

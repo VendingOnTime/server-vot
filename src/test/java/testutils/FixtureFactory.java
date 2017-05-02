@@ -109,6 +109,18 @@ public class FixtureFactory {
                 .setRole(PersonRole.SUPERVISOR);
     }
 
+    public static EditPersonData generateEditPersonDataFrom(Person person) {
+        return (EditPersonData) new EditPersonData()
+                .setId(person.getId())
+                .setDni(person.getDni())
+                .setName(person.getName())
+                .setSurnames(person.getSurnames())
+                .setEmail(person.getEmail())
+                .setUsername(person.getUsername())
+                .setPassword(person.getPassword())
+                .setRole(person.getRole());
+    }
+
     // MACHINE METHODS
 
     public static Machine generateMachine() {
