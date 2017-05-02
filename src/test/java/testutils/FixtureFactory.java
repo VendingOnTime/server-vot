@@ -20,6 +20,7 @@ package testutils;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
+import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
@@ -93,6 +94,19 @@ public class FixtureFactory {
         return new LogInData()
                 .setEmail(signUpData.getEmail())
                 .setPassword(signUpData.getPassword());
+    }
+
+    public static EditPersonData generateEditPersonData() {
+        SignUpData signUpData = generateSignUpData();
+
+        return (EditPersonData) new EditPersonData()
+                .setDni(signUpData.getDni())
+                .setName(signUpData.getName())
+                .setSurnames(signUpData.getSurnames())
+                .setEmail(signUpData.getEmail())
+                .setUsername(signUpData.getUsername())
+                .setPassword(signUpData.getPassword())
+                .setRole(PersonRole.SUPERVISOR);
     }
 
     // MACHINE METHODS

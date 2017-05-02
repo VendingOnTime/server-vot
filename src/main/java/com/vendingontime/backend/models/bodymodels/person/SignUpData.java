@@ -186,28 +186,31 @@ public class SignUpData implements Validable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof SignUpData)) return false;
 
         SignUpData that = (SignUpData) o;
 
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (dni != null ? !dni.equals(that.dni) : that.dni != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (surnames != null ? !surnames.equals(that.surnames) : that.surnames != null) return false;
-        return role == that.role;
+        if (getEmail() != null ? !getEmail().equals(that.getEmail()) : that.getEmail() != null) return false;
+        if (getUsername() != null ? !getUsername().equals(that.getUsername()) : that.getUsername() != null)
+            return false;
+        if (getPassword() != null ? !getPassword().equals(that.getPassword()) : that.getPassword() != null)
+            return false;
+        if (getDni() != null ? !getDni().equals(that.getDni()) : that.getDni() != null) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
+        if (getSurnames() != null ? !getSurnames().equals(that.getSurnames()) : that.getSurnames() != null)
+            return false;
+        return getRole() == that.getRole();
     }
 
     @Override
     public int hashCode() {
-        int result = email != null ? email.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (dni != null ? dni.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (surnames != null ? surnames.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
+        int result = getEmail() != null ? getEmail().hashCode() : 0;
+        result = 31 * result + (getUsername() != null ? getUsername().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        result = 31 * result + (getDni() != null ? getDni().hashCode() : 0);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getSurnames() != null ? getSurnames().hashCode() : 0);
+        result = 31 * result + (getRole() != null ? getRole().hashCode() : 0);
         return result;
     }
 
