@@ -32,9 +32,8 @@ public class EditMachineData extends AddMachineData {
     public String[] validate() {
         LinkedList<String> causes = new LinkedList<>(Arrays.asList(super.validate()));
 
-        if (StringUtils.isEmpty(id)) {
-            causes.add(EMPTY_MACHINE_ID);
-        }
+        if (StringUtils.isEmpty(id)) causes.add(EMPTY_MACHINE_ID);
+
         return causes.toArray(new String[causes.size()]);
     }
 

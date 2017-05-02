@@ -54,6 +54,7 @@ public class AddMachineData implements Validable {
     private String description;
     private Person requester;
 
+    // FIXME: 2/5/17 Part of this business logic should be moved to the service
     public boolean requesterIsAuthorized() {
         if (requester == null || requester.getId() == null) return false;
         if (requester.getRole() != PersonRole.SUPERVISOR) return false;

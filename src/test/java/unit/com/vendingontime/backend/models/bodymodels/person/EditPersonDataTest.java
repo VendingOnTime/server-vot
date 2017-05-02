@@ -1,6 +1,7 @@
 package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
+import com.vendingontime.backend.models.person.Person;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,8 @@ public class EditPersonDataTest {
     @Before
     public void setUp() throws Exception {
         editPersonData = FixtureFactory.generateEditPersonData()
-                .setId(PERSON_ID);
+                .setId(PERSON_ID)
+                .setRequester(FixtureFactory.generateSupervisor());
     }
 
     @After
@@ -59,5 +61,19 @@ public class EditPersonDataTest {
         editPersonData.setId("  ");
 
         assertArrayEquals(new String[]{EditPersonData.EMPTY_PERSON_ID}, editPersonData.validate());
+    }
+
+    @Test
+    public void validate_withEmptyRequester_notValid() throws Exception {
+        editPersonData.setRequester(null);
+
+        assertArrayEquals(new String[]{EditPersonData.EMPTY_REQUESTER}, editPersonData.validate());
+    }
+
+    @Test
+    public void validate_withRequesterWithoutRole_notValid() throws Exception {
+        editPersonData.setRequester(new Person());
+
+        assertArrayEquals(new String[]{EditPersonData.EMPTY_REQUESTER}, editPersonData.validate());
     }
 }

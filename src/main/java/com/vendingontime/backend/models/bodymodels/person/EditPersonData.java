@@ -17,6 +17,7 @@ package com.vendingontime.backend.models.bodymodels.person;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.utils.StringUtils;
 
 import java.util.Arrays;
@@ -24,16 +25,18 @@ import java.util.LinkedList;
 
 public class EditPersonData extends SignUpData {
     public static final String EMPTY_PERSON_ID = "EMPTY_MACHINE_ID";
+    public static final String EMPTY_REQUESTER = "EMPTY_REQUESTER";
 
     private String id;
+    private Person requester;
 
     @Override
     public String[] validate() {
         LinkedList<String> causes = new LinkedList<>(Arrays.asList(super.validate()));
 
-        if (StringUtils.isEmpty(id)) {
-            causes.add(EMPTY_PERSON_ID);
-        }
+        if (StringUtils.isEmpty(id)) causes.add(EMPTY_PERSON_ID);
+        if (requester == null || requester.getRole() == null) causes.add(EMPTY_REQUESTER);
+
         return causes.toArray(new String[causes.size()]);
     }
 
@@ -46,6 +49,15 @@ public class EditPersonData extends SignUpData {
         return this;
     }
 
+    public Person getRequester() {
+        return requester;
+    }
+
+    public EditPersonData setRequester(Person requester) {
+        this.requester = requester;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,13 +66,15 @@ public class EditPersonData extends SignUpData {
 
         EditPersonData that = (EditPersonData) o;
 
-        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
+        return getRequester() != null ? getRequester().equals(that.getRequester()) : that.getRequester() == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+        result = 31 * result + (getRequester() != null ? getRequester().hashCode() : 0);
         return result;
     }
 
@@ -68,6 +82,7 @@ public class EditPersonData extends SignUpData {
     public String toString() {
         return "EditPersonData{" +
                 "id='" + id + '\'' +
+                ", requester=" + requester +
                 "} " + super.toString();
     }
 }
