@@ -13,6 +13,7 @@ import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
+import org.junit.Ignore;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
@@ -54,7 +55,7 @@ public class E2EGetMachineTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void getMachine() {
+    public void getMachine_withValidId_andValidAuthorization_returnsMachineData() {
         final SignUpData signUpData = FixtureFactory.generateSignUpData();
         final Person supervisor = signUpService.createSupervisor(signUpData);
         final String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -79,6 +80,80 @@ public class E2EGetMachineTest extends E2ETest {
             .body("data.state", equalTo(machine.getState().toValue()))
             .body("data.description", equalTo(machine.getDescription()))
             .body("error", nullValue());
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void getMachine_withValidId_andInvalidAuthorization_returnsUnauthorized() {
+        final SignUpData signUpData = FixtureFactory.generateSignUpData();
+        final Person supervisor = signUpService.createSupervisor(signUpData);
+
+        final AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        addMachineData.setRequester(supervisor);
+        addMachineService.createMachine(addMachineData);
+
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
+        final String savedMachineId = machinesByCompany.get(0).getId();
+
+        given()
+            .header("Authorization", "JWT " + "INVALID_TOKEN")
+        .when()
+            .get(host + GetMachineRouter.V1_MACHINES + savedMachineId)
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void getMachine_withInvalidId_andValidAuthorization_returnsNotFound() {
+        final SignUpData signUpData = FixtureFactory.generateSignUpData();
+        final Person supervisor = signUpService.createSupervisor(signUpData);
+        final String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        given()
+            .header("Authorization", "JWT " + token)
+        .when()
+            .get(host + GetMachineRouter.V1_MACHINES + "INVALID_ID")
+        .then()
+            .statusCode(HttpResponse.StatusCode.NOT_FOUND);
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    //TODO miguel@30/04/2017 Should be 'unauthorized' instead of 'bad request'?
+    public void getMachine_withValidId_andValidAuthorization_butDifferentCompany_returnsUnauthorized() {
+        final SignUpData signUpData = FixtureFactory.generateSignUpData();
+        final Person supervisor = signUpService.createSupervisor(signUpData);
+
+        final AddMachineData addMachineData = FixtureFactory.generateAddMachineData();
+        addMachineData.setRequester(supervisor);
+        addMachineService.createMachine(addMachineData);
+
+        final SignUpData anotherSignUpData = FixtureFactory.generateSignUpData()
+                .setDni("22222222A")
+                .setEmail("another@example.com")
+                .setUsername("anotherUsername");
+        final Person anotherSupervisor = signUpService.createSupervisor(anotherSignUpData);
+        final String anotherToken = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(anotherSupervisor));
+
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
+        final String savedMachineId = machinesByCompany.get(0).getId();
+
+        given()
+            .header("Authorization", "JWT " + anotherToken)
+        .when()
+            .get(host + GetMachineRouter.V1_MACHINES + savedMachineId)
+        .then()
+            .statusCode(HttpResponse.StatusCode.BAD_REQUEST);
 
         machineRepository.deleteAll();
         personRepository.deleteAll();

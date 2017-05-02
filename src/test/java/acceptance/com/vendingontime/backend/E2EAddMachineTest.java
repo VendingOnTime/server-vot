@@ -21,7 +21,6 @@ package acceptance.com.vendingontime.backend;
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
@@ -35,9 +34,10 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
-import java.util.List;
-
+import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_MACHINE_DESCRIPTION;
+import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -46,12 +46,12 @@ public class E2EAddMachineTest extends E2ETest {
 
     @Inject private SignUpService signUpService;
     @Inject private LogInService logInService;
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void addMachine() {
+    public void addMachine_withValidData() {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
         String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -73,8 +73,68 @@ public class E2EAddMachineTest extends E2ETest {
             .body("data.description", is(payload.getDescription()))
             .body("error", nullValue());
 
-        repository.deleteAll();
+        machineRepository.deleteAll();
         personRepository.deleteAll();
         companyRepository.deleteAll();
+    }
+
+    @Test
+    // For a full list of all possible errors for invalid data, go to AddMachineData's validate method.
+    public void addMachine_withInvalidData() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        AddMachineData payload = FixtureFactory.generateAddMachineData();
+        payload.setDescription(null);
+
+        given()
+            .header("Authorization", "JWT " + token)
+            .body(payload)
+        .when()
+            .post(host + AddMachineRouter.V1_MACHINES)
+        .then()
+            .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+            .body("success", is(false))
+            .body("data", nullValue())
+            .body("error", contains(INVALID_MACHINE_DESCRIPTION));
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    // This will also happen when the JSON has more fields than required.
+    public void addMachine_withInvalidJSON() {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        given()
+            .header("Authorization", "JWT " + token)
+            .body("")
+        .when()
+            .post(host + AddMachineRouter.V1_MACHINES)
+        .then()
+            .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+            .body("success", is(false))
+            .body("data", nullValue())
+            .body("error", is(MALFORMED_JSON));
+
+        machineRepository.deleteAll();
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
+
+    @Test
+    public void addMachine_withInvalidToken() {
+        given()
+            .header("Authorization", "JWT " + "INVALID_TOKEN")
+            .body("")
+        .when()
+            .post(host + AddMachineRouter.V1_MACHINES)
+        .then()
+            .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
     }
 }
