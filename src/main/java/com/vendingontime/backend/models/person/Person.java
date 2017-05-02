@@ -2,6 +2,7 @@ package com.vendingontime.backend.models.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
 
@@ -57,6 +58,11 @@ public class Person extends AbstractEntity<Person> {
         this.name = signUpData.getName();
         this.surnames = signUpData.getSurnames();
         this.role = signUpData.getRole();
+    }
+
+    public Person(EditPersonData editPersonData) {
+        this((SignUpData) editPersonData);
+        this.setId(editPersonData.getId());
     }
 
     public void update(Person person) {
