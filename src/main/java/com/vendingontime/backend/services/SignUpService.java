@@ -55,9 +55,9 @@ public class SignUpService extends AbstractService {
     private Person createPerson(SignUpData personCandidate, PersonRole role) {
         personCandidate.setRole(role);
 
-        String[] signUpErrors = personCandidate.validate();
-        if(signUpErrors.length != 0) {
-            throw new BusinessLogicException(signUpErrors);
+        String[] validationErrors = personCandidate.validate();
+        if(validationErrors.length != 0) {
+            throw new BusinessLogicException(validationErrors);
         }
 
         Person person = new Person(personCandidate);

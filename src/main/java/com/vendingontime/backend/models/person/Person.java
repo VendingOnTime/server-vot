@@ -75,6 +75,10 @@ public class Person extends AbstractEntity<Person> {
         this.role = person.getRole();
     }
 
+    public void update(EditPersonData editPersonData) {
+        update(new Person(editPersonData));
+    }
+
     public String getEmail() {
         return email;
     }

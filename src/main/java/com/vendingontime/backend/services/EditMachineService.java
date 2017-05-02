@@ -40,8 +40,8 @@ public class EditMachineService extends AbstractService {
 
         if (!machineUpdateCandidate.requesterIsAuthorized()) throw insufficientPermissionsException;
 
-        String[] signUpErrors = machineUpdateCandidate.validate();
-        if(signUpErrors.length != 0) throw new BusinessLogicException(signUpErrors);
+        String[] validationErrors = machineUpdateCandidate.validate();
+        if(validationErrors.length != 0) throw new BusinessLogicException(validationErrors);
 
         Optional<Machine> machineById = repository.findById(machineUpdateCandidate.getId());
         if (!machineById.isPresent()) return machineById;
@@ -51,7 +51,7 @@ public class EditMachineService extends AbstractService {
 
         if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
 
-        machine.update(new Machine(machineUpdateCandidate));
+        machine.update(machineUpdateCandidate);
         return repository.update(machine);
     }
 }

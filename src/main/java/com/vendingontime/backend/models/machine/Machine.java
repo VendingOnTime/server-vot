@@ -65,6 +65,10 @@ public class Machine extends AbstractEntity<Machine> {
         this.description = machine.getDescription();
     }
 
+    public void update(EditMachineData editMachineData) {
+        update(new Machine(editMachineData));
+    }
+
     public MachineLocation getLocation() {
         return location;
     }

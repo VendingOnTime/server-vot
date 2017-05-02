@@ -40,10 +40,9 @@ public class AddMachineService extends AbstractService {
     public Machine createMachine(AddMachineData machineCandidate) throws BusinessLogicException {
         if (!machineCandidate.requesterIsAuthorized()) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
-        String[] signUpErrors = machineCandidate.validate();
-
-        if(signUpErrors.length != 0) {
-            throw new BusinessLogicException(signUpErrors);
+        String[] validationErrors = machineCandidate.validate();
+        if(validationErrors.length != 0) {
+            throw new BusinessLogicException(validationErrors);
         }
 
         Machine machine = repository.create(new Machine(machineCandidate));
