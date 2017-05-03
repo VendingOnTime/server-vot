@@ -2,6 +2,7 @@ package unit.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.EditPersonService;
 import com.vendingontime.backend.services.utils.AuthProvider;
@@ -14,6 +15,7 @@ import testutils.FixtureFactory;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -56,9 +58,8 @@ public class EditPersonServiceTest {
         editPersonService = new EditPersonService(authProvider, repository);
 
         supervisor = FixtureFactory.generateSupervisor().setId(SUPERVISOR_ID);
-        editPersonData = FixtureFactory.generateEditPersonData();
 
-        editPersonData.setId(SUPERVISOR_ID);
+        editPersonData = FixtureFactory.generateEditPersonDataFrom(supervisor);
         editPersonData.setRequester(supervisor);
 
         when(authProvider.canModify(supervisor, supervisor)).thenReturn(true);
@@ -112,5 +113,21 @@ public class EditPersonServiceTest {
         } catch (BusinessLogicException e) {
             assertArrayEquals(new String[]{EditPersonService.INSUFFICIENT_PERMISSIONS}, e.getCauses());
         }
+    }
+
+    @Test
+    public void editPerson_password_shouldNotChange() throws Exception {
+        editPersonData.setPassword("ANOTHER_PASSWORD");
+
+        editPersonService.updatePerson(editPersonData);
+        assertThat(editPersonData.getPassword(), equalTo(supervisor.getPassword()));
+    }
+
+    @Test
+    public void editPerson_role_shouldNotChange() throws Exception {
+        editPersonData.setRole(PersonRole.CUSTOMER);
+
+        editPersonService.updatePerson(editPersonData);
+        assertThat(editPersonData.getRole(), equalTo(supervisor.getRole()));
     }
 }

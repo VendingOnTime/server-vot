@@ -50,7 +50,12 @@ public class EditPersonService extends AbstractService {
         if (!authProvider.canModify(requester, person))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
+        editPersonData
+                .setPassword(person.getPassword())
+                .setRole(person.getRole());
+
         person.updateWith(editPersonData);
+
         return repository.update(person);
     }
 }
