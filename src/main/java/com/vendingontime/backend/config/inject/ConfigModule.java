@@ -136,6 +136,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(RemoveMachineRouter.class);
         routerBinder.addBinding().to(EditMachineRouter.class);
         routerBinder.addBinding().to(GetMachineRouter.class);
+        routerBinder.addBinding().to(EditPersonRouter.class);
     }
 
     private void bindPlugins() {
