@@ -27,6 +27,9 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 import java.util.Optional;
 
 public class EditPasswordService extends AbstractService {
+
+    public static final String OLD_PASSWORD_DO_NOT_MATCH = "OLD_PASSWORD_DO_NOT_MATCH";
+
     private final AuthProvider authProvider;
     private final PersonRepository repository;
 
@@ -48,6 +51,9 @@ public class EditPasswordService extends AbstractService {
 
         if (!authProvider.canModifyPassword(requester, person))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+
+        if (!person.getPassword().equals(editPasswordData.getOldPassword()))
+            throw new BusinessLogicException(new String[]{OLD_PASSWORD_DO_NOT_MATCH});
 
         person.updateWith(editPasswordData);
 

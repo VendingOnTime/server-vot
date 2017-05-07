@@ -112,4 +112,15 @@ public class EditPasswordServiceTest {
             assertArrayEquals(new String[]{EditPasswordService.INSUFFICIENT_PERMISSIONS}, e.getCauses());
         }
     }
+
+    @Test
+    public void editPerson_passwordsDoNotMatch_throwsException() throws Exception {
+        editPasswordData.setOldPassword("ANOTHER_PASSWORD");
+
+        try {
+            editPasswordService.updatePassword(editPasswordData);
+        } catch (BusinessLogicException e) {
+            assertArrayEquals(new String[]{EditPasswordService.OLD_PASSWORD_DO_NOT_MATCH}, e.getCauses());
+        }
+    }
 }

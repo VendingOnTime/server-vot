@@ -2,11 +2,9 @@ package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
-import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.EditPasswordRouter;
-import com.vendingontime.backend.routes.EditPersonRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
