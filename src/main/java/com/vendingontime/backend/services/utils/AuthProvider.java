@@ -21,4 +21,5 @@ import com.vendingontime.backend.models.person.Person;
 
 public interface AuthProvider {
     boolean canModify(Person requester, Person person);
+    boolean canModifyPassword(Person requester, Person person);
 }

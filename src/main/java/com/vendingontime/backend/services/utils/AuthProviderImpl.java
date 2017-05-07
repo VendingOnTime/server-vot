@@ -26,4 +26,9 @@ public class AuthProviderImpl implements AuthProvider {
         // TODO: alberto@2/5/17 Once company person hierarchy gets more complex add extra checks here
         return requester.equals(person);
     }
+
+    @Override
+    public boolean canModifyPassword(Person requester, Person person) {
+        return requester.equals(person);
+    }
 }

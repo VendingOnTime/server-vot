@@ -55,4 +55,14 @@ public class AuthProviderImplTest {
     public void canModify_nonRelatedOne_isFalse() throws Exception {
         assertThat(authProvider.canModify(requester, FixtureFactory.generateCustomer()), is(false));
     }
+
+    @Test
+    public void canModifyPassword_himself_isTrue() throws Exception {
+        assertThat(authProvider.canModifyPassword(requester, requester), is(true));
+    }
+
+    @Test
+    public void canModifyPassword_nonRelatedOne_isFalse() throws Exception {
+        assertThat(authProvider.canModifyPassword(requester, FixtureFactory.generateCustomer()), is(false));
+    }
 }
