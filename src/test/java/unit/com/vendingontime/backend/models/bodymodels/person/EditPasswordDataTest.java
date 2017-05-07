@@ -1,13 +1,13 @@
 package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
+import com.vendingontime.backend.models.person.Person;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testutils.FixtureFactory;
 
-import static com.vendingontime.backend.models.bodymodels.person.EditPasswordData.EMPTY_NEW_PASSWORD;
-import static com.vendingontime.backend.models.bodymodels.person.EditPasswordData.EMPTY_OLD_PASSWORD;
-import static com.vendingontime.backend.models.bodymodels.person.EditPasswordData.SHORT_NEW_PASSWORD;
+import static com.vendingontime.backend.models.bodymodels.person.EditPasswordData.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
@@ -36,8 +36,10 @@ public class EditPasswordDataTest {
     @Before
     public void setUp() throws Exception {
         editPasswordData = new EditPasswordData()
+                .setId("PERSON_ID")
                 .setOldPassword("123456")
-                .setNewPassword("7891011");
+                .setNewPassword("7891011")
+                .setRequester(FixtureFactory.generateSupervisor());
     }
 
     @After
@@ -48,6 +50,12 @@ public class EditPasswordDataTest {
     @Test
     public void validate_goodData_isValid() throws Exception {
         assertThat(editPasswordData.validate(), equalTo(new String[]{}));
+    }
+
+    @Test
+    public void validate_emptyId_returnsError() throws Exception {
+        editPasswordData.setId("");
+        assertThat(editPasswordData.validate(), equalTo(new String[]{EMPTY_PERSON_ID}));
     }
 
     @Test
@@ -66,5 +74,17 @@ public class EditPasswordDataTest {
     public void validate_shortNewPassword_returnsError() throws Exception {
         editPasswordData.setNewPassword("12");
         assertThat(editPasswordData.validate(), equalTo(new String[]{SHORT_NEW_PASSWORD}));
+    }
+
+    @Test
+    public void validate_emptyRequester_returnsError() throws Exception {
+        editPasswordData.setRequester(null);
+        assertThat(editPasswordData.validate(), equalTo(new String[]{EMPTY_REQUESTER}));
+    }
+
+    @Test
+    public void validate_requesterWithoutRole_returnsError() throws Exception {
+        editPasswordData.setRequester(new Person());
+        assertThat(editPasswordData.validate(), equalTo(new String[]{EMPTY_REQUESTER}));
     }
 }
