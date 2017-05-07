@@ -1,9 +1,11 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.routes.EditPasswordRouter;
 import com.vendingontime.backend.routes.EditPersonRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
@@ -37,9 +39,9 @@ import static org.mockito.Mockito.mock;
  * specific language governing permissions and limitations under the License.
  */
 
-public class EditPersonRouterTest extends IntegrationTest {
+public class EditPasswordRouterTest extends IntegrationTest {
 
-    @Inject private EditPersonRouter router;
+    @Inject private EditPasswordRouter router;
 
     @Inject private SignUpService signUpService;
 
@@ -50,12 +52,12 @@ public class EditPersonRouterTest extends IntegrationTest {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
 
         ObjectMapper mapper = new ObjectMapper();
-        EditPersonData editPersonData = FixtureFactory.generateEditPersonDataFrom(supervisor);
-        editPersonData.setId(null);
-        editPersonData.setName("NEW_NAME");
-        String stringifiedPerson = mapper.writeValueAsString(editPersonData);
+        EditPasswordData editPasswordData = FixtureFactory.generateEditPasswordDataFrom(supervisor);
+        editPasswordData.setId(null);
+        editPasswordData.setNewPassword("NEW_PASSWORD");
+        String stringifiedPerson = mapper.writeValueAsString(editPasswordData);
 
-        AppRoute post = router.editProfile(supervisor.getId(), stringifiedPerson, supervisor);
+        AppRoute post = router.editPassword(supervisor.getId(), stringifiedPerson, supervisor);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
