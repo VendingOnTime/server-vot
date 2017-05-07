@@ -1,12 +1,9 @@
 package unit.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
-import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.EditPasswordService;
-import com.vendingontime.backend.services.EditPersonService;
 import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
@@ -17,7 +14,6 @@ import testutils.FixtureFactory;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
