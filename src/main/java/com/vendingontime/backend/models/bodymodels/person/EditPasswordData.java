@@ -49,7 +49,7 @@ public class EditPasswordData implements Validable {
         if (isEmpty(oldPassword)) causes.add(EMPTY_OLD_PASSWORD);
         // FIXME: alberto@7/5/17 Define business domain objects to represent passwords, emails, etc.
         if (isEmpty(newPassword)) causes.add(EMPTY_NEW_PASSWORD);
-        if (!isEmpty(newPassword) && isShort(newPassword, MIN_PASSWORD_LENGTH)) causes.add(SHORT_NEW_PASSWORD);
+        else if (isShort(newPassword, MIN_PASSWORD_LENGTH)) causes.add(SHORT_NEW_PASSWORD);
         if (requester == null || requester.getRole() == null) causes.add(EMPTY_REQUESTER);
 
         return causes.toArray(new String[causes.size()]);
