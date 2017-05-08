@@ -16,7 +16,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_MACHINE_DESCRIPTION;
+import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_DESCRIPTION;
 import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -95,7 +95,7 @@ public class EditMachineRouterTest {
 
     @Test
     public void editMachine_withInvalidData() {
-        String[] expectedErrors = new String[]{ INVALID_MACHINE_DESCRIPTION };
+        String[] expectedErrors = new String[]{INVALID_DESCRIPTION};
 
         doThrow(new BusinessLogicException(expectedErrors))
                 .when(service).updateMachine((EditMachineData) payload.setId(MACHINE_ID).setRequester(person));

@@ -61,63 +61,63 @@ public class AddMachineDataTest {
 
     @Test
     public void validate_invalid_nullMachineLocation() {
-        machineData.setMachineLocation(null);
+        machineData.setLocation(null);
 
-        assertArrayEquals(new String[]{INVALID_MACHINE_LOCATION}, machineData.validate());
+        assertArrayEquals(new String[]{INVALID_LOCATION}, machineData.validate());
     }
 
     @Test
     public void validate_invalid_nullMachineLocationName() {
         MachineLocation location = new MachineLocation().setName(null);
-        machineData.setMachineLocation(location);
+        machineData.setLocation(location);
 
-        assertArrayEquals(new String[]{INVALID_MACHINE_LOCATION_NAME}, machineData.validate());
+        assertArrayEquals(new String[]{INVALID_LOCATION_NAME}, machineData.validate());
     }
 
     @Test
     public void validate_machineLocationName_betweenBoundaries() {
-        MachineLocation locationWithMinLength = new MachineLocation().setName(StringUtils.createFilled(MIN_MACHINE_LOCATION_NAME_LENGTH));
-        MachineLocation locationWithMaxLength = new MachineLocation().setName(StringUtils.createFilled(MAX_MACHINE_LOCATION_NAME_LENGTH));
-        MachineLocation locationWithLengthBetweenBoundaries = new MachineLocation().setName(StringUtils.createFilled(MAX_MACHINE_LOCATION_NAME_LENGTH - 1));
+        MachineLocation locationWithMinLength = new MachineLocation().setName(StringUtils.createFilled(MIN_LOCATION_NAME_LENGTH));
+        MachineLocation locationWithMaxLength = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH));
+        MachineLocation locationWithLengthBetweenBoundaries = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH - 1));
 
-        machineData.setMachineLocation(locationWithMinLength);
+        machineData.setLocation(locationWithMinLength);
         assertArrayEquals(new String[]{}, machineData.validate());
 
-        machineData.setMachineLocation(locationWithMaxLength);
+        machineData.setLocation(locationWithMaxLength);
         assertArrayEquals(new String[]{}, machineData.validate());
 
-        machineData.setMachineLocation(locationWithLengthBetweenBoundaries);
+        machineData.setLocation(locationWithLengthBetweenBoundaries);
         assertArrayEquals(new String[]{}, machineData.validate());
     }
 
     @Test
     public void validate_invalid_shortMachineLocationName() {
         MachineLocation location = new MachineLocation().setName("a");
-        machineData.setMachineLocation(location);
+        machineData.setLocation(location);
 
-        assertArrayEquals(new String[]{SHORT_MACHINE_LOCATION_NAME}, machineData.validate());
+        assertArrayEquals(new String[]{SHORT_LOCATION_NAME}, machineData.validate());
     }
 
     @Test
     public void validate_invalid_longMachineLocationName() {
-        MachineLocation location = new MachineLocation().setName(StringUtils.createFilled(MAX_MACHINE_LOCATION_NAME_LENGTH + 1));
-        machineData.setMachineLocation(location);
+        MachineLocation location = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH + 1));
+        machineData.setLocation(location);
 
-        assertArrayEquals(new String[]{LONG_MACHINE_LOCATION_NAME}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME}, machineData.validate());
     }
 
     @Test
     public void validate_invalid_nullMachineDescription() {
         machineData.setDescription(null);
 
-        assertArrayEquals(new String[]{INVALID_MACHINE_DESCRIPTION}, machineData.validate());
+        assertArrayEquals(new String[]{INVALID_DESCRIPTION}, machineData.validate());
     }
 
     @Test
     public void validate_machineDescription_betweenBoundaries() {
-        String descriptionWithMinLength = StringUtils.createFilled(MIN_MACHINE_DESCRIPTION_LENGTH);
-        String descriptionWithMaxLength = StringUtils.createFilled(MAX_MACHINE_DESCRIPTION_LENGTH);
-        String descriptionWithLengthBetweenBoundaries = StringUtils.createFilled(MAX_MACHINE_DESCRIPTION_LENGTH - 1);
+        String descriptionWithMinLength = StringUtils.createFilled(MIN_DESCRIPTION_LENGTH);
+        String descriptionWithMaxLength = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH);
+        String descriptionWithLengthBetweenBoundaries = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH - 1);
 
         machineData.setDescription(descriptionWithMinLength);
         assertArrayEquals(new String[]{}, machineData.validate());
@@ -131,22 +131,22 @@ public class AddMachineDataTest {
 
     @Test
     public void validate_invalid_longMachineDescription() {
-        String description = StringUtils.createFilled(MAX_MACHINE_DESCRIPTION_LENGTH + 1);
+        String description = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH + 1);
         machineData.setDescription(description);
 
-        assertArrayEquals(new String[]{LONG_MACHINE_DESCRIPTION}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_DESCRIPTION}, machineData.validate());
     }
 
     //TODO enum tests and complete test with all kind of errors
 
     @Test
     public void validate_invalid_variousErrors() {
-        MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_MACHINE_LOCATION_NAME_LENGTH + 1));
-        String invalidDescription = StringUtils.createFilled(MAX_MACHINE_DESCRIPTION_LENGTH + 1);
+        MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH + 1));
+        String invalidDescription = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH + 1);
 
-        machineData.setMachineLocation(invalidMachineLocation).setDescription(invalidDescription);
+        machineData.setLocation(invalidMachineLocation).setDescription(invalidDescription);
 
-        assertArrayEquals(new String[]{LONG_MACHINE_LOCATION_NAME, LONG_MACHINE_DESCRIPTION}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION}, machineData.validate());
     }
 
     @Test

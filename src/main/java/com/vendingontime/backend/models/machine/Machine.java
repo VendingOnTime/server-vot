@@ -47,10 +47,10 @@ public class Machine extends AbstractEntity<Machine> {
     }
 
     public Machine(AddMachineData addMachineData) {
-        this.location = addMachineData.getMachineLocation();
+        this.location = addMachineData.getLocation();
         this.description = addMachineData.getDescription();
-        this.type = addMachineData.getMachineType();
-        this.state = addMachineData.getMachineState();
+        this.type = addMachineData.getType();
+        this.state = addMachineData.getState();
     }
 
     public Machine(EditMachineData editMachineData) {
