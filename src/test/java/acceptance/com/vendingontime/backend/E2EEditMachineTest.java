@@ -65,7 +65,7 @@ public class E2EEditMachineTest extends E2ETest {
 
         EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
         payload.setDescription("NEW_DESCRIPTION");
-        payload.setMachineState(MachineState.OUT_OF_SERVICE);
+        payload.setState(MachineState.OUT_OF_SERVICE);
         payload.setId(null);
 
         given()
@@ -77,9 +77,9 @@ public class E2EEditMachineTest extends E2ETest {
             .statusCode(HttpResponse.StatusCode.OK)
             .body("success", is(true))
             .body("data.id", notNullValue())
-            .body("data.location.name", is(payload.getMachineLocation().getName()))
-            .body("data.type", is(payload.getMachineType().toValue()))
-            .body("data.state", is(payload.getMachineState().toValue()))
+            .body("data.location.name", is(payload.getLocation().getName()))
+            .body("data.type", is(payload.getType().toValue()))
+            .body("data.state", is(payload.getState().toValue()))
             .body("data.description", is(payload.getDescription()))
             .body("error", nullValue());
 
@@ -155,7 +155,7 @@ public class E2EEditMachineTest extends E2ETest {
 
         EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
         payload.setDescription("NEW_DESCRIPTION");
-        payload.setMachineState(MachineState.OUT_OF_SERVICE);
+        payload.setState(MachineState.OUT_OF_SERVICE);
         payload.setId(null);
 
         given()

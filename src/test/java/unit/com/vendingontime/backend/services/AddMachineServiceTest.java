@@ -85,11 +85,11 @@ public class AddMachineServiceTest {
     @Test
     public void createMachine_withInvalidPayload_throwsException() {
         try {
-            addMachineData.getMachineLocation().setName("");
+            addMachineData.getLocation().setName("");
             addMachineService.createMachine(addMachineData);
             fail();
         } catch (BusinessLogicException ex) {
-            assertArrayEquals(new String[]{AddMachineData.SHORT_MACHINE_LOCATION_NAME}, ex.getCauses());
+            assertArrayEquals(new String[]{AddMachineData.SHORT_LOCATION_NAME}, ex.getCauses());
 
             verify(repository, never()).create(any());
             verify(companyRepository, never()).update(any());

@@ -29,28 +29,28 @@ import java.util.List;
  * specific language governing permissions and limitations under the License.
  */
 public class AddMachineData implements Validable {
-    public static final int MIN_MACHINE_LOCATION_NAME_LENGTH  = 4;
-    public static final int MAX_MACHINE_LOCATION_NAME_LENGTH  = 140;
+    public static final int MIN_LOCATION_NAME_LENGTH = 4;
+    public static final int MAX_LOCATION_NAME_LENGTH = 140;
 
-    public static final int MIN_MACHINE_DESCRIPTION_LENGTH  = 0;
-    public static final int MAX_MACHINE_DESCRIPTION_LENGTH  = 300;
+    public static final int MIN_DESCRIPTION_LENGTH = 0;
+    public static final int MAX_DESCRIPTION_LENGTH = 300;
 
     public static final String EMPTY_LOCATION_NAME = "EMPTY_LOCATION_NAME";
 
-    public static final String INVALID_MACHINE_DESCRIPTION = "INVALID_MACHINE_DESCRIPTION";
-    public static final String INVALID_MACHINE_LOCATION = "INVALID_MACHINE_LOCATION";
-    public static final String INVALID_MACHINE_LOCATION_NAME = "INVALID_MACHINE_LOCATION_NAME";
-    public static final String INVALID_MACHINE_TYPE = "INVALID_MACHINE_TYPE";
-    public static final String INVALID_MACHINE_STATE = "INVALID_MACHINE_STATE";
+    public static final String INVALID_DESCRIPTION = "INVALID_DESCRIPTION";
+    public static final String INVALID_LOCATION = "INVALID_LOCATION";
+    public static final String INVALID_LOCATION_NAME = "INVALID_LOCATION_NAME";
+    public static final String INVALID_TYPE = "INVALID_TYPE";
+    public static final String INVALID_STATE = "INVALID_STATE";
 
-    public static final String SHORT_MACHINE_LOCATION_NAME = "SHORT_MACHINE_LOCATION_NAME";
+    public static final String SHORT_LOCATION_NAME = "SHORT_LOCATION_NAME";
 
-    public static final String LONG_MACHINE_LOCATION_NAME = "LONG_MACHINE_LOCATION_NAME";
-    public static final String LONG_MACHINE_DESCRIPTION = "LONG_MACHINE_DESCRIPTION";
+    public static final String LONG_LOCATION_NAME = "LONG_LOCATION_NAME";
+    public static final String LONG_DESCRIPTION = "LONG_DESCRIPTION";
 
-    private MachineLocation machineLocation;
-    private MachineType machineType;
-    private MachineState machineState;
+    private MachineLocation location;
+    private MachineType type;
+    private MachineState state;
     private String description;
     private Person requester;
 
@@ -74,57 +74,57 @@ public class AddMachineData implements Validable {
     }
 
     private List<String> validateMachineLocation() {
-        if (machineLocation == null) return Collections.singletonList(INVALID_MACHINE_LOCATION);
-        if (machineLocation.getName() == null) return Collections.singletonList(INVALID_MACHINE_LOCATION_NAME);
+        if (location == null) return Collections.singletonList(INVALID_LOCATION);
+        if (location.getName() == null) return Collections.singletonList(INVALID_LOCATION_NAME);
 
         List<String> causes = new LinkedList<>();
-        if (machineLocation.getName().length() < MIN_MACHINE_LOCATION_NAME_LENGTH) {
-            causes.add(SHORT_MACHINE_LOCATION_NAME);
+        if (location.getName().length() < MIN_LOCATION_NAME_LENGTH) {
+            causes.add(SHORT_LOCATION_NAME);
         }
 
-        if (machineLocation.getName().length() > MAX_MACHINE_LOCATION_NAME_LENGTH) {
-            causes.add(LONG_MACHINE_LOCATION_NAME);
+        if (location.getName().length() > MAX_LOCATION_NAME_LENGTH) {
+            causes.add(LONG_LOCATION_NAME);
         }
 
         return causes;
     }
 
     private List<String> validateMachineDescription() {
-        if (description == null) return Collections.singletonList(INVALID_MACHINE_DESCRIPTION);
+        if (description == null) return Collections.singletonList(INVALID_DESCRIPTION);
 
         List<String> causes = new LinkedList<>();
-        if (description.length() > MAX_MACHINE_DESCRIPTION_LENGTH) {
-            causes.add(LONG_MACHINE_DESCRIPTION);
+        if (description.length() > MAX_DESCRIPTION_LENGTH) {
+            causes.add(LONG_DESCRIPTION);
         }
 
         return causes;
     }
 
 
-    public MachineLocation getMachineLocation() {
-        return machineLocation;
+    public MachineLocation getLocation() {
+        return location;
     }
 
-    public AddMachineData setMachineLocation(MachineLocation machineLocation) {
-        this.machineLocation = machineLocation;
+    public AddMachineData setLocation(MachineLocation location) {
+        this.location = location;
         return this;
     }
 
-    public MachineType getMachineType() {
-        return machineType;
+    public MachineType getType() {
+        return type;
     }
 
-    public AddMachineData setMachineType(MachineType machineType) {
-        this.machineType = machineType;
+    public AddMachineData setType(MachineType type) {
+        this.type = type;
         return this;
     }
 
-    public MachineState getMachineState() {
-        return machineState;
+    public MachineState getState() {
+        return state;
     }
 
-    public AddMachineData setMachineState(MachineState machineState) {
-        this.machineState = machineState;
+    public AddMachineData setState(MachineState state) {
+        this.state = state;
         return this;
     }
 
@@ -153,10 +153,10 @@ public class AddMachineData implements Validable {
 
         AddMachineData that = (AddMachineData) o;
 
-        if (getMachineLocation() != null ? !getMachineLocation().equals(that.getMachineLocation()) : that.getMachineLocation() != null)
+        if (getLocation() != null ? !getLocation().equals(that.getLocation()) : that.getLocation() != null)
             return false;
-        if (getMachineType() != that.getMachineType()) return false;
-        if (getMachineState() != that.getMachineState()) return false;
+        if (getType() != that.getType()) return false;
+        if (getState() != that.getState()) return false;
         if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
             return false;
         return getRequester() != null ? getRequester().equals(that.getRequester()) : that.getRequester() == null;
@@ -164,9 +164,9 @@ public class AddMachineData implements Validable {
 
     @Override
     public int hashCode() {
-        int result = getMachineLocation() != null ? getMachineLocation().hashCode() : 0;
-        result = 31 * result + (getMachineType() != null ? getMachineType().hashCode() : 0);
-        result = 31 * result + (getMachineState() != null ? getMachineState().hashCode() : 0);
+        int result = getLocation() != null ? getLocation().hashCode() : 0;
+        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
+        result = 31 * result + (getState() != null ? getState().hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getRequester() != null ? getRequester().hashCode() : 0);
         return result;
@@ -175,9 +175,9 @@ public class AddMachineData implements Validable {
     @Override
     public String toString() {
         return "AddMachineData{" +
-                "machineLocation=" + machineLocation +
-                ", machineType=" + machineType +
-                ", machineState=" + machineState +
+                "location=" + location +
+                ", type=" + type +
+                ", state=" + state +
                 ", description='" + description + '\'' +
                 ", requester=" + requester +
                 '}';

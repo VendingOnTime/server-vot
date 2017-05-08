@@ -137,9 +137,9 @@ public class FixtureFactory {
     public static AddMachineData generateAddMachineData() {
         return new AddMachineData()
                 .setDescription("DESCRIPTION")
-                .setMachineType(MachineType.COFFEE)
-                .setMachineState(MachineState.OPERATIVE)
-                .setMachineLocation(instance.generateBasicLocation());
+                .setType(MachineType.COFFEE)
+                .setState(MachineState.OPERATIVE)
+                .setLocation(instance.generateBasicLocation());
     }
 
     public static EditMachineData generateEditMachineData() {
@@ -147,9 +147,9 @@ public class FixtureFactory {
 
         return (EditMachineData) new EditMachineData()
                 .setDescription(amd.getDescription())
-                .setMachineType(amd.getMachineType())
-                .setMachineState(amd.getMachineState())
-                .setMachineLocation(amd.getMachineLocation());
+                .setType(amd.getType())
+                .setState(amd.getState())
+                .setLocation(amd.getLocation());
     }
 
     public static EditMachineData generateEditMachineDataFrom(Machine machine) {
@@ -157,9 +157,9 @@ public class FixtureFactory {
 
         editMachineData.setId(machine.getId());
         editMachineData.setDescription(machine.getDescription());
-        editMachineData.setMachineLocation(machine.getLocation());
-        editMachineData.setMachineState(machine.getState());
-        editMachineData.setMachineType(machine.getType());
+        editMachineData.setLocation(machine.getLocation());
+        editMachineData.setState(machine.getState());
+        editMachineData.setType(machine.getType());
 
         return editMachineData;
     }

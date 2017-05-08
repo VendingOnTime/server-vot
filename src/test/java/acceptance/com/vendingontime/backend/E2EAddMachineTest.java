@@ -34,7 +34,7 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
-import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_MACHINE_DESCRIPTION;
+import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.INVALID_DESCRIPTION;
 import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -67,9 +67,9 @@ public class E2EAddMachineTest extends E2ETest {
             .statusCode(HttpResponse.StatusCode.CREATED)
             .body("success", is(true))
             .body("data.id", notNullValue())
-            .body("data.location.name", is(payload.getMachineLocation().getName()))
-            .body("data.type", is(payload.getMachineType().toValue()))
-            .body("data.state", is(payload.getMachineState().toValue()))
+            .body("data.location.name", is(payload.getLocation().getName()))
+            .body("data.type", is(payload.getType().toValue()))
+            .body("data.state", is(payload.getState().toValue()))
             .body("data.description", is(payload.getDescription()))
             .body("error", nullValue());
 
@@ -97,7 +97,7 @@ public class E2EAddMachineTest extends E2ETest {
             .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
             .body("success", is(false))
             .body("data", nullValue())
-            .body("error", contains(INVALID_MACHINE_DESCRIPTION));
+            .body("error", contains(INVALID_DESCRIPTION));
 
         machineRepository.deleteAll();
         personRepository.deleteAll();
