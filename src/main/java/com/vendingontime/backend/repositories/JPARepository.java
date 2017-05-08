@@ -70,7 +70,7 @@ public abstract class JPARepository<MODEL extends AbstractEntity> implements Rep
 
                 EntityTransaction tr = em.getTransaction();
                 tr.begin();
-                found.update(model);
+                found.updateWith(model);
                 tr.commit();
             } finally {
                 em.detach(found);

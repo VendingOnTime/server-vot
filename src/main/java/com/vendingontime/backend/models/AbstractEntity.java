@@ -67,7 +67,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> {
         return result;
     }
 
-    public abstract void update(T entity);
+    public abstract void updateWith(T entity);
 
     @Override
     public String toString() {

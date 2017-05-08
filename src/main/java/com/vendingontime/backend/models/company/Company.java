@@ -42,7 +42,7 @@ public class Company extends AbstractEntity<Company> {
     }
 
     @Override
-    public void update(Company company) {
+    public void updateWith(Company company) {
         this.owner = company.getOwner();
         this.machines = company.getMachines();
     }

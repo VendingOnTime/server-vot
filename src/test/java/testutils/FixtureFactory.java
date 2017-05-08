@@ -20,6 +20,8 @@ package testutils;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
+import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
+import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
@@ -93,6 +95,37 @@ public class FixtureFactory {
         return new LogInData()
                 .setEmail(signUpData.getEmail())
                 .setPassword(signUpData.getPassword());
+    }
+
+    public static EditPersonData generateEditPersonData() {
+        SignUpData signUpData = generateSignUpData();
+
+        return (EditPersonData) new EditPersonData()
+                .setDni(signUpData.getDni())
+                .setName(signUpData.getName())
+                .setSurnames(signUpData.getSurnames())
+                .setEmail(signUpData.getEmail())
+                .setUsername(signUpData.getUsername())
+                .setPassword(signUpData.getPassword())
+                .setRole(PersonRole.SUPERVISOR);
+    }
+
+    public static EditPersonData generateEditPersonDataFrom(Person person) {
+        return (EditPersonData) new EditPersonData()
+                .setId(person.getId())
+                .setDni(person.getDni())
+                .setName(person.getName())
+                .setSurnames(person.getSurnames())
+                .setEmail(person.getEmail())
+                .setUsername(person.getUsername())
+                .setPassword(person.getPassword())
+                .setRole(person.getRole());
+    }
+
+    public static EditPasswordData generateEditPasswordDataFrom(Person person) {
+        return new EditPasswordData()
+                .setId(person.getId())
+                .setOldPassword(person.getPassword());
     }
 
     // MACHINE METHODS

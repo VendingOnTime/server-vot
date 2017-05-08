@@ -42,10 +42,9 @@ public class LogInService extends AbstractService {
     }
 
     public String authorizeUser(LogInData userData) throws BusinessLogicException {
-        String[] signInErrors = userData.validate();
-
-        if(signInErrors.length != 0) {
-            throw new BusinessLogicException(signInErrors);
+        String[] validationErrors = userData.validate();
+        if (validationErrors.length != 0) {
+            throw new BusinessLogicException(validationErrors);
         }
 
         if (!checkProvidedData(userData)) {

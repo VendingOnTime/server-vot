@@ -29,10 +29,7 @@ import com.vendingontime.backend.services.*;
 import com.vendingontime.backend.routes.LogInRouter;
 import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.SparkRouter;
-import com.vendingontime.backend.services.utils.DummyPasswordEncryptor;
-import com.vendingontime.backend.services.utils.JWTTokenGenerator;
-import com.vendingontime.backend.services.utils.PasswordEncryptor;
-import com.vendingontime.backend.services.utils.TokenGenerator;
+import com.vendingontime.backend.services.utils.*;
 import spark.ResponseTransformer;
 
 /*
@@ -64,7 +61,8 @@ public class ConfigModule extends AbstractModule {
     protected void configure() {
         bindLiterals();
         bindCoreComponents();
-        bindUtils();
+        bindServiceUtils();
+        bindRouterUtils();
         bindRepositories();
         bindServices();
         bindMiddleware();
@@ -90,12 +88,13 @@ public class ConfigModule extends AbstractModule {
         bind(SparkPluginInitializer.class).in(Singleton.class);
     }
 
-    private void bindUtils() {
-        // Services
+    private void bindServiceUtils() {
         bind(TokenGenerator.class).to(JWTTokenGenerator.class);
         bind(PasswordEncryptor.class).to(DummyPasswordEncryptor.class);
+        bind(AuthProvider.class).to(AuthProviderImpl.class);
+    }
 
-        // Routes
+    private void bindRouterUtils() {
         bind(ResponseTransformer.class).to(JSONTransformer.class);
         bind(ServiceResponse.class).to(HttpResponse.class);
         bind(ResultFactory.class).to(RESTResultFactory.class);
@@ -120,6 +119,8 @@ public class ConfigModule extends AbstractModule {
         bind(RemoveMachineService.class);
         bind(EditMachineService.class);
         bind(GetMachineService.class);
+        bind(EditPersonService.class);
+        bind(EditPasswordService.class);
     }
 
     private void bindMiddleware() {
@@ -136,6 +137,8 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(RemoveMachineRouter.class);
         routerBinder.addBinding().to(EditMachineRouter.class);
         routerBinder.addBinding().to(GetMachineRouter.class);
+        routerBinder.addBinding().to(EditPersonRouter.class);
+        routerBinder.addBinding().to(EditPasswordRouter.class);
     }
 
     private void bindPlugins() {
