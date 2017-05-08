@@ -19,10 +19,12 @@ package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
+import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.EditPersonRouter;
+import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
@@ -31,8 +33,12 @@ import testutils.FixtureFactory;
 
 import javax.inject.Inject;
 
+import static com.vendingontime.backend.models.bodymodels.person.SignUpData.INVALID_EMAIL;
+import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
+import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -44,7 +50,7 @@ public class E2EEditSupervisorDataTest extends E2ETest {
     @Inject private PersonRepository repository;
 
     @Test
-    public void editSupervisor_withValidJSON_andValidData_returnsNewSupervisorData() throws Exception {
+    public void editSupervisor_withValidJSON_andValidData_returnsUpdatedSupervisorData() throws Exception {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
 
         String token = loginService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
@@ -52,8 +58,6 @@ public class E2EEditSupervisorDataTest extends E2ETest {
         EditPersonData payload = FixtureFactory.generateEditPersonDataFrom(supervisor);
 
         payload.setName("NEW_NAME");
-        payload.setRole(PersonRole.CUSTOMER);
-        payload.setId(null);
 
         given()
                 .body(payload)
@@ -73,5 +77,73 @@ public class E2EEditSupervisorDataTest extends E2ETest {
                 .body("error", nullValue());
 
         repository.delete(supervisor.getId());
+    }
+
+    @Test
+    //It also throws SignUpData's validation errors
+    public void editSupervisor_withValidJSON_andInvalidData_returnsBadRequest() throws Exception {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+
+        String token = loginService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        EditPersonData payload = FixtureFactory.generateEditPersonDataFrom(supervisor);
+        payload.setEmail("invalidEmail");
+
+        given()
+                .body(payload)
+                .header("Authorization", "JWT " + token)
+        .when()
+                .put(host + EditPersonRouter.V1_EDIT_PROFILE + supervisor.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+                .body("success", is(false))
+                .body("data", nullValue())
+                .body("error", contains(INVALID_EMAIL));
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void editSupervisor_withInvalidJSON_returnsMalformedJSON() throws Exception {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+
+        String token = loginService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor));
+
+        given()
+                .body("")
+                .header("Authorization", "JWT " + token)
+        .when()
+                .put(host + EditPersonRouter.V1_EDIT_PROFILE + supervisor.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+                .body("success", is(false))
+                .body("data", nullValue())
+                .body("error", is(MALFORMED_JSON));
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void editSupervisor_withUnauthorizedUser_returnsInsufficientPermissions() throws Exception {
+        Person supervisor1 = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+        Person supervisor2 = signUpService.createSupervisor(FixtureFactory.generateSignUpData()
+                .setDni("12345678W").setEmail("another.email@example.com").setUsername("supervisor2"));
+
+        String token = loginService.authorizeUser(FixtureFactory.generateLogInDataFrom(supervisor2));
+
+        EditPersonData payload = FixtureFactory.generateEditPersonDataFrom(supervisor1);
+
+        given()
+                .body(payload)
+                .header("Authorization", "JWT " + token)
+        .when()
+                .put(host + EditPersonRouter.V1_EDIT_PROFILE + supervisor1.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+                .body("success", is(false))
+                .body("data", nullValue())
+                .body("error", contains(INSUFFICIENT_PERMISSIONS));
+
+        repository.deleteAll();
     }
 }

@@ -19,7 +19,6 @@ package acceptance.com.vendingontime.backend;
 
 import acceptance.com.vendingontime.backend.testutils.E2ETest;
 import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
-import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;

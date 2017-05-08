@@ -67,6 +67,7 @@ public class E2ESignUpSupervisorTest extends E2ETest {
     }
 
     @Test
+    // For a full list of all possible errors for invalid data, go to SignUpData's validate method.
     public void createSupervisor_withValidJSON_andInvalidData_returnsBadRequest() throws Exception {
         SignUpData payload = FixtureFactory.generateSignUpData()
                 .setEmail("invalidEmail");
