@@ -82,7 +82,7 @@ public class EditPasswordRouterTest {
     }
 
     @Test
-    public void editMachine_withValidData() {
+    public void editPassword_withValidData() {
         when(service.updatePassword(any())).thenReturn(Optional.of(requester));
 
         router.editPassword(PERSON_ID, stringifiedPerson, person);
@@ -93,7 +93,7 @@ public class EditPasswordRouterTest {
     }
 
     @Test
-    public void editMachine_withInvalidData() {
+    public void editPassword_withInvalidData() {
         String[] expectedErrors = new String[]{ EditPasswordData.EMPTY_NEW_PASSWORD };
 
         doThrow(new BusinessLogicException(expectedErrors))
@@ -105,7 +105,7 @@ public class EditPasswordRouterTest {
     }
 
     @Test
-    public void editMachine_withNotExistingMachine_returnsNotFound() throws Exception {
+    public void editPassword_withNotExistingPerson_returnsNotFound() throws Exception {
         when(service.updatePassword(payload)).thenReturn(Optional.empty());
 
         router.editPassword(PERSON_ID, stringifiedPerson, person);
@@ -114,7 +114,7 @@ public class EditPasswordRouterTest {
     }
 
     @Test
-    public void editMachine_withEmptyJSON() {
+    public void editPassword_withEmptyJSON() {
         stringifiedPerson = "";
 
         router.editPassword(PERSON_ID, stringifiedPerson, person);
@@ -125,7 +125,7 @@ public class EditPasswordRouterTest {
     }
 
     @Test
-    public void editMachine_withInvalidJSONField() {
+    public void editPassword_withInvalidJSONField() {
         stringifiedPerson = "{\"invalid\":\"1234\"}";
 
         router.editPassword(PERSON_ID, stringifiedPerson, person);

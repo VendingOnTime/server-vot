@@ -119,7 +119,6 @@ public class EditPasswordData implements Validable {
     public String toString() {
         return "EditPasswordData{" +
                 "id='" + id + '\'' +
-                ", oldPassword='" + oldPassword + '\'' + // TODO: alberto@7/5/17 Decide if we should print this
                 ", newPassword='" + newPassword + '\'' +
                 ", requester=" + requester +
                 '}';

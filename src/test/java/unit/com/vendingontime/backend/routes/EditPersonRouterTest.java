@@ -80,7 +80,7 @@ public class EditPersonRouterTest {
     }
 
     @Test
-    public void editMachine_withValidData() {
+    public void updatePerson_withValidData() {
         when(service.updatePerson(any())).thenReturn(Optional.of(requester));
 
         router.editProfile(PERSON_ID, stringifiedPerson, person);
@@ -91,7 +91,7 @@ public class EditPersonRouterTest {
     }
 
     @Test
-    public void editMachine_withInvalidData() {
+    public void updatePerson_withInvalidData() {
         String[] expectedErrors = new String[]{ EditPersonData.EMPTY_NAME };
 
         doThrow(new BusinessLogicException(expectedErrors))
@@ -103,7 +103,7 @@ public class EditPersonRouterTest {
     }
 
     @Test
-    public void editMachine_withNotExistingMachine_returnsNotFound() throws Exception {
+    public void updatePerson_withNotExistingPerson_returnsNotFound() throws Exception {
         when(service.updatePerson(payload)).thenReturn(Optional.empty());
 
         router.editProfile(PERSON_ID, stringifiedPerson, person);
@@ -112,7 +112,7 @@ public class EditPersonRouterTest {
     }
 
     @Test
-    public void editMachine_withEmptyJSON() {
+    public void updatePerson_withEmptyJSON() {
         stringifiedPerson = "";
 
         router.editProfile(PERSON_ID, stringifiedPerson, person);
@@ -123,7 +123,7 @@ public class EditPersonRouterTest {
     }
 
     @Test
-    public void editMachine_withInvalidJSONField() {
+    public void updatePerson_withInvalidJSONField() {
         stringifiedPerson = "{\"invalid\":\"1234\"}";
 
         router.editProfile(PERSON_ID, stringifiedPerson, person);

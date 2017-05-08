@@ -78,13 +78,13 @@ public class EditPasswordServiceTest {
     }
 
     @Test
-    public void editPerson_validDataAndPermissions_returnsFilledOptional() throws Exception {
+    public void editPassword_validDataAndPermissions_returnsFilledOptional() throws Exception {
         Optional<Person> possiblePerson = editPasswordService.updatePassword(editPasswordData);
         assertThat(possiblePerson.isPresent(), is(true));
     }
 
     @Test
-    public void editPerson_invalidData_throwsException() throws Exception {
+    public void editPassword_invalidData_throwsException() throws Exception {
         editPasswordData.setNewPassword("");
 
         try {
@@ -95,7 +95,7 @@ public class EditPasswordServiceTest {
     }
 
     @Test
-    public void editPerson_unknownPerson_returnsEmptyOptional() throws Exception {
+    public void editPassword_unknownPerson_returnsEmptyOptional() throws Exception {
         editPasswordData.setId("ANOTHER_PERSON");
 
         Optional<Person> possiblePerson = editPasswordService.updatePassword(editPasswordData);
@@ -103,7 +103,7 @@ public class EditPasswordServiceTest {
     }
 
     @Test
-    public void editPerson_insufficientPermissions_throwsException() throws Exception {
+    public void editPassword_insufficientPermissions_throwsException() throws Exception {
         when(authProvider.canModifyPassword(any(), any())).thenReturn(false);
 
         try {
@@ -114,7 +114,7 @@ public class EditPasswordServiceTest {
     }
 
     @Test
-    public void editPerson_passwordsDoNotMatch_throwsException() throws Exception {
+    public void editPassword_passwordsDoNotMatch_throwsException() throws Exception {
         editPasswordData.setOldPassword("ANOTHER_PASSWORD");
 
         try {
