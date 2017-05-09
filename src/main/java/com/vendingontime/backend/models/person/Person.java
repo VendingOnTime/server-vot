@@ -47,6 +47,10 @@ public class Person extends AbstractEntity<Person> {
     @JsonIgnore
     private Company ownedCompany;
 
+    @ManyToOne
+    @JsonIgnore
+    private Company company;
+
     public Person() {
         super();
     }
@@ -156,10 +160,19 @@ public class Person extends AbstractEntity<Person> {
         return this;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public Person setCompany(Company company) {
+        this.company = company;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Person)) return false;
         if (!super.equals(o)) return false;
 
         Person person = (Person) o;
@@ -186,6 +199,8 @@ public class Person extends AbstractEntity<Person> {
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getSurnames() != null ? getSurnames().hashCode() : 0);
         result = 31 * result + (getRole() != null ? getRole().hashCode() : 0);
+        result = 31 * result + (getOwnedCompany() != null ? getOwnedCompany().hashCode() : 0);
+        result = 31 * result + (getCompany() != null ? getCompany().hashCode() : 0);
         return result;
     }
 
