@@ -107,7 +107,7 @@ public class RemoveMachineServiceTest {
     @Test
     public void removeMachine_withDifferentCompany_throwsException() {
         try {
-            requester.setCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
+            requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
             removeMachineService.removeMachine(machine.getId(), requester);
             fail();
         } catch (BusinessLogicException ex) {

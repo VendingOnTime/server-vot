@@ -61,7 +61,7 @@ public class SignUpServiceTest extends IntegrationTest {
         assertNotNull(user);
 
         Optional<Person> byEmail = repository.findByEmail(supervisor.getEmail());
-        Optional<Company> userCompany = companyRepository.findById(user.getCompany().getId());
+        Optional<Company> userCompany = companyRepository.findById(user.getOwnedCompany().getId());
 
         assertTrue(byEmail.isPresent());
         assertTrue(userCompany.isPresent());

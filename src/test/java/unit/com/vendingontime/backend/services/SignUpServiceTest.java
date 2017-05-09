@@ -88,8 +88,8 @@ public class SignUpServiceTest {
         verify(companyRepository, times(1)).create(any());
         verify(companyRepository, times(1)).update(any());
 
-        assertNotNull(person.getCompany().getId());
-        assertNotNull(companyRepository.findById(person.getCompany().getId()));
+        assertNotNull(person.getOwnedCompany().getId());
+        assertNotNull(companyRepository.findById(person.getOwnedCompany().getId()));
     }
 
     @Test
@@ -102,8 +102,8 @@ public class SignUpServiceTest {
         verify(companyRepository, times(1)).update(any());
 
         assertEquals(PersonRole.SUPERVISOR, supervisor.getRole());
-        assertNotNull(supervisor.getCompany().getId());
-        assertNotNull(companyRepository.findById(supervisor.getCompany().getId()));
+        assertNotNull(supervisor.getOwnedCompany().getId());
+        assertNotNull(companyRepository.findById(supervisor.getOwnedCompany().getId()));
     }
 
     @Test

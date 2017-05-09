@@ -31,7 +31,7 @@ import java.util.Set;
 })
 public class Company extends AbstractEntity<Company> {
 
-    @OneToOne(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(mappedBy = "ownedCompany", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Person owner;
 
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
@@ -53,7 +53,7 @@ public class Company extends AbstractEntity<Company> {
 
     public Company setOwner(Person owner) {
         this.owner = owner;
-        owner.setCompany(this);
+        owner.setOwnedCompany(this);
         return this;
     }
 
@@ -89,6 +89,6 @@ public class Company extends AbstractEntity<Company> {
 
     @PreRemove
     void preRemove() {
-        if (owner != null) owner.setCompany(null);
+        if (owner != null) owner.setOwnedCompany(null);
     }
 }

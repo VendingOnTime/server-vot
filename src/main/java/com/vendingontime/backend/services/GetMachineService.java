@@ -41,7 +41,7 @@ public class GetMachineService extends AbstractService {
         if (!possibleMachine.isPresent()) return Optional.empty();
 
         Machine foundMachine = possibleMachine.get();
-        if (!foundMachine.getCompany().equals(requester.getCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+        if (!foundMachine.getCompany().equals(requester.getOwnedCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleMachine;
     }
@@ -49,8 +49,8 @@ public class GetMachineService extends AbstractService {
     private boolean isAuthorized(Person requester) {
         if (requester == null) return false;
         if (requester.getId() == null || requester.getId().isEmpty()) return false;
-        if (requester.getCompany() == null) return false;
-        if (requester.getCompany().getId() == null || requester.getCompany().getId().isEmpty()) return false;
+        if (requester.getOwnedCompany() == null) return false;
+        if (requester.getOwnedCompany().getId() == null || requester.getOwnedCompany().getId().isEmpty()) return false;
 
         return true;
     }

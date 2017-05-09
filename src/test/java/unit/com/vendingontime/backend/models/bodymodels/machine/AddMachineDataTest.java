@@ -170,7 +170,7 @@ public class AddMachineDataTest {
 
     @Test
     public void invalidRequester_WithNullCompany() {
-        machineData.getRequester().setCompany(null);
+        machineData.getRequester().setOwnedCompany(null);
 
         assertFalse(machineData.requesterIsAuthorized());
     }

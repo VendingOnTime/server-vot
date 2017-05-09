@@ -119,7 +119,7 @@ public class JPACompanyRepositoryTest extends IntegrationTest {
 
         assertThat(possibleUpdated.isPresent(), is(true));
         assertThat(possibleUpdated.get().getOwner(), equalTo(owner));
-        assertThat(savedOwner.getCompany(), equalTo(company));
+        assertThat(savedOwner.getOwnedCompany(), equalTo(company));
 
         companyRepository.delete(companyId);
         personRepository.delete(ownerId);

@@ -58,7 +58,7 @@ public class AddMachineData implements Validable {
     public boolean requesterIsAuthorized() {
         if (requester == null || requester.getId() == null) return false;
         if (requester.getRole() != PersonRole.SUPERVISOR) return false;
-        if (requester.getCompany() == null || requester.getCompany().getId() == null) return false;
+        if (requester.getOwnedCompany() == null || requester.getOwnedCompany().getId() == null) return false;
 
         return true;
     }

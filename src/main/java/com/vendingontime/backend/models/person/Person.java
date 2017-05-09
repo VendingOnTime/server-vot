@@ -45,7 +45,7 @@ public class Person extends AbstractEntity<Person> {
 
     @OneToOne
     @JsonIgnore
-    private Company company;
+    private Company ownedCompany;
 
     public Person() {
         super();
@@ -147,12 +147,12 @@ public class Person extends AbstractEntity<Person> {
         return this;
     }
 
-    public Company getCompany() {
-        return company;
+    public Company getOwnedCompany() {
+        return ownedCompany;
     }
 
-    public Person setCompany(Company company) {
-        this.company = company;
+    public Person setOwnedCompany(Company company) {
+        this.ownedCompany = company;
         return this;
     }
 
