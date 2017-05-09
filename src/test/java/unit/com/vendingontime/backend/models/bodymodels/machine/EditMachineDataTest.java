@@ -13,6 +13,7 @@ import org.junit.Test;
 import testutils.FixtureFactory;
 
 import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.*;
+import static com.vendingontime.backend.models.bodymodels.machine.EditMachineData.EMPTY_MACHINE_ID;
 import static org.junit.Assert.*;
 
 /*
@@ -66,13 +67,29 @@ public class EditMachineDataTest {
     public void validate_withNullMachineId_notValid() throws Exception {
         machineData.setId(null);
 
-        assertArrayEquals(new String[]{EditMachineData.EMPTY_MACHINE_ID}, machineData.validate());
+        assertArrayEquals(new String[]{EMPTY_MACHINE_ID}, machineData.validate());
     }
 
     @Test
     public void validate_withEmptyMachineId_notValid() throws Exception {
         machineData.setId("  ");
 
-        assertArrayEquals(new String[]{EditMachineData.EMPTY_MACHINE_ID}, machineData.validate());
+        assertArrayEquals(new String[]{EMPTY_MACHINE_ID}, machineData.validate());
+    }
+
+    @Test
+    public void validate_invalid_variousErrors() {
+        MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH + 1));
+        String invalidDescription = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH + 1);
+
+        machineData
+                .setId(null)
+                .setRequester(null)
+                .setType(null)
+                .setState(null)
+                .setLocation(invalidMachineLocation)
+                .setDescription(invalidDescription);
+
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION, EMPTY_TYPE, EMPTY_STATE, EMPTY_MACHINE_ID}, machineData.validate());
     }
 }
