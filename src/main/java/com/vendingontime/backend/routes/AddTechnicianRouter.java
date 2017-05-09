@@ -32,7 +32,7 @@ import java.io.IOException;
 
 public class AddTechnicianRouter extends AbstractSparkRouter {
 
-    public static final String V1_ADD_TECHNICIAN = V1 + "/companies/technicians";
+    public static final String V1_ADD_TECHNICIAN = V1 + "/technicians";
 
     private final EndpointProtector protector;
     private final SignUpService service;

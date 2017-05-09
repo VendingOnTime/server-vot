@@ -70,7 +70,7 @@ public class AddTechnicianRouterTest extends IntegrationTest {
     }
 
     @Test
-    public void signUpSupervisor() throws Exception {
+    public void addTechnician() throws Exception {
         Person supervisor = service.createSupervisor(supervisorData);
 
         AppRoute post = router.addTechnician(stringifiedTechnician, supervisor);
