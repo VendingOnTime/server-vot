@@ -35,13 +35,12 @@ public class AddMachineData implements Validable {
     public static final int MIN_DESCRIPTION_LENGTH = 0;
     public static final int MAX_DESCRIPTION_LENGTH = 300;
 
-    public static final String EMPTY_LOCATION_NAME = "EMPTY_LOCATION_NAME";
+    public static final String EMPTY_TYPE = "EMPTY_TYPE";
+    public static final String EMPTY_STATE = "EMPTY_STATE";
 
     public static final String INVALID_DESCRIPTION = "INVALID_DESCRIPTION";
     public static final String INVALID_LOCATION = "INVALID_LOCATION";
     public static final String INVALID_LOCATION_NAME = "INVALID_LOCATION_NAME";
-    public static final String INVALID_TYPE = "INVALID_TYPE";
-    public static final String INVALID_STATE = "INVALID_STATE";
 
     public static final String SHORT_LOCATION_NAME = "SHORT_LOCATION_NAME";
 
@@ -69,8 +68,8 @@ public class AddMachineData implements Validable {
 
         causes.addAll(validateMachineLocation());
         causes.addAll(validateMachineDescription());
-        if (type == null) causes.add(INVALID_TYPE);
-        if (state == null) causes.add(INVALID_STATE);
+        if (type == null) causes.add(EMPTY_TYPE);
+        if (state == null) causes.add(EMPTY_STATE);
 
         return causes.toArray(new String[causes.size()]);
     }

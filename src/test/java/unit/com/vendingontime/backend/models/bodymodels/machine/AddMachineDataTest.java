@@ -3,7 +3,6 @@ package unit.com.vendingontime.backend.models.bodymodels.machine;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
-import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.utils.StringUtils;
@@ -139,17 +138,17 @@ public class AddMachineDataTest {
     }
 
     @Test
-    public void validate_withNullMachineType_shouldReturn_invalidMachineType() {
+    public void validate_withNullMachineType_shouldReturn_emptyMachineType() {
         machineData.setType(null);
 
-        assertArrayEquals(new String[]{INVALID_TYPE}, machineData.validate());
+        assertArrayEquals(new String[]{EMPTY_TYPE}, machineData.validate());
     }
 
     @Test
-    public void validate_withNullMachineState_shouldReturn_invalidMachineState() {
+    public void validate_withNullMachineState_shouldReturn_emptyMachineState() {
         machineData.setState(null);
 
-        assertArrayEquals(new String[]{INVALID_STATE}, machineData.validate());
+        assertArrayEquals(new String[]{EMPTY_STATE}, machineData.validate());
     }
 
 
@@ -164,7 +163,7 @@ public class AddMachineDataTest {
                 .setState(null)
                 .setType(null);
 
-        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION, INVALID_TYPE, INVALID_STATE}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION, EMPTY_TYPE, EMPTY_STATE}, machineData.validate());
     }
 
     @Test
