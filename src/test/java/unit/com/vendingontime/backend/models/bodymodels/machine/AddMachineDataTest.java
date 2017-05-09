@@ -138,16 +138,33 @@ public class AddMachineDataTest {
         assertArrayEquals(new String[]{LONG_DESCRIPTION}, machineData.validate());
     }
 
-    //TODO enum tests and complete test with all kind of errors
+    @Test
+    public void validate_withNullMachineType_shouldReturn_emptyMachineType() {
+        machineData.setType(null);
+
+        assertArrayEquals(new String[]{EMPTY_TYPE}, machineData.validate());
+    }
+
+    @Test
+    public void validate_withNullMachineState_shouldReturn_emptyMachineState() {
+        machineData.setState(null);
+
+        assertArrayEquals(new String[]{EMPTY_STATE}, machineData.validate());
+    }
+
 
     @Test
     public void validate_invalid_variousErrors() {
         MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH + 1));
         String invalidDescription = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH + 1);
 
-        machineData.setLocation(invalidMachineLocation).setDescription(invalidDescription);
+        machineData
+                .setLocation(invalidMachineLocation)
+                .setDescription(invalidDescription)
+                .setState(null)
+                .setType(null);
 
-        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION, EMPTY_TYPE, EMPTY_STATE}, machineData.validate());
     }
 
     @Test
