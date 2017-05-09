@@ -91,6 +91,8 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         Machine machine = repository.create(this.machineOne);
 
         assertEquals(machine, repository.create(machine));
+
+        repository.delete(machine.getId());
     }
 
 
@@ -173,6 +175,7 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         Company company = companyRepository.create(new Company());
         List<Machine> machines = repository.findMachinesByCompany(company);
         assertThat(machines.size(), is(0));
+        companyRepository.delete(company.getId());
     }
 
     @Test
@@ -194,6 +197,9 @@ public class JPAMachineRepositoryTest extends IntegrationTest {
         assertThat(machines.size(), is(2));
         assertThat(machines.contains(savedMachine1), is(true));
         assertThat(machines.contains(savedMachine2), is(true));
+
+        repository.deleteAll();
+        companyRepository.deleteAll();
     }
 
     @Test
