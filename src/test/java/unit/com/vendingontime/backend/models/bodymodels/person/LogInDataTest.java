@@ -45,6 +45,12 @@ public class LogInDataTest {
     }
 
     @Test
+    public void validate_emptyMail_error() throws Exception {
+        user.setEmail("");
+        assertArrayEquals(new String[]{BAD_LOGIN}, user.validate());
+    }
+
+    @Test
     public void validate_invalidMail_error() throws Exception {
         user.setEmail("aaaa");
         assertArrayEquals(new String[]{BAD_LOGIN}, user.validate());
