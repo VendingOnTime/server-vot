@@ -1,13 +1,13 @@
 package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
-import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import static com.vendingontime.backend.models.bodymodels.person.AddTechnicianData.*;
 import static org.junit.Assert.*;
 
 /*
@@ -52,13 +52,24 @@ public class AddTechnicianDataTest {
     public void validate_withEmptyRequester_notValid() throws Exception {
         addTechnicianData.setRequester(null);
 
-        assertArrayEquals(new String[]{AddTechnicianData.EMPTY_REQUESTER}, addTechnicianData.validate());
+        assertArrayEquals(new String[]{EMPTY_REQUESTER}, addTechnicianData.validate());
     }
 
     @Test
     public void validate_withRequesterWithoutRole_notValid() throws Exception {
         addTechnicianData.setRequester(new Person());
 
-        assertArrayEquals(new String[]{addTechnicianData.EMPTY_REQUESTER}, addTechnicianData.validate());
+        assertArrayEquals(new String[]{EMPTY_REQUESTER}, addTechnicianData.validate());
+    }
+
+    @Test
+    public void validate_invalid_multipleErrors() throws Exception {
+        AddTechnicianData technicianData = FixtureFactory.generateAddTechnicianData();
+        technicianData.setRequester(null);
+        technicianData.setEmail("");
+
+        assertArrayEquals(new String[]{
+                EMPTY_EMAIL, EMPTY_REQUESTER
+        }, technicianData.validate());
     }
 }
