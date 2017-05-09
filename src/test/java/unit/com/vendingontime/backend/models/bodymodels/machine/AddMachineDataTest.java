@@ -138,7 +138,6 @@ public class AddMachineDataTest {
         assertArrayEquals(new String[]{LONG_DESCRIPTION}, machineData.validate());
     }
 
-    //TODO enum tests and complete test with all kind of errors
     @Test
     public void validate_withNullMachineType_shouldReturn_invalidMachineType() {
         machineData.setType(null);
