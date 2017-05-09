@@ -29,14 +29,13 @@ import static org.junit.Assert.*;
  */
 
 public class AddTechnicianDataTest {
-    private final static String PERSON_ID = "PERSON_ID";
 
     private AddTechnicianData addTechnicianData;
 
     @Before
     public void setUp() throws Exception {
         addTechnicianData = FixtureFactory.generateAddTechnicianData()
-                .setRequester(FixtureFactory.generateSupervisor());
+                .setRequester(FixtureFactory.generateSupervisorWithCompany());
     }
 
     @After

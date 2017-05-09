@@ -31,7 +31,7 @@ public class AddTechnicianData extends SignUpData {
     public String[] validate() {
         LinkedList<String> causes = new LinkedList<>(Arrays.asList(super.validate()));
 
-        if (requester == null || requester.getRole() == null) causes.add(EMPTY_REQUESTER);
+        if (requester == null || requester.getOwnedCompany() == null) causes.add(EMPTY_REQUESTER);
 
         return causes.toArray(new String[causes.size()]);
     }

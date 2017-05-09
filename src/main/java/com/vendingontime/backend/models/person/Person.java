@@ -199,8 +199,6 @@ public class Person extends AbstractEntity<Person> {
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getSurnames() != null ? getSurnames().hashCode() : 0);
         result = 31 * result + (getRole() != null ? getRole().hashCode() : 0);
-        result = 31 * result + (getOwnedCompany() != null ? getOwnedCompany().hashCode() : 0);
-        result = 31 * result + (getCompany() != null ? getCompany().hashCode() : 0);
         return result;
     }
 

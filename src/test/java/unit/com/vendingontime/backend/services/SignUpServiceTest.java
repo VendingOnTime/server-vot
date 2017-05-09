@@ -1,5 +1,6 @@
 package unit.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 
@@ -12,7 +13,10 @@ import com.vendingontime.backend.services.SignUpService;
 
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
+import static com.vendingontime.backend.models.bodymodels.person.AddTechnicianData.EMPTY_REQUESTER;
+import static com.vendingontime.backend.models.bodymodels.person.SignUpData.EMPTY_EMAIL;
 import static com.vendingontime.backend.models.person.PersonCollisionException.*;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -41,61 +45,76 @@ import java.util.Optional;
  * specific language governing permissions and limitations under the License.
  */
 public class SignUpServiceTest {
+
+    private static final String SUPERVISOR_ID = "SUPERVISOR_ID";
+    private static final String COMPANY_ID = "COMPANY_ID";
+    private static final String TECHNICIAN_ID = "TECHNICIAN_ID";
+
     private JPAPersonRepository repository;
     private CompanyRepository companyRepository;
-    private SignUpService signUp;
-    private SignUpData payload;
+    private SignUpService service;
+    private SignUpData signUpData;
+    private AddTechnicianData addTechnicianData;
 
-    private Person person;
+    private Person supervisor;
+    private Person technician;
     private Company company;
 
     @Before
     public void setUp() throws Exception {
-        final String PERSON_ID = "PERSON_ID";
-        final String COMPANY_ID = "COMPANY_ID";
 
         repository = mock(JPAPersonRepository.class);
         companyRepository = mock(CompanyRepository.class);
 
-        signUp = new SignUpService(repository, companyRepository);
+        service = new SignUpService(repository, companyRepository);
 
-        payload = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
-        person = new Person(payload);
+        signUpData = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
+        supervisor = new Person(signUpData);
 
         company = new Company();
 
-        when(repository.create(any())).thenReturn(person.setId(PERSON_ID));
-        when(repository.findById(PERSON_ID)).thenReturn(Optional.of(person));
+        addTechnicianData = FixtureFactory.generateAddTechnicianData();
+        technician = new Person(addTechnicianData);
+
+        when(repository.findById(SUPERVISOR_ID)).thenReturn(Optional.of(supervisor));
+        when(repository.findById(TECHNICIAN_ID)).thenReturn(Optional.of(technician));
+
         when(companyRepository.create(any())).thenReturn(company.setId(COMPANY_ID));
-        when(companyRepository.update(any())).thenReturn(Optional.of(company.setOwner(person)));
+        when(companyRepository.update(any())).thenReturn(Optional.of(company));
     }
 
     @After
     public void tearDown() throws Exception {
         repository = null;
         companyRepository = null;
-        signUp = null;
-        payload = null;
-        person = null;
+        service = null;
+        signUpData = null;
+        addTechnicianData = null;
+        supervisor = null;
+        technician = null;
         company = null;
     }
 
     @Test
     public void createSupervisor() {
-        signUp.createSupervisor(payload);
+        when(repository.create(any())).thenReturn(supervisor.setId(SUPERVISOR_ID));
+
+        service.createSupervisor(signUpData);
 
         verify(repository, times(1)).create(any());
         verify(companyRepository, times(1)).create(any());
         verify(companyRepository, times(1)).update(any());
 
-        assertNotNull(person.getOwnedCompany().getId());
-        assertNotNull(companyRepository.findById(person.getOwnedCompany().getId()));
+        assertNotNull(supervisor.getOwnedCompany().getId());
+        assertNotNull(companyRepository.findById(supervisor.getOwnedCompany().getId()));
     }
 
     @Test
     public void createSupervisor_withNoRole_returnsSupervisor() throws Exception {
-        payload.setRole(null);
-        Person supervisor = signUp.createSupervisor(payload);
+        when(repository.create(any())).thenReturn(supervisor.setId(SUPERVISOR_ID));
+
+        signUpData.setRole(null);
+        Person supervisor = service.createSupervisor(signUpData);
 
         verify(repository, times(1)).create(any());
         verify(companyRepository, times(1)).create(any());
@@ -109,11 +128,11 @@ public class SignUpServiceTest {
     @Test
     public void createSupervisor_withInvalidPayload_throwsException() throws Exception {
         try {
-            payload.setEmail("");
-            signUp.createSupervisor(payload);
+            signUpData.setEmail("");
+            service.createSupervisor(signUpData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{SignUpData.EMPTY_EMAIL}, e.getCauses());
+            assertArrayEquals(new String[]{EMPTY_EMAIL}, e.getCauses());
         }
     }
 
@@ -122,7 +141,74 @@ public class SignUpServiceTest {
         try {
             doThrow(new PersonCollisionException(new Cause[]{Cause.EMAIL}))
                     .when(repository).create(any());
-            signUp.createSupervisor(payload);
+            service.createSupervisor(signUpData);
+            fail();
+        } catch (BusinessLogicException e) {
+            assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
+        }
+    }
+
+    @Test
+    public void createTechnician() {
+        when(repository.create(any())).thenReturn(technician.setId(TECHNICIAN_ID));
+
+        addTechnicianData.setRequester(supervisor.setOwnedCompany(company));
+
+        service.createTechnician(addTechnicianData);
+
+        verify(repository, times(1)).create(any());
+        verify(companyRepository, times(0)).create(any());
+        verify(companyRepository, times(1)).update(any());
+
+        assertNotNull(technician.getCompany().getId());
+        assertThat(company.getTechnicians().contains(technician), is(true));
+    }
+
+    @Test
+    public void createTechnician_withNoRole_returnsTechnician() {
+        when(repository.create(any())).thenReturn(technician.setId(TECHNICIAN_ID));
+
+        addTechnicianData.setRequester(supervisor.setOwnedCompany(company)).setRole(null);
+
+        service.createTechnician(addTechnicianData);
+
+        verify(repository, times(1)).create(any());
+        verify(companyRepository, times(0)).create(any());
+        verify(companyRepository, times(1)).update(any());
+
+        assertThat(technician.getRole(), is(PersonRole.TECHNICIAN));
+    }
+
+    @Test
+    public void createTechnician_withInvalidPayload_throwsException() throws Exception {
+        try {
+            addTechnicianData.setRequester(supervisor.setOwnedCompany(company));
+            addTechnicianData.setEmail("");
+            service.createTechnician(addTechnicianData);
+            fail();
+        } catch (BusinessLogicException e) {
+            assertArrayEquals(new String[]{EMPTY_EMAIL}, e.getCauses());
+        }
+    }
+
+    @Test
+    public void createTechnician_withNoRequester_throwsException() throws Exception {
+        try {
+            addTechnicianData.setRequester(null);
+            service.createTechnician(addTechnicianData);
+            fail();
+        } catch (BusinessLogicException e) {
+            assertArrayEquals(new String[]{EMPTY_REQUESTER}, e.getCauses());
+        }
+    }
+
+    @Test
+    public void createTechnician_withCollision_throwsException() throws Exception {
+        try {
+            doThrow(new PersonCollisionException(new Cause[]{Cause.EMAIL}))
+                    .when(repository).create(any());
+            addTechnicianData.setRequester(supervisor.setOwnedCompany(company)).setRole(null);
+            service.createTechnician(addTechnicianData);
             fail();
         } catch (BusinessLogicException e) {
             assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());

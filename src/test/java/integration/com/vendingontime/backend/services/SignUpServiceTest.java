@@ -1,5 +1,6 @@
 package integration.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
@@ -16,6 +17,8 @@ import javax.inject.Inject;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /*
@@ -39,35 +42,57 @@ import static org.junit.Assert.*;
 public class SignUpServiceTest extends IntegrationTest {
 
     @Inject private SignUpService service;
-    @Inject private PersonRepository repository;
+    @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
 
-    private SignUpData supervisor;
+    private SignUpData supervisorData;
+    private AddTechnicianData technicianData;
 
     @Before
     public void setUp() throws Exception {
-        supervisor = FixtureFactory.generateSignUpData();
+        supervisorData = FixtureFactory.generateSignUpData();
+        technicianData = FixtureFactory.generateAddTechnicianData();
     }
 
     @After
     public void tearDown() throws Exception {
-        supervisor = null;
+        supervisorData = null;
+        technicianData = null;
     }
 
     @Test
-    public void createUser() throws Exception {
-        Person user = service.createSupervisor(supervisor);
+    public void createSupervisor() throws Exception {
+        Person supervisor = service.createSupervisor(supervisorData);
 
-        assertNotNull(user);
+        assertNotNull(supervisor);
 
-        Optional<Person> byEmail = repository.findByEmail(supervisor.getEmail());
-        Optional<Company> userCompany = companyRepository.findById(user.getOwnedCompany().getId());
+        Optional<Person> byEmail = personRepository.findByEmail(supervisorData.getEmail());
+        Optional<Company> company = companyRepository.findById(supervisor.getOwnedCompany().getId());
 
-        assertTrue(byEmail.isPresent());
-        assertTrue(userCompany.isPresent());
-        assertNotNull(userCompany.get().getId());
+        assertThat(byEmail.isPresent(), is(true));
+        assertThat(company.isPresent(), is(true));
+        assertThat(company.get().getId(), notNullValue());
 
-        repository.delete(user.getId());
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
+    @Test
+    public void createTechnician() throws Exception {
+        Person supervisor = service.createSupervisor(supervisorData);
+
+        technicianData.setRequester(supervisor);
+        Person technician = service.createTechnician(technicianData);
+
+        Optional<Person> byEmail = personRepository.findByEmail(technicianData.getEmail());
+        Optional<Company> company = companyRepository.findById(technician.getCompany().getId());
+
+
+        assertThat(byEmail.isPresent(), is(true));
+        assertThat(company.isPresent(), is(true));
+        assertThat(company.get().getTechnicians().contains(technician), is(true));
+
+        personRepository.deleteAll();
+        companyRepository.deleteAll();
+    }
 }
