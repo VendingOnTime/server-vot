@@ -5,7 +5,6 @@ import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.AddTechnicianRouter;
-import com.vendingontime.backend.routes.SignUpRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
