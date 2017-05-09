@@ -1,4 +1,4 @@
-package unit.com.vendingontime.backend.models.bodymodels;
+package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import org.junit.After;
