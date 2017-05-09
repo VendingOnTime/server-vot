@@ -3,6 +3,7 @@ package unit.com.vendingontime.backend.models.bodymodels.machine;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
+import com.vendingontime.backend.models.machine.MachineType;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.utils.StringUtils;
@@ -138,15 +139,33 @@ public class AddMachineDataTest {
     }
 
     //TODO enum tests and complete test with all kind of errors
+    @Test
+    public void validate_withNullMachineType_shouldReturn_invalidMachineType() {
+        machineData.setType(null);
+
+        assertArrayEquals(new String[]{INVALID_TYPE}, machineData.validate());
+    }
+
+    @Test
+    public void validate_withNullMachineState_shouldReturn_invalidMachineState() {
+        machineData.setState(null);
+
+        assertArrayEquals(new String[]{INVALID_STATE}, machineData.validate());
+    }
+
 
     @Test
     public void validate_invalid_variousErrors() {
         MachineLocation invalidMachineLocation = new MachineLocation().setName(StringUtils.createFilled(MAX_LOCATION_NAME_LENGTH + 1));
         String invalidDescription = StringUtils.createFilled(MAX_DESCRIPTION_LENGTH + 1);
 
-        machineData.setLocation(invalidMachineLocation).setDescription(invalidDescription);
+        machineData
+                .setLocation(invalidMachineLocation)
+                .setDescription(invalidDescription)
+                .setState(null)
+                .setType(null);
 
-        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION}, machineData.validate());
+        assertArrayEquals(new String[]{LONG_LOCATION_NAME, LONG_DESCRIPTION, INVALID_TYPE, INVALID_STATE}, machineData.validate());
     }
 
     @Test

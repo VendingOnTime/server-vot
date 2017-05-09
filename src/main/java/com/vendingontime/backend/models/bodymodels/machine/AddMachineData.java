@@ -69,6 +69,8 @@ public class AddMachineData implements Validable {
 
         causes.addAll(validateMachineLocation());
         causes.addAll(validateMachineDescription());
+        if (type == null) causes.add(INVALID_TYPE);
+        if (state == null) causes.add(INVALID_STATE);
 
         return causes.toArray(new String[causes.size()]);
     }
