@@ -40,13 +40,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
  * specific language governing permissions and limitations under the License.
  */
 
-public class E2ELogInTest extends E2ETest {
+public class E2ELogInSupervisorTest extends E2ETest {
 
     @Inject private SignUpService signUpService;
     @Inject private PersonRepository repository;
 
     @Test
-    public void logInUser_withValidJSON_andValidData_returnsToken() throws Exception {
+    public void logInSupervisor_withValidJSON_andValidData_returnsToken() throws Exception {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
 
         Person supervisor = signUpService.createSupervisor(signUpData);
@@ -67,12 +67,12 @@ public class E2ELogInTest extends E2ETest {
     }
 
     @Test
-    public void logInUser_withValidJSON_andInvalidData_returnsBadLogin() throws Exception {
+    public void logInSupervisor_withValidJSON_andInvalidData_returnsBadLogin() throws Exception {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
 
         Person supervisor = signUpService.createSupervisor(signUpData);
 
-        LogInData payload = FixtureFactory.generateLogInData()
+        LogInData payload = FixtureFactory.generateLogInDataFrom(supervisor)
                 .setEmail("another@example.com");
 
         given()
@@ -89,11 +89,7 @@ public class E2ELogInTest extends E2ETest {
     }
 
     @Test
-    public void logInUser_withInvalidJSON_returnsMalformedJSON() throws Exception {
-        SignUpData signUpData = FixtureFactory.generateSignUpData();
-
-        Person supervisor = signUpService.createSupervisor(signUpData);
-
+    public void logInSupervisor_withInvalidJSON_returnsMalformedJSON() throws Exception {
         given()
             .body("")
         .when()
@@ -103,8 +99,6 @@ public class E2ELogInTest extends E2ETest {
             .body("success", equalTo(false))
             .body("data", nullValue())
             .body("error", is(MALFORMED_JSON));
-
-        repository.delete(supervisor.getId());
     }
 
 }
