@@ -2,6 +2,9 @@ package integration.com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
 
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
@@ -11,13 +14,16 @@ import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.*;
 import testutils.FixtureFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.person.PersonCollisionException.DNI_EXISTS;
 import static com.vendingontime.backend.models.person.PersonCollisionException.EMAIL_EXISTS;
 import static com.vendingontime.backend.models.person.PersonCollisionException.USERNAME_EXISTS;
 import static junit.framework.TestCase.*;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -43,6 +49,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
     private static final String EMAIL2 = "EMAIL2";
 
     @Inject private JPAPersonRepository repository;
+    @Inject private CompanyRepository companyRepository;
 
     private Person personOne;
     private Person personTwo;
@@ -357,5 +364,56 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
 
         Optional<Person> possiblePerson = repository.findById(personId);
         assertFalse(possiblePerson.isPresent());
+    }
+
+    @Test
+    public void findByCompany_companyNotExists_returnsEmpty() throws Exception {
+        Company company = new Company().setId("FAKE_ID");
+        List<Person> technicians = repository.findTechniciansByCompany(company);
+        assertThat(technicians.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_nullCompany_returnsEmpty() throws Exception {
+        List<Person> technicians = repository.findTechniciansByCompany(null);
+        assertThat(technicians.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_noSavedCompany_returnsEmpty() throws Exception {
+        List<Person> technicians = repository.findTechniciansByCompany(new Company());
+        assertThat(technicians.size(), is(0));
+    }
+
+    @Test
+    public void findByCompany_companyExistsWithNoMachines_returnsEmpty() throws Exception {
+        Company company = companyRepository.create(new Company());
+        List<Person> technicians = repository.findTechniciansByCompany(company);
+        assertThat(technicians.size(), is(0));
+        companyRepository.delete(company.getId());
+    }
+
+    @Test
+    public void findByCompany_companyExistsWithMachines_returnsMachines() throws Exception {
+        Company company = companyRepository.create(new Company());
+
+        Person technician1 = repository.create(new Person().setRole(PersonRole.TECHNICIAN));
+        Person technician2 = repository.create(new Person().setRole(PersonRole.TECHNICIAN));
+
+        Person savedPerson1 = repository.findById(technician1.getId()).get();
+        Person savedPerson2 = repository.findById(technician2.getId()).get();
+
+        company.addTechnician(savedPerson1);
+        company.addTechnician(savedPerson2);
+
+        companyRepository.update(company);
+
+        List<Person> technicians = repository.findTechniciansByCompany(company);
+        assertThat(technicians.size(), is(2));
+        assertThat(technicians.contains(savedPerson1), is(true));
+        assertThat(technicians.contains(savedPerson2), is(true));
+
+        repository.deleteAll();
+        companyRepository.deleteAll();
     }
 }

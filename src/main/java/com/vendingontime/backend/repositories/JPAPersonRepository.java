@@ -1,6 +1,7 @@
 package com.vendingontime.backend.repositories;
 
 import com.google.inject.Inject;
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonCollisionException;
 
@@ -49,6 +50,12 @@ public class JPAPersonRepository extends JPARepository<Person> implements Person
     @Override
     public Optional<Person> findByDni(String dni) {
         return findOneBy("findByDni", "dni", dni);
+    }
+
+    @Override
+    public List<Person> findTechniciansByCompany(Company company) {
+        if (company == null || company.getId() == null) return new LinkedList<>();
+        return findManyBy("findByCompany", "companyId", company.getId());
     }
 
     @Override
