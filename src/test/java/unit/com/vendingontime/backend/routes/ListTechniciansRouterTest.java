@@ -1,11 +1,11 @@
 package unit.com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.ListMachinesRouter;
+import com.vendingontime.backend.models.person.PersonRole;
+import com.vendingontime.backend.routes.ListTechniciansRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.ListMachinesService;
+import com.vendingontime.backend.services.ListTechniciansService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
@@ -35,44 +35,44 @@ import static org.mockito.Mockito.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class ListMachinesRouterTest {
+public class ListTechniciansRouterTest {
     private ServiceResponse serviceResponse;
-    private ListMachinesService service;
-    private ListMachinesRouter listMachinesRouter;
+    private ListTechniciansService service;
+    private ListTechniciansRouter listTechniciansRouter;
 
     private Person person;
-    private List<Machine> machines;
+    private List<Person> technicians;
 
     @Before
     public void setUp() throws Exception {
         serviceResponse = mock(ServiceResponse.class);
-        service = mock(ListMachinesService.class);
         EndpointProtector protector = mock(EndpointProtector.class);
-        listMachinesRouter = new ListMachinesRouter(serviceResponse, service, protector);
+        service = mock(ListTechniciansService.class);
+        listTechniciansRouter = new ListTechniciansRouter(serviceResponse, protector, service);
 
         person = new Person();
 
-        machines = new LinkedList<>();
-        machines.add(new Machine());
-        machines.add(new Machine());
+        technicians = new LinkedList<>();
+        technicians.add(new Person().setRole(PersonRole.TECHNICIAN));
+        technicians.add(new Person().setRole(PersonRole.TECHNICIAN));
     }
 
     @After
     public void tearDown() throws Exception {
         serviceResponse = null;
         service = null;
-        listMachinesRouter = null;
+        listTechniciansRouter = null;
         person = null;
-        machines = null;
+        technicians = null;
     }
 
     @Test
     public void listFor_withList_returnsOk() throws Exception {
-        when(service.listFor(person)).thenReturn(machines);
+        when(service.listFor(person)).thenReturn(technicians);
 
-        listMachinesRouter.listFor(person);
+        listTechniciansRouter.listFor(person);
 
-        verify(serviceResponse, times(1)).ok(machines);
+        verify(serviceResponse, times(1)).ok(technicians);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class ListMachinesRouterTest {
         doThrow(new BusinessLogicException(causes))
                 .when(service).listFor(person);
 
-        listMachinesRouter.listFor(person);
+        listTechniciansRouter.listFor(person);
 
         verify(serviceResponse, times(1)).badRequest(causes);
     }
