@@ -87,4 +87,15 @@ public class EditPasswordDataTest {
         editPasswordData.setRequester(new Person());
         assertThat(editPasswordData.validate(), equalTo(new String[]{EMPTY_REQUESTER}));
     }
+
+    @Test
+    public void validate_invalid_multipleErrors() throws Exception {
+        editPasswordData
+                .setId(null)
+                .setNewPassword("")
+                .setOldPassword("")
+                .setRequester(null);
+
+        assertThat(editPasswordData.validate(), equalTo(new String[]{EMPTY_PERSON_ID, EMPTY_OLD_PASSWORD, EMPTY_NEW_PASSWORD, EMPTY_REQUESTER}));
+    }
 }

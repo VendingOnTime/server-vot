@@ -45,7 +45,7 @@ public class RemoveMachineService extends AbstractService {
         if (!machineById.isPresent()) return machineById;
 
         Machine machine = machineById.get();
-        Company requesterCompany = requester.getCompany();
+        Company requesterCompany = requester.getOwnedCompany();
 
         if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
 

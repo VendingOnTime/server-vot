@@ -1,25 +1,28 @@
-package integration.com.vendingontime.backend.services;
+package integration.com.vendingontime.backend.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
-import com.vendingontime.backend.repositories.CompanyRepository;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.routes.AddTechnicianRouter;
+import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import spark.Request;
+import spark.Response;
 import testutils.FixtureFactory;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -39,60 +42,47 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class SignUpServiceTest extends IntegrationTest {
+public class AddTechnicianRouterTest extends IntegrationTest {
+    @Inject private AddTechnicianRouter router;
 
     @Inject private SignUpService service;
-    @Inject private PersonRepository personRepository;
-    @Inject private CompanyRepository companyRepository;
+    @Inject private PersonRepository repository;
 
+    private ObjectMapper mapper;
     private SignUpData supervisorData;
     private AddTechnicianData technicianData;
+    private String stringifiedTechnician;
 
     @Before
     public void setUp() throws Exception {
-        supervisorData = FixtureFactory.generateSignUpData();
+        mapper = new ObjectMapper();
+        supervisorData = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
         technicianData = FixtureFactory.generateAddTechnicianData();
+        stringifiedTechnician = mapper.writeValueAsString(technicianData);
     }
 
     @After
     public void tearDown() throws Exception {
+        mapper = null;
         supervisorData = null;
         technicianData = null;
+        stringifiedTechnician = null;
     }
 
     @Test
-    public void createSupervisor() throws Exception {
+    public void addTechnician() throws Exception {
         Person supervisor = service.createSupervisor(supervisorData);
 
-        assertNotNull(supervisor);
+        AppRoute post = router.addTechnician(stringifiedTechnician, supervisor);
+        String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
-        Optional<Person> byEmail = personRepository.findByEmail(supervisorData.getEmail());
-        Optional<Company> company = companyRepository.findById(supervisor.getOwnedCompany().getId());
+        RESTResult restResult = mapper.readValue(result, RESTResult.class);
 
-        assertThat(byEmail.isPresent(), is(true));
-        assertThat(company.isPresent(), is(true));
-        assertThat(company.get().getId(), notNullValue());
+        assertTrue(restResult.getSuccess());
 
-        personRepository.deleteAll();
-        companyRepository.deleteAll();
-    }
+        Optional<Person> byEmail = repository.findByEmail(supervisorData.getEmail());
+        assertTrue(byEmail.isPresent());
 
-    @Test
-    public void createTechnician() throws Exception {
-        Person supervisor = service.createSupervisor(supervisorData);
-
-        technicianData.setRequester(supervisor);
-        Person technician = service.createTechnician(technicianData);
-
-        Optional<Person> byEmail = personRepository.findByEmail(technicianData.getEmail());
-        Optional<Company> company = companyRepository.findById(technician.getCompany().getId());
-
-
-        assertThat(byEmail.isPresent(), is(true));
-        assertThat(company.isPresent(), is(true));
-        assertThat(company.get().getTechnicians().contains(technician), is(true));
-
-        personRepository.deleteAll();
-        companyRepository.deleteAll();
+        repository.deleteAll();
     }
 }

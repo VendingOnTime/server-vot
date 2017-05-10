@@ -53,11 +53,11 @@ public class EditMachineServiceTest {
         editMachineData = FixtureFactory.generateEditMachineData();
 
         editMachineData.setRequester(FixtureFactory.generateSupervisorWithCompany());
-        editMachineData.getRequester().getCompany().setId("COMPANY_ID");
+        editMachineData.getRequester().getOwnedCompany().setId("COMPANY_ID");
         editMachineData.getRequester().setId("PERSON_ID");
 
         machine = new Machine(editMachineData.setId("MACHINE_ID"))
-                .setCompany(editMachineData.getRequester().getCompany());
+                .setCompany(editMachineData.getRequester().getOwnedCompany());
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
@@ -124,7 +124,7 @@ public class EditMachineServiceTest {
     @Test
     public void editMachine_withDifferentCompany_throwsException() {
         try {
-            editMachineData.getRequester().setCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
+            editMachineData.getRequester().setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
             editMachineService.updateMachine(editMachineData);
             fail();
         } catch (BusinessLogicException ex) {

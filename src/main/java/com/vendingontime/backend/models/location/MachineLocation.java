@@ -28,10 +28,6 @@ public class MachineLocation implements Location {
         super();
     }
 
-    public void update(MachineLocation location) {
-        this.name = location.getName();
-    }
-
     public String getName() {
         return name;
     }

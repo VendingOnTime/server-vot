@@ -39,7 +39,7 @@ public class ListMachinesService extends AbstractService {
 
         switch (person.getRole()) {
             case SUPERVISOR:
-                return repository.findMachinesByCompany(person.getCompany());
+                return repository.findMachinesByCompany(person.getOwnedCompany());
             case TECHNICIAN:
                 throw new BusinessLogicException(new String[]{"UNIMPLEMENTED"});
             default:

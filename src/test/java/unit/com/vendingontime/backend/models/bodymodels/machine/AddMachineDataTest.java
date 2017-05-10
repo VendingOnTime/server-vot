@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.*;
 
@@ -172,24 +173,37 @@ public class AddMachineDataTest {
     }
 
     @Test
-    public void invalidRequester_WithNullRequester() {
+    public void invalidRequester_WithNullRequester_returnsFalse() {
         machineData.setRequester(null);
 
-        assertFalse(machineData.requesterIsAuthorized());
+        assertThat(machineData.requesterIsAuthorized(), is(false));
     }
 
     @Test
-    public void invalidRequester_WithIncorrectRole() {
+    public void invalidRequester_RequesterWithoutId_returnsFalse() {
+        machineData.setRequester(new Person());
+
+        assertThat(machineData.requesterIsAuthorized(), is(false));
+    }
+
+    @Test
+    public void invalidRequester_WithIncorrectRole_returnsFalse() {
         machineData.getRequester().setRole(PersonRole.CUSTOMER);
 
-        assertFalse(machineData.requesterIsAuthorized());
+        assertThat(machineData.requesterIsAuthorized(), is(false));
     }
 
     @Test
-    public void invalidRequester_WithNullCompany() {
-        machineData.getRequester().setCompany(null);
+    public void invalidRequester_WithNullCompany_returnsFalse() {
+        machineData.getRequester().setOwnedCompany(null);
 
-        assertFalse(machineData.requesterIsAuthorized());
+        assertThat(machineData.requesterIsAuthorized(), is(false));
     }
 
+    @Test
+    public void invalidRequester_CompanyWithoutId_returnsFalse() {
+        machineData.getRequester().setOwnedCompany(new Company());
+
+        assertThat(machineData.requesterIsAuthorized(), is(false));
+    }
 }

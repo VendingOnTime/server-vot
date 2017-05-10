@@ -20,10 +20,7 @@ package testutils;
 
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
-import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
-import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
-import com.vendingontime.backend.models.bodymodels.person.LogInData;
-import com.vendingontime.backend.models.bodymodels.person.SignUpData;
+import com.vendingontime.backend.models.bodymodels.person.*;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.machine.Machine;
@@ -126,6 +123,19 @@ public class FixtureFactory {
         return new EditPasswordData()
                 .setId(person.getId())
                 .setOldPassword(person.getPassword());
+    }
+
+    public static AddTechnicianData generateAddTechnicianData() {
+        SignUpData signUpData = generateSignUpData();
+
+        return (AddTechnicianData) new AddTechnicianData()
+                .setDni("22222222W")
+                .setUsername("TECHNICIAN1")
+                .setEmail("technician1@example.com")
+                .setName(signUpData.getName())
+                .setSurnames(signUpData.getSurnames())
+                .setPassword(signUpData.getPassword())
+                .setRole(PersonRole.TECHNICIAN);
     }
 
     // MACHINE METHODS

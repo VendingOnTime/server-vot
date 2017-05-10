@@ -13,7 +13,6 @@ import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
-import org.junit.Ignore;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
@@ -64,7 +63,7 @@ public class E2EGetMachineTest extends E2ETest {
         addMachineData.setRequester(supervisor);
         final Machine machine = addMachineService.createMachine(addMachineData);
 
-        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getOwnedCompany());
         final String savedMachineId = machinesByCompany.get(0).getId();
 
         given()
@@ -95,7 +94,7 @@ public class E2EGetMachineTest extends E2ETest {
         addMachineData.setRequester(supervisor);
         addMachineService.createMachine(addMachineData);
 
-        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getOwnedCompany());
         final String savedMachineId = machinesByCompany.get(0).getId();
 
         given()
@@ -145,7 +144,7 @@ public class E2EGetMachineTest extends E2ETest {
         final Person anotherSupervisor = signUpService.createSupervisor(anotherSignUpData);
         final String anotherToken = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(anotherSupervisor));
 
-        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getCompany());
+        final List<Machine> machinesByCompany = machineRepository.findMachinesByCompany(supervisor.getOwnedCompany());
         final String savedMachineId = machinesByCompany.get(0).getId();
 
         given()

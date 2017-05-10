@@ -2,11 +2,14 @@ package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import static com.vendingontime.backend.models.bodymodels.person.EditPersonData.*;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /*
@@ -53,27 +56,40 @@ public class EditPersonDataTest {
     public void validate_withNullPersonId_notValid() throws Exception {
         editPersonData.setId(null);
 
-        assertArrayEquals(new String[]{EditPersonData.EMPTY_PERSON_ID}, editPersonData.validate());
+        assertThat(editPersonData.validate(), equalTo(new String[]{EMPTY_PERSON_ID}));
     }
 
     @Test
     public void validate_withEmptyPersonId_notValid() throws Exception {
         editPersonData.setId("  ");
 
-        assertArrayEquals(new String[]{EditPersonData.EMPTY_PERSON_ID}, editPersonData.validate());
+        assertThat(editPersonData.validate(), equalTo(new String[]{EMPTY_PERSON_ID}));
     }
 
     @Test
     public void validate_withEmptyRequester_notValid() throws Exception {
         editPersonData.setRequester(null);
 
-        assertArrayEquals(new String[]{EditPersonData.EMPTY_REQUESTER}, editPersonData.validate());
+        assertThat(editPersonData.validate(), equalTo(new String[]{EMPTY_REQUESTER}));
     }
 
     @Test
     public void validate_withRequesterWithoutRole_notValid() throws Exception {
         editPersonData.setRequester(new Person());
 
-        assertArrayEquals(new String[]{EditPersonData.EMPTY_REQUESTER}, editPersonData.validate());
+        assertThat(editPersonData.validate(), equalTo(new String[]{EMPTY_REQUESTER}));
+    }
+
+    @Test
+    public void validate_invalid_multipleErrors() throws Exception {
+        editPersonData
+                .setId(null)
+                .setRequester(null)
+                .setEmail("")
+                .setDni("")
+                .setUsername("")
+                .setRole(PersonRole.SUPERVISOR);
+
+        assertThat(editPersonData.validate(), equalTo(new String[]{EMPTY_EMAIL, EMPTY_USERNAME, EMPTY_PERSON_ID, EMPTY_REQUESTER}));
     }
 }

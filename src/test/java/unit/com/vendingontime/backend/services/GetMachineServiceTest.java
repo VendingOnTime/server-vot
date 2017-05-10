@@ -121,7 +121,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forPersonWithNullCompany_throwException() {
         Person invalidUser = FixtureFactory.generateSupervisor()
                 .setId("INVALID_USER")
-                .setCompany(null);
+                .setOwnedCompany(null);
 
         invalidUserTest(invalidUser);
     }
@@ -130,7 +130,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forPersonWithNullCompanyId_throwException() {
         Person invalidUser = FixtureFactory.generateSupervisor()
                 .setId("INVALID_USER")
-                .setCompany(FixtureFactory.generateCompany().setId(null));
+                .setOwnedCompany(FixtureFactory.generateCompany().setId(null));
 
         invalidUserTest(invalidUser);
     }
@@ -139,7 +139,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forPersonWithEmptyCompanyId_throwException() {
         Person invalidUser = FixtureFactory.generateSupervisor()
                 .setId("INVALID_USER")
-                .setCompany(FixtureFactory.generateCompany().setId(""));
+                .setOwnedCompany(FixtureFactory.generateCompany().setId(""));
 
         invalidUserTest(invalidUser);
     }

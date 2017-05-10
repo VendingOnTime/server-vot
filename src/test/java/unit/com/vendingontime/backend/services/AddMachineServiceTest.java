@@ -55,7 +55,7 @@ public class AddMachineServiceTest {
 
         addMachineData = FixtureFactory.generateAddMachineData()
                 .setRequester(FixtureFactory.generateSupervisorWithCompany());
-        addMachineData.getRequester().getCompany().setId("COMPANY_ID");
+        addMachineData.getRequester().getOwnedCompany().setId("COMPANY_ID");
         addMachineData.getRequester().setId("PERSON_ID");
 
         machine = new Machine(addMachineData);
@@ -79,7 +79,7 @@ public class AddMachineServiceTest {
         assertThat(machine.getId(), notNullValue());
 
         verify(repository, times(1)).create(any());
-        verify(companyRepository, times(1)).update(addMachineData.getRequester().getCompany());
+        verify(companyRepository, times(1)).update(addMachineData.getRequester().getOwnedCompany());
     }
 
     @Test

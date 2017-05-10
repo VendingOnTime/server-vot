@@ -22,7 +22,6 @@ import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -31,12 +30,10 @@ import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.LogInService;
 import com.vendingontime.backend.services.SignUpService;
-import org.junit.Ignore;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
@@ -48,7 +45,7 @@ public class E2EListMachinesTest extends E2ETest {
     @Inject private SignUpService signUpService;
     @Inject private LogInService logInService;
     @Inject private AddMachineService addMachineService;
-    @Inject private MachineRepository repository;
+    @Inject private MachineRepository machineRepository;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
 
@@ -76,8 +73,8 @@ public class E2EListMachinesTest extends E2ETest {
             .body("data[0].description", equalTo(machine.getDescription()))
             .body("error", nullValue());
 
-        repository.deleteAll();
         personRepository.deleteAll();
+        machineRepository.deleteAll();
         companyRepository.deleteAll();
     }
 
@@ -97,7 +94,7 @@ public class E2EListMachinesTest extends E2ETest {
         .then()
             .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
 
-        repository.deleteAll();
+        machineRepository.deleteAll();
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }

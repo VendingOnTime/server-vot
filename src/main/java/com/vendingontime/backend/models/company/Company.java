@@ -31,11 +31,14 @@ import java.util.Set;
 })
 public class Company extends AbstractEntity<Company> {
 
-    @OneToOne(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(mappedBy = "ownedCompany", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Person owner;
 
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Machine> machines = new HashSet<>();
+
+    @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Set<Person> technicians = new HashSet<>();
 
     public Company() {
         super();
@@ -45,6 +48,7 @@ public class Company extends AbstractEntity<Company> {
     public void updateWith(Company company) {
         this.owner = company.getOwner();
         this.machines = company.getMachines();
+        this.technicians = company.getTechnicians();
     }
 
     public Person getOwner() {
@@ -53,7 +57,7 @@ public class Company extends AbstractEntity<Company> {
 
     public Company setOwner(Person owner) {
         this.owner = owner;
-        owner.setCompany(this);
+        owner.setOwnedCompany(this);
         return this;
     }
 
@@ -67,16 +71,14 @@ public class Company extends AbstractEntity<Company> {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+    public Set<Person> getTechnicians() {
+        return technicians;
+    }
 
-        Company company = (Company) o;
-
-        if (getOwner() != null ? !getOwner().equals(company.getOwner()) : company.getOwner() != null) return false;
-        return getMachines() != null ? getMachines().equals(company.getMachines()) : company.getMachines() == null;
+    public Company addTechnician(Person technician) {
+        this.technicians.add(technician);
+        technician.setCompany(this);
+        return this;
     }
 
     @Override
@@ -84,11 +86,21 @@ public class Company extends AbstractEntity<Company> {
         int result = super.hashCode();
         result = 31 * result + (getOwner() != null ? getOwner().hashCode() : 0);
         result = 31 * result + (getMachines() != null ? getMachines().hashCode() : 0);
+        result = 31 * result + (getTechnicians() != null ? getTechnicians().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "owner=" + owner +
+                ", machines=" + machines +
+                ", technicians=" + technicians +
+                "} " + super.toString();
     }
 
     @PreRemove
     void preRemove() {
-        if (owner != null) owner.setCompany(null);
+        if (owner != null) owner.setOwnedCompany(null);
     }
 }

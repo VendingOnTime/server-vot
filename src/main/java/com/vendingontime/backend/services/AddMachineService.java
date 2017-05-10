@@ -46,7 +46,7 @@ public class AddMachineService extends AbstractService {
         }
 
         Machine machine = repository.create(new Machine(machineCandidate));
-        Company company = machineCandidate.getRequester().getCompany();
+        Company company = machineCandidate.getRequester().getOwnedCompany();
 
         Machine savedMachine = repository.findById(machine.getId()).get();
         company.addMachine(savedMachine);

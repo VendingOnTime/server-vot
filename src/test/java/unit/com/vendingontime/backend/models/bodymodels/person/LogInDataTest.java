@@ -1,4 +1,4 @@
-package unit.com.vendingontime.backend.models.bodymodels;
+package unit.com.vendingontime.backend.models.bodymodels.person;
 
 import com.vendingontime.backend.models.bodymodels.person.LogInData;
 import org.junit.After;
@@ -42,6 +42,12 @@ public class LogInDataTest {
     @Test
     public void validate_user_noErrors() {
         assertArrayEquals(new String[]{}, user.validate());
+    }
+
+    @Test
+    public void validate_emptyMail_error() throws Exception {
+        user.setEmail("");
+        assertArrayEquals(new String[]{BAD_LOGIN}, user.validate());
     }
 
     @Test

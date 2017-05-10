@@ -47,7 +47,7 @@ public class E2EChangePasswordTest extends E2ETest {
     @Inject private SignUpService signUpService;
     @Inject private LogInService loginService;
 
-    @Inject private PersonRepository repository;
+    @Inject private PersonRepository personRepository;
 
     @Test
     public void changeSupervisorPassword_withValidJSON_andValidData_returnsSupervisorData() throws Exception {
@@ -86,7 +86,7 @@ public class E2EChangePasswordTest extends E2ETest {
                 .statusCode(HttpResponse.StatusCode.OK)
                 .body("success", is(true));
 
-        repository.delete(supervisor.getId());
+        personRepository.delete(supervisor.getId());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class E2EChangePasswordTest extends E2ETest {
                 .body("data", nullValue())
                 .body("error", contains(EMPTY_NEW_PASSWORD));
 
-        repository.delete(supervisor.getId());
+        personRepository.delete(supervisor.getId());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class E2EChangePasswordTest extends E2ETest {
                 .body("data", nullValue())
                 .body("error", is(MALFORMED_JSON));
 
-        repository.deleteAll();
+        personRepository.deleteAll();
     }
 
     @Test
@@ -158,6 +158,6 @@ public class E2EChangePasswordTest extends E2ETest {
                 .body("data", nullValue())
                 .body("error", contains(INSUFFICIENT_PERMISSIONS));
 
-        repository.deleteAll();
+        personRepository.deleteAll();
     }
 }

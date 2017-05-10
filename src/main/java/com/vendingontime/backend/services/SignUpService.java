@@ -1,5 +1,6 @@
 package com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
@@ -7,6 +8,7 @@ import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
@@ -30,8 +32,8 @@ import javax.inject.Inject;
  */
 public class SignUpService extends AbstractService {
 
-    private PersonRepository repository;
-    private CompanyRepository companyRepository;
+    private final PersonRepository repository;
+    private final CompanyRepository companyRepository;
 
     @Inject
     public SignUpService(PersonRepository repository, CompanyRepository companyRepository) {
@@ -40,16 +42,29 @@ public class SignUpService extends AbstractService {
     }
 
     public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
-        Person person = createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
+        Person supervisor = createPerson(supervisorCandidate, PersonRole.SUPERVISOR);
 
         Company company = companyRepository.create(new Company());
 
-        Person savedPerson = repository.findById(person.getId()).get();
-        company.setOwner(savedPerson);
+        Person savedSupervisor = repository.findById(supervisor.getId()).get();
+        company.setOwner(savedSupervisor);
 
         companyRepository.update(company);
 
-        return savedPerson;
+        return savedSupervisor;
+    }
+
+    public Person createTechnician(AddTechnicianData addTechnicianData) throws BusinessLogicException {
+        Person technician = createPerson(addTechnicianData, PersonRole.TECHNICIAN);
+
+        Company company = addTechnicianData.getRequester().getOwnedCompany();
+
+        Person savedTechnician = repository.findById(technician.getId()).get();
+        company.addTechnician(savedTechnician);
+
+        companyRepository.update(company);
+
+        return savedTechnician;
     }
 
     private Person createPerson(SignUpData personCandidate, PersonRole role) {

@@ -47,7 +47,7 @@ public class EditMachineService extends AbstractService {
         if (!machineById.isPresent()) return machineById;
 
         Machine machine = machineById.get();
-        Company requesterCompany = machineUpdateCandidate.getRequester().getCompany();
+        Company requesterCompany = machineUpdateCandidate.getRequester().getOwnedCompany();
 
         if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
 
