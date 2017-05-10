@@ -99,6 +99,9 @@ public class E2EListMachinesTest extends E2ETest {
         companyRepository.deleteAll();
     }
 
+
+    // TODO: alberto@10/5/17 Decide if this should be removed from here since it doesn't represents any functionality
+
     //TODO miguel@30/04/2017 This is just a temporary functionality until technicians can be created.
 //    @Test
 //    public void listMachines_withValidToken_andTechnicianRole_returnsUnimplemented() {}
