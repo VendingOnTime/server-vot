@@ -1,21 +1,25 @@
-package integration.com.vendingontime.backend.services;
+package integration.com.vendingontime.backend.routes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.ListTechniciansService;
+import com.vendingontime.backend.routes.ListTechniciansRouter;
+import com.vendingontime.backend.routes.utils.RESTResult;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
+import spark.Request;
+import spark.Response;
 import testutils.FixtureFactory;
 
-import java.util.HashSet;
 import java.util.List;
 
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -35,9 +39,9 @@ import static org.junit.Assert.*;
  * specific language governing permissions and limitations under the License.
  */
 
-public class ListTechniciansServiceTest extends IntegrationTest {
-    @Inject private ListTechniciansService service;
+public class ListTechniciansRouterTest extends IntegrationTest {
 
+    @Inject private ListTechniciansRouter router;
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;
 
@@ -55,8 +59,15 @@ public class ListTechniciansServiceTest extends IntegrationTest {
         company.addTechnician(savedTechnician2);
         companyRepository.update(company);
 
-        List<Person> technicians = service.listFor(savedOwner);
-        assertThat(new HashSet<>(technicians), equalTo(company.getTechnicians()));
+        String result = (String) router.listFor(savedOwner)
+                .handle(mock(Request.class), mock(Response.class));
+
+        ObjectMapper mapper = new ObjectMapper();
+        RESTResult restResult = mapper.readValue(result, RESTResult.class);
+        assertThat(restResult.getSuccess(), is(true));
+
+        List machines = (List) restResult.getData();
+        assertThat(machines.size(), is(2));
 
         personRepository.deleteAll();
         companyRepository.deleteAll();
