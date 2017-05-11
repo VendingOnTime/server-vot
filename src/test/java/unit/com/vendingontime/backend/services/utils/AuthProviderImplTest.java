@@ -1,6 +1,7 @@
 package unit.com.vendingontime.backend.services.utils;
 
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.services.utils.AuthProviderImpl;
 import org.junit.After;
@@ -78,8 +79,38 @@ public class AuthProviderImplTest {
         assertThat(authProvider.canModify(requester, FixtureFactory.generateCompany()), is(false));
     }
 
+    @Test
     public void canModify_company_withNullCompany_isFalse() throws Exception {
         Company company = null;
         assertThat(authProvider.canModify(requester, company), is(false));
+    }
+
+    @Test
+    public void canModify_machine_withPermissions_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(true));
+    }
+
+    @Test
+    public void canModify_machine_withNoCompany_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(false));
+    }
+
+    @Test
+    public void canModify_machine_withTechnician_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+
+        assertThat(authProvider.canModify(technician, machine), is(false));
     }
 }

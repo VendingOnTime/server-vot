@@ -18,6 +18,7 @@ package com.vendingontime.backend.services.utils;
  */
 
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 
 public class AuthProviderImpl implements AuthProvider {
@@ -37,5 +38,11 @@ public class AuthProviderImpl implements AuthProvider {
     public boolean canModify(Person requester, Company company) {
         if (company == null) return false;
         return company.equals(requester.getOwnedCompany());
+    }
+
+    @Override
+    public boolean canModify(Person requester, Machine machine) {
+        if (machine == null || machine.getCompany() == null) return false;
+        return machine.getCompany().equals(requester.getOwnedCompany());
     }
 }
