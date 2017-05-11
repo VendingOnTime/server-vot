@@ -16,6 +16,8 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 import static com.vendingontime.backend.models.bodymodels.person.AddTechnicianData.EMPTY_REQUESTER;
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.EMPTY_EMAIL;
 import static com.vendingontime.backend.models.person.PersonCollisionException.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -80,6 +82,7 @@ public class SignUpServiceTest {
         when(repository.findById(TECHNICIAN_ID)).thenReturn(Optional.of(technician));
 
         when(companyRepository.create(any())).thenReturn(company.setId(COMPANY_ID));
+        when(companyRepository.findById(COMPANY_ID)).thenReturn(Optional.of(company.setId(COMPANY_ID)));
         when(companyRepository.update(any())).thenReturn(Optional.of(company));
     }
 
@@ -105,8 +108,11 @@ public class SignUpServiceTest {
         verify(companyRepository, times(1)).create(any());
         verify(companyRepository, times(1)).update(any());
 
-        assertNotNull(supervisor.getOwnedCompany().getId());
-        assertNotNull(companyRepository.findById(supervisor.getOwnedCompany().getId()));
+        assertThat(supervisor.getOwnedCompany().getId(), notNullValue());
+
+        Optional<Company> byId = companyRepository.findById(supervisor.getOwnedCompany().getId());
+        assertThat(byId.isPresent(), is(true));
+        assertThat(byId.get().getWorkers().contains(supervisor), is(true));
     }
 
     @Test
@@ -120,9 +126,12 @@ public class SignUpServiceTest {
         verify(companyRepository, times(1)).create(any());
         verify(companyRepository, times(1)).update(any());
 
-        assertEquals(PersonRole.SUPERVISOR, supervisor.getRole());
-        assertNotNull(supervisor.getOwnedCompany().getId());
-        assertNotNull(companyRepository.findById(supervisor.getOwnedCompany().getId()));
+        assertThat(supervisor.getRole(), equalTo(PersonRole.SUPERVISOR));
+        assertThat(supervisor.getOwnedCompany().getId(), notNullValue());
+
+        Optional<Company> byId = companyRepository.findById(supervisor.getOwnedCompany().getId());
+        assertThat(byId.isPresent(), is(true));
+        assertThat(byId.get().getWorkers().contains(supervisor), is(true));
     }
 
     @Test
@@ -132,7 +141,7 @@ public class SignUpServiceTest {
             service.createSupervisor(signUpData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{EMPTY_EMAIL}, e.getCauses());
+            assertThat(e.getCauses(), equalTo(new String[]{EMPTY_EMAIL}));
         }
     }
 
@@ -144,7 +153,7 @@ public class SignUpServiceTest {
             service.createSupervisor(signUpData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
+            assertThat(e.getCauses(), equalTo(new String[]{EMAIL_EXISTS}));
         }
     }
 
@@ -160,8 +169,8 @@ public class SignUpServiceTest {
         verify(companyRepository, times(0)).create(any());
         verify(companyRepository, times(1)).update(any());
 
-        assertNotNull(technician.getCompany().getId());
-        assertThat(company.getTechnicians().contains(technician), is(true));
+        assertThat(technician.getCompany().getId(), notNullValue());
+        assertThat(company.getWorkers().contains(technician), is(true));
     }
 
     @Test
@@ -187,7 +196,7 @@ public class SignUpServiceTest {
             service.createTechnician(addTechnicianData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{EMPTY_EMAIL}, e.getCauses());
+            assertThat(e.getCauses(), equalTo(new String[]{EMPTY_EMAIL}));
         }
     }
 
@@ -198,7 +207,7 @@ public class SignUpServiceTest {
             service.createTechnician(addTechnicianData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{EMPTY_REQUESTER}, e.getCauses());
+            assertThat(e.getCauses(), equalTo(new String[]{EMPTY_REQUESTER}));
         }
     }
 
@@ -211,7 +220,7 @@ public class SignUpServiceTest {
             service.createTechnician(addTechnicianData);
             fail();
         } catch (BusinessLogicException e) {
-            assertArrayEquals(new String[]{EMAIL_EXISTS}, e.getCauses());
+            assertThat(e.getCauses(), equalTo(new String[]{EMAIL_EXISTS}));
         }
     }
 }

@@ -90,7 +90,7 @@ public class SignUpServiceTest extends IntegrationTest {
 
         assertThat(byEmail.isPresent(), is(true));
         assertThat(company.isPresent(), is(true));
-        assertThat(company.get().getTechnicians().contains(technician), is(true));
+        assertThat(company.get().getWorkers().contains(technician), is(true));
 
         personRepository.deleteAll();
         companyRepository.deleteAll();

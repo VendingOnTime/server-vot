@@ -8,7 +8,6 @@ import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
@@ -48,6 +47,7 @@ public class SignUpService extends AbstractService {
 
         Person savedSupervisor = repository.findById(supervisor.getId()).get();
         company.setOwner(savedSupervisor);
+        company.addWorker(savedSupervisor);
 
         companyRepository.update(company);
 
@@ -60,7 +60,7 @@ public class SignUpService extends AbstractService {
         Company company = addTechnicianData.getRequester().getOwnedCompany();
 
         Person savedTechnician = repository.findById(technician.getId()).get();
-        company.addTechnician(savedTechnician);
+        company.addWorker(savedTechnician);
 
         companyRepository.update(company);
 

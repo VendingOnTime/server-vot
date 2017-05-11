@@ -3,7 +3,6 @@ package integration.com.vendingontime.backend.repositories;
 import com.google.inject.Inject;
 
 import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.models.person.Person;
@@ -403,8 +402,8 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
         Person savedTechnician1 = repository.findById(technician1.getId()).get();
         Person savedTechnician2 = repository.findById(technician2.getId()).get();
 
-        company.addTechnician(savedTechnician1);
-        company.addTechnician(savedTechnician2);
+        company.addWorker(savedTechnician1);
+        company.addWorker(savedTechnician2);
 
         companyRepository.update(company);
 
