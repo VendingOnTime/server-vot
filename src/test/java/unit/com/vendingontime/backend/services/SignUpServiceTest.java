@@ -11,11 +11,13 @@ import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.JPAPersonRepository;
 import com.vendingontime.backend.services.SignUpService;
 
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import static com.vendingontime.backend.models.bodymodels.person.AddTechnicianData.EMPTY_REQUESTER;
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.EMPTY_EMAIL;
 import static com.vendingontime.backend.models.person.PersonCollisionException.*;
+import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -56,8 +58,9 @@ public class SignUpServiceTest {
     private CompanyRepository companyRepository;
     private SignUpService service;
     private SignUpData signUpData;
-    private AddTechnicianData addTechnicianData;
+    private AuthProvider authProvider;
 
+    private AddTechnicianData addTechnicianData;
     private Person supervisor;
     private Person technician;
     private Company company;
@@ -67,8 +70,9 @@ public class SignUpServiceTest {
 
         repository = mock(JPAPersonRepository.class);
         companyRepository = mock(CompanyRepository.class);
+        authProvider = mock(AuthProvider.class);
 
-        service = new SignUpService(repository, companyRepository);
+        service = new SignUpService(repository, companyRepository, authProvider);
 
         signUpData = FixtureFactory.generateSignUpData().setRole(PersonRole.SUPERVISOR);
         supervisor = new Person(signUpData);
@@ -84,12 +88,15 @@ public class SignUpServiceTest {
         when(companyRepository.create(any())).thenReturn(company.setId(COMPANY_ID));
         when(companyRepository.findById(COMPANY_ID)).thenReturn(Optional.of(company.setId(COMPANY_ID)));
         when(companyRepository.update(any())).thenReturn(Optional.of(company));
+
+        when(authProvider.canModify(any(Person.class), any(Company.class))).thenReturn(true);
     }
 
     @After
     public void tearDown() throws Exception {
         repository = null;
         companyRepository = null;
+        authProvider = null;
         service = null;
         signUpData = null;
         addTechnicianData = null;
@@ -161,7 +168,8 @@ public class SignUpServiceTest {
     public void createTechnician() {
         when(repository.create(any())).thenReturn(technician.setId(TECHNICIAN_ID));
 
-        addTechnicianData.setRequester(supervisor.setOwnedCompany(company));
+        company.setOwner(supervisor).addWorker(supervisor);
+        addTechnicianData.setRequester(supervisor);
 
         service.createTechnician(addTechnicianData);
 
@@ -177,7 +185,8 @@ public class SignUpServiceTest {
     public void createTechnician_withNoRole_returnsTechnician() {
         when(repository.create(any())).thenReturn(technician.setId(TECHNICIAN_ID));
 
-        addTechnicianData.setRequester(supervisor.setOwnedCompany(company)).setRole(null);
+        company.setOwner(supervisor).addWorker(supervisor);
+        addTechnicianData.setRequester(supervisor).setRole(null);
 
         service.createTechnician(addTechnicianData);
 
@@ -189,9 +198,23 @@ public class SignUpServiceTest {
     }
 
     @Test
+    public void createTechnician_withNoPermissions_throwsException() throws Exception {
+        when(authProvider.canModify(any(Person.class), any(Company.class))).thenReturn(false);
+
+        try {
+            addTechnicianData.setRequester(supervisor);
+            service.createTechnician(addTechnicianData);
+            fail();
+        } catch (BusinessLogicException e) {
+            assertThat(e.getCauses(), equalTo(new String[]{INSUFFICIENT_PERMISSIONS}));
+        }
+    }
+
+    @Test
     public void createTechnician_withInvalidPayload_throwsException() throws Exception {
         try {
-            addTechnicianData.setRequester(supervisor.setOwnedCompany(company));
+            company.setOwner(supervisor).addWorker(supervisor);
+            addTechnicianData.setRequester(supervisor);
             addTechnicianData.setEmail("");
             service.createTechnician(addTechnicianData);
             fail();
@@ -201,22 +224,15 @@ public class SignUpServiceTest {
     }
 
     @Test
-    public void createTechnician_withNoRequester_throwsException() throws Exception {
-        try {
-            addTechnicianData.setRequester(null);
-            service.createTechnician(addTechnicianData);
-            fail();
-        } catch (BusinessLogicException e) {
-            assertThat(e.getCauses(), equalTo(new String[]{EMPTY_REQUESTER}));
-        }
-    }
-
-    @Test
     public void createTechnician_withCollision_throwsException() throws Exception {
         try {
             doThrow(new PersonCollisionException(new Cause[]{Cause.EMAIL}))
                     .when(repository).create(any());
-            addTechnicianData.setRequester(supervisor.setOwnedCompany(company)).setRole(null);
+
+            company.setOwner(supervisor).addWorker(supervisor);
+            addTechnicianData.setRequester(supervisor);
+
+            addTechnicianData.setRequester(supervisor);
             service.createTechnician(addTechnicianData);
             fail();
         } catch (BusinessLogicException e) {

@@ -38,7 +38,8 @@ public class FixtureFactory {
     }
 
     public static Company generateCompanyWithOwner() {
-        return instance.generateBasicCompany().setOwner(generateSupervisor());
+        Person owner = generateSupervisor();
+        return instance.generateBasicCompany().setOwner(owner).addWorker(owner);
     }
 
     private Company generateBasicCompany() {

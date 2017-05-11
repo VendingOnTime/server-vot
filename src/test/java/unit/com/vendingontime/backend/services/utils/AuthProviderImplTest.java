@@ -1,5 +1,6 @@
 package unit.com.vendingontime.backend.services.utils;
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.services.utils.AuthProviderImpl;
 import org.junit.After;
@@ -64,5 +65,21 @@ public class AuthProviderImplTest {
     @Test
     public void canModifyPassword_nonRelatedOne_isFalse() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, FixtureFactory.generateCustomer()), is(false));
+    }
+
+    @Test
+    public void canModify_company_withPermissions_isTrue() throws Exception {
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canModify(supervisor, supervisor.getOwnedCompany()), is(true));
+    }
+
+    @Test
+    public void canModify_company_withNoPermissions_isFalse() throws Exception {
+        assertThat(authProvider.canModify(requester, FixtureFactory.generateCompany()), is(false));
+    }
+
+    public void canModify_company_withNullCompany_isFalse() throws Exception {
+        Company company = null;
+        assertThat(authProvider.canModify(requester, company), is(false));
     }
 }

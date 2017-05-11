@@ -17,6 +17,7 @@ package com.vendingontime.backend.services.utils;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 
 public class AuthProviderImpl implements AuthProvider {
@@ -30,5 +31,11 @@ public class AuthProviderImpl implements AuthProvider {
     @Override
     public boolean canModifyPassword(Person requester, Person person) {
         return requester.equals(person);
+    }
+
+    @Override
+    public boolean canModify(Person requester, Company company) {
+        if (company == null) return false;
+        return company.equals(requester.getOwnedCompany());
     }
 }

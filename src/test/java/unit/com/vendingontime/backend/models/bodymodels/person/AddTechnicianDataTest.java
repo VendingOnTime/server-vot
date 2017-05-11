@@ -56,13 +56,6 @@ public class AddTechnicianDataTest {
     }
 
     @Test
-    public void validate_withRequesterWithoutRole_notValid() throws Exception {
-        addTechnicianData.setRequester(new Person());
-
-        assertArrayEquals(new String[]{EMPTY_REQUESTER}, addTechnicianData.validate());
-    }
-
-    @Test
     public void validate_invalid_multipleErrors() throws Exception {
         AddTechnicianData technicianData = FixtureFactory.generateAddTechnicianData();
         technicianData.setRequester(null);
