@@ -85,6 +85,4 @@ public class E2EListTechniciansTest extends E2ETest {
         .then()
                 .statusCode(HttpResponse.StatusCode.UNAUTHORIZED);
     }
-
-    // TODO: alberto@10/5/17 Decide if we should add acceptance tests to represent unauthorized accesses
 }

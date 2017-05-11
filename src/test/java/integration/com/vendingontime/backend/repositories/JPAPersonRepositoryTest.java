@@ -386,7 +386,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    public void findByCompany_companyExistsWithNoMachines_returnsEmpty() throws Exception {
+    public void findByCompany_companyExistsWithc_returnsEmpty() throws Exception {
         Company company = companyRepository.create(new Company());
         List<Person> technicians = repository.findTechniciansByCompany(company);
         assertThat(technicians.size(), is(0));
@@ -394,24 +394,24 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    public void findByCompany_companyExistsWithMachines_returnsMachines() throws Exception {
+    public void findByCompany_companyExistsWithTechnicians_returnsTechnicians() throws Exception {
         Company company = companyRepository.create(new Company());
 
         Person technician1 = repository.create(new Person().setRole(PersonRole.TECHNICIAN));
         Person technician2 = repository.create(new Person().setRole(PersonRole.TECHNICIAN));
 
-        Person savedPerson1 = repository.findById(technician1.getId()).get();
-        Person savedPerson2 = repository.findById(technician2.getId()).get();
+        Person savedTechnician1 = repository.findById(technician1.getId()).get();
+        Person savedTechnician2 = repository.findById(technician2.getId()).get();
 
-        company.addTechnician(savedPerson1);
-        company.addTechnician(savedPerson2);
+        company.addTechnician(savedTechnician1);
+        company.addTechnician(savedTechnician2);
 
         companyRepository.update(company);
 
         List<Person> technicians = repository.findTechniciansByCompany(company);
         assertThat(technicians.size(), is(2));
-        assertThat(technicians.contains(savedPerson1), is(true));
-        assertThat(technicians.contains(savedPerson2), is(true));
+        assertThat(technicians.contains(savedTechnician1), is(true));
+        assertThat(technicians.contains(savedTechnician2), is(true));
 
         repository.deleteAll();
         companyRepository.deleteAll();
