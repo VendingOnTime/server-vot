@@ -6,8 +6,11 @@ import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -51,6 +54,10 @@ public class Person extends AbstractEntity<Person> {
     @ManyToOne
     @JsonIgnore
     private Company company;
+
+    @OneToMany(mappedBy = "maintainer", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Machine> maintainedMachines = new HashSet<>();
 
     public Person() {
         super();
@@ -167,6 +174,16 @@ public class Person extends AbstractEntity<Person> {
 
     public Person setCompany(Company company) {
         this.company = company;
+        return this;
+    }
+
+    public Set<Machine> getMaintainedMachines() {
+        return maintainedMachines;
+    }
+
+    public Person addMaintainedMachine(Machine machine) {
+        maintainedMachines.add(machine);
+        machine.setMaintainer(this);
         return this;
     }
 
