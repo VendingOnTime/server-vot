@@ -86,6 +86,9 @@ public class Person extends AbstractEntity<Person> {
         this.name = person.getName();
         this.surnames = person.getSurnames();
         this.role = person.getRole();
+        this.ownedCompany = person.getOwnedCompany();
+        this.company = person.getCompany();
+        this.maintainedMachines = person.getMaintainedMachines();
     }
 
     public void updateWith(EditPersonData editPersonData) {
@@ -229,6 +232,8 @@ public class Person extends AbstractEntity<Person> {
                 ", name='" + name + '\'' +
                 ", surnames='" + surnames + '\'' +
                 ", role=" + role +
+                ", ownedCompany=" + ownedCompany +
+                ", company=" + company +
                 "} " + super.toString();
     }
 }
