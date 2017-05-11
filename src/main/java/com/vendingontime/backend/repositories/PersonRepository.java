@@ -1,7 +1,9 @@
 package com.vendingontime.backend.repositories;
 
+import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -25,4 +27,5 @@ public interface PersonRepository extends Repository<Person> {
     Optional<Person> findByEmail(String email);
     Optional<Person> findByUsername(String email);
     Optional<Person> findByDni(String email);
+    List<Person> findTechniciansByCompany(Company company);
 }

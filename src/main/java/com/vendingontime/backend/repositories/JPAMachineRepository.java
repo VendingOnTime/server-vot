@@ -33,7 +33,7 @@ public class JPAMachineRepository extends JPARepository<Machine> implements Mach
 
     @Override
     public List<Machine> findMachinesByCompany(Company company) {
-        if (company == null) return new LinkedList<>();
+        if (company == null || company.getId() == null) return new LinkedList<>();
         return findManyBy("findByCompany", "companyId", company.getId());
     }
 }

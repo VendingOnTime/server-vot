@@ -38,7 +38,7 @@ public class Company extends AbstractEntity<Company> {
     private Set<Machine> machines = new HashSet<>();
 
     @OneToMany(mappedBy = "company", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Set<Person> technicians = new HashSet<>();
+    private Set<Person> workers = new HashSet<>();
 
     public Company() {
         super();
@@ -48,7 +48,7 @@ public class Company extends AbstractEntity<Company> {
     public void updateWith(Company company) {
         this.owner = company.getOwner();
         this.machines = company.getMachines();
-        this.technicians = company.getTechnicians();
+        this.workers = company.getWorkers();
     }
 
     public Person getOwner() {
@@ -71,13 +71,13 @@ public class Company extends AbstractEntity<Company> {
         return this;
     }
 
-    public Set<Person> getTechnicians() {
-        return technicians;
+    public Set<Person> getWorkers() {
+        return workers;
     }
 
-    public Company addTechnician(Person technician) {
-        this.technicians.add(technician);
-        technician.setCompany(this);
+    public Company addWorker(Person worker) {
+        this.workers.add(worker);
+        worker.setCompany(this);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class Company extends AbstractEntity<Company> {
         int result = super.hashCode();
         result = 31 * result + (getOwner() != null ? getOwner().hashCode() : 0);
         result = 31 * result + (getMachines() != null ? getMachines().hashCode() : 0);
-        result = 31 * result + (getTechnicians() != null ? getTechnicians().hashCode() : 0);
+        result = 31 * result + (getWorkers() != null ? getWorkers().hashCode() : 0);
         return result;
     }
 
@@ -95,7 +95,7 @@ public class Company extends AbstractEntity<Company> {
         return "Company{" +
                 "owner=" + owner +
                 ", machines=" + machines +
-                ", technicians=" + technicians +
+                ", workers=" + workers +
                 "} " + super.toString();
     }
 

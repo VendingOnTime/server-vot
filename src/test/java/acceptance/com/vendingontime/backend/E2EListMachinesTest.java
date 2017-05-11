@@ -98,12 +98,4 @@ public class E2EListMachinesTest extends E2ETest {
         personRepository.deleteAll();
         companyRepository.deleteAll();
     }
-
-    //TODO miguel@30/04/2017 This is just a temporary functionality until technicians can be created.
-//    @Test
-//    public void listMachines_withValidToken_andTechnicianRole_returnsUnimplemented() {}
-
-    //TODO miguel@30/04/2017 Can not be tested until signUp and logIn methods are created.
-//    @Test
-//    public void listMachines_withValidToken_andUserRole_returnsUnauthorized() {}
 }
