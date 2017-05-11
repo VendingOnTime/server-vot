@@ -55,8 +55,8 @@ public class ListTechniciansRouterTest extends IntegrationTest {
         Person savedTechnician1 = personRepository.findById(technician1.getId()).get();
         Person savedTechnician2 = personRepository.findById(technician2.getId()).get();
 
-        company.addTechnician(savedTechnician1);
-        company.addTechnician(savedTechnician2);
+        company.addWorker(savedTechnician1);
+        company.addWorker(savedTechnician2);
         companyRepository.update(company);
 
         String result = (String) router.listFor(savedOwner)

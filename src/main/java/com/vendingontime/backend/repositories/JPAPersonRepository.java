@@ -55,7 +55,7 @@ public class JPAPersonRepository extends JPARepository<Person> implements Person
     @Override
     public List<Person> findTechniciansByCompany(Company company) {
         if (company == null || company.getId() == null) return new LinkedList<>();
-        return findManyBy("findByCompany", "companyId", company.getId());
+        return findManyBy("findTechniciansByCompany", "companyId", company.getId());
     }
 
     @Override

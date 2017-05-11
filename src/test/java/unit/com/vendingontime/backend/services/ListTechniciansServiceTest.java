@@ -70,18 +70,18 @@ public class ListTechniciansServiceTest {
 
     @Test
     public void listFor_companyWithTechnicians_returnsListOfTechnicians() throws Exception {
-        company.addTechnician(new Person().setId("TECHNICIAN_1"));
-        company.addTechnician(new Person().setId("TECHNICIAN_2"));
+        company.addWorker(new Person().setId("TECHNICIAN_1"));
+        company.addWorker(new Person().setId("TECHNICIAN_2"));
 
-        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(company.getTechnicians()));
+        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(company.getWorkers()));
 
         List<Person> technicians = listTechniciansService.listFor(owner);
-        assertThat(technicians, equalTo(new LinkedList<>(company.getTechnicians())));
+        assertThat(technicians, equalTo(new LinkedList<>(company.getWorkers())));
     }
 
     @Test
     public void listFor_companyWithNoTechnicians_returnsEmptyList() throws Exception {
-        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(company.getTechnicians()));
+        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(company.getWorkers()));
 
         List<Person> technicians = listTechniciansService.listFor(owner);
         assertThat(technicians.size(), is(0));
