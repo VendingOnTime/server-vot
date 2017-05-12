@@ -96,6 +96,15 @@ public class AuthProviderImplTest {
     }
 
     @Test
+    public void canModify_machine_withNoMachine_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = null;
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(false));
+    }
+
+    @Test
     public void canModify_machine_withNoCompany_isFalse() throws Exception {
         Company company = FixtureFactory.generateCompanyWithOwner();
         Machine machine = FixtureFactory.generateMachine();
