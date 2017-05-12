@@ -26,22 +26,26 @@ public class AuthProviderImpl implements AuthProvider {
     @Override
     public boolean canModify(Person requester, Person person) {
         // TODO: alberto@2/5/17 Once company person hierarchy gets more complex add extra checks here
+        if (requester == null) return false;
         return requester.equals(person);
     }
 
     @Override
     public boolean canModifyPassword(Person requester, Person person) {
+        if (requester == null) return false;
         return requester.equals(person);
     }
 
     @Override
     public boolean canModify(Person requester, Company company) {
+        if (requester == null) return false;
         if (company == null) return false;
         return company.equals(requester.getOwnedCompany());
     }
 
     @Override
     public boolean canModify(Person requester, Machine machine) {
+        if (requester == null) return false;
         if (machine == null || machine.getCompany() == null) return false;
         return machine.getCompany().equals(requester.getOwnedCompany());
     }

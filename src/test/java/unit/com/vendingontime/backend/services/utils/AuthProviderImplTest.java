@@ -59,6 +59,11 @@ public class AuthProviderImplTest {
     }
 
     @Test
+    public void canModify_nullRequester_isFalse() throws Exception {
+        assertThat(authProvider.canModify(null, requester), is(false));
+    }
+
+    @Test
     public void canModifyPassword_himself_isTrue() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, requester), is(true));
     }
@@ -66,6 +71,11 @@ public class AuthProviderImplTest {
     @Test
     public void canModifyPassword_nonRelatedOne_isFalse() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, FixtureFactory.generateCustomer()), is(false));
+    }
+
+    @Test
+    public void canModifyPassword_nullPerson_isFalse() throws Exception {
+        assertThat(authProvider.canModifyPassword(null, requester), is(false));
     }
 
     @Test
@@ -83,6 +93,12 @@ public class AuthProviderImplTest {
     public void canModify_company_withNullCompany_isFalse() throws Exception {
         Company company = null;
         assertThat(authProvider.canModify(requester, company), is(false));
+    }
+
+    @Test
+    public void canModify_company_nullPerson_isFalse() throws Exception {
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canModify(null, supervisor.getOwnedCompany()), is(false));
     }
 
     @Test
@@ -121,5 +137,11 @@ public class AuthProviderImplTest {
         company.addWorker(technician);
 
         assertThat(authProvider.canModify(technician, machine), is(false));
+    }
+
+    @Test
+    public void canModify_machine_nullPerson_isFalse() throws Exception {
+        Machine machine = FixtureFactory.generateMachine();
+        assertThat(authProvider.canModify(null, machine), is(false));
     }
 }
