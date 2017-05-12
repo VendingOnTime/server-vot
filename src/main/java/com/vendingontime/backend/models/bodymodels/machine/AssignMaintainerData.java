@@ -37,24 +37,27 @@ public class AssignMaintainerData implements Validable {
         return id;
     }
 
-    public void setId(String id) {
+    public AssignMaintainerData setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getTechnicianId() {
         return technicianId;
     }
 
-    public void setTechnicianId(String technicianId) {
+    public AssignMaintainerData setTechnicianId(String technicianId) {
         this.technicianId = technicianId;
+        return this;
     }
 
     public Person getRequester() {
         return requester;
     }
 
-    public void setRequester(Person requester) {
+    public AssignMaintainerData setRequester(Person requester) {
         this.requester = requester;
+        return this;
     }
 
     @Override

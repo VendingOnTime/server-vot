@@ -19,6 +19,7 @@ package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
 import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.utils.AuthProvider;
@@ -41,6 +42,26 @@ public class AssignMaintainerService extends AbstractService {
     }
 
     public Optional<Machine> assignMaintainer(AssignMaintainerData assignMaintainerData) throws BusinessLogicException {
-        return Optional.empty();
+        String[] validateErrors = assignMaintainerData.validate();
+        if (validateErrors.length != 0)
+            throw new BusinessLogicException(validateErrors);
+
+        Optional<Machine> machineById = machineRepository.findById(assignMaintainerData.getId());
+        if (!machineById.isPresent())
+            return machineById;
+
+        Machine machine = machineById.get();
+        if (!authProvider.canModify(assignMaintainerData.getRequester(), machine))
+            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+
+        Optional<Person> technicianById = personRepository.findById(assignMaintainerData.getTechnicianId());
+        if (!technicianById.isPresent())
+            return Optional.empty();
+
+        Person technician = technicianById.get();
+        technician.addMaintainedMachine(machine);
+        Optional<Person> possibleUpdated = personRepository.update(technician);
+
+        return possibleUpdated.isPresent() ? Optional.of(machine) : Optional.empty();
     }
 }
