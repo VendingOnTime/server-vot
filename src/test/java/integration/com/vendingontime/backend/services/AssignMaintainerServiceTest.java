@@ -1,5 +1,6 @@
 package integration.com.vendingontime.backend.services;
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
 import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
@@ -14,8 +15,6 @@ import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
 import testutils.FixtureFactory;
-
-import javax.inject.Inject;
 
 import java.util.Optional;
 

@@ -66,7 +66,6 @@ public class E2EEditMachineTest extends E2ETest {
         EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
         payload.setDescription("NEW_DESCRIPTION");
         payload.setState(MachineState.OUT_OF_SERVICE);
-        payload.setId(null);
 
         given()
             .header("Authorization", "JWT " + token)
@@ -100,7 +99,6 @@ public class E2EEditMachineTest extends E2ETest {
         Machine machine = addMachineService.createMachine(addMachineData.setRequester(supervisor));
 
         EditMachineData payload = FixtureFactory.generateEditMachineDataFrom(machine);
-        payload.setId(null);
 
         given()
             .header("Authorization", "JWT " + token)

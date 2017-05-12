@@ -17,6 +17,7 @@ package com.vendingontime.backend.routes;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
 import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
@@ -27,7 +28,7 @@ import com.vendingontime.backend.services.AssignMaintainerService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
-import javax.inject.Inject;
+
 import java.io.IOException;
 
 public class AssignMaintainerRouter extends AbstractSparkRouter {
@@ -49,7 +50,7 @@ public class AssignMaintainerRouter extends AbstractSparkRouter {
     public void configure(Service http) {
         protector.protect(V1_MACHINES + ID_PARAM + MAINTAINER);
         http.put(V1_MACHINES + ID_PARAM + MAINTAINER, map((req, res) ->
-                assignMachineMaintainer(req.body(), req.params(ID_PARAM),
+                assignMachineMaintainer(req.params(ID_PARAM), req.body(),
                         req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 

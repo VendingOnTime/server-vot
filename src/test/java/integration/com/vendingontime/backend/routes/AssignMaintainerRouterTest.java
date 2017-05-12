@@ -1,9 +1,8 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
-import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
@@ -12,7 +11,6 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.routes.AssignMaintainerRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.AddMachineService;
-import com.vendingontime.backend.services.AssignMaintainerService;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
@@ -20,7 +18,7 @@ import spark.Request;
 import spark.Response;
 import testutils.FixtureFactory;
 
-import javax.inject.Inject;
+
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -46,7 +44,8 @@ import static org.mockito.Mockito.mock;
 
 public class AssignMaintainerRouterTest extends IntegrationTest {
 
-    @Inject private SignUpService signUpService;
+    @Inject
+    private SignUpService signUpService;
     @Inject private AddMachineService addMachineService;
     @Inject private AssignMaintainerRouter assignMaintainerRouter;
 

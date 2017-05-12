@@ -17,6 +17,7 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -25,7 +26,7 @@ import com.vendingontime.backend.repositories.PersonRepository;
 import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
-import javax.inject.Inject;
+
 import java.util.Optional;
 
 public class AssignMaintainerService extends AbstractService {
