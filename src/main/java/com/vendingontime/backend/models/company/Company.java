@@ -81,24 +81,6 @@ public class Company extends AbstractEntity<Company> {
         return this;
     }
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getOwner() != null ? getOwner().hashCode() : 0);
-        result = 31 * result + (getMachines() != null ? getMachines().hashCode() : 0);
-        result = 31 * result + (getWorkers() != null ? getWorkers().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Company{" +
-                "owner=" + owner +
-                ", machines=" + machines +
-                ", workers=" + workers +
-                "} " + super.toString();
-    }
-
     @PreRemove
     void preRemove() {
         if (owner != null) owner.setOwnedCompany(null);

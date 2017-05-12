@@ -8,6 +8,7 @@ import com.vendingontime.backend.models.person.PersonCollisionException;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
@@ -29,15 +30,19 @@ import javax.inject.Inject;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
+// FIXME: 11/05/2017 Is hard to find this class, it should be splitted in two
 public class SignUpService extends AbstractService {
 
     private final PersonRepository repository;
     private final CompanyRepository companyRepository;
+    private final AuthProvider authProvider;
 
     @Inject
-    public SignUpService(PersonRepository repository, CompanyRepository companyRepository) {
+    public SignUpService(PersonRepository repository, CompanyRepository companyRepository, AuthProvider authProvider) {
         this.repository = repository;
         this.companyRepository = companyRepository;
+        this.authProvider = authProvider;
     }
 
     public Person createSupervisor(SignUpData supervisorCandidate) throws BusinessLogicException {
@@ -55,9 +60,12 @@ public class SignUpService extends AbstractService {
     }
 
     public Person createTechnician(AddTechnicianData addTechnicianData) throws BusinessLogicException {
+        if (!authProvider.canModify(addTechnicianData.getRequester(), addTechnicianData.getRequester().getCompany()))
+            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+
         Person technician = createPerson(addTechnicianData, PersonRole.TECHNICIAN);
 
-        Company company = addTechnicianData.getRequester().getOwnedCompany();
+        Company company = addTechnicianData.getRequester().getCompany();
 
         Person savedTechnician = repository.findById(technician.getId()).get();
         company.addWorker(savedTechnician);

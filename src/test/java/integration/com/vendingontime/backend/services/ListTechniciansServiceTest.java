@@ -13,6 +13,7 @@ import testutils.FixtureFactory;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -56,7 +57,11 @@ public class ListTechniciansServiceTest extends IntegrationTest {
         companyRepository.update(company);
 
         List<Person> technicians = service.listFor(savedOwner);
-        assertThat(new HashSet<>(technicians), equalTo(company.getWorkers()));
+
+        Set<Person> workersWithoutOwner = new HashSet<>(company.getWorkers());
+        workersWithoutOwner.remove(savedOwner);
+
+        assertThat(new HashSet<>(technicians), equalTo(workersWithoutOwner));
 
         personRepository.deleteAll();
         companyRepository.deleteAll();

@@ -385,7 +385,7 @@ public class JPAPersonRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    public void findByCompany_companyExistsWithc_returnsEmpty() throws Exception {
+    public void findByCompany_companyExistsWithTechnician_returnsEmpty() throws Exception {
         Company company = companyRepository.create(new Company());
         List<Person> technicians = repository.findTechniciansByCompany(company);
         assertThat(technicians.size(), is(0));

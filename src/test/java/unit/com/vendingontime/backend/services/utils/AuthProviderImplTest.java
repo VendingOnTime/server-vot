@@ -1,5 +1,7 @@
 package unit.com.vendingontime.backend.services.utils;
 
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.services.utils.AuthProviderImpl;
 import org.junit.After;
@@ -57,6 +59,11 @@ public class AuthProviderImplTest {
     }
 
     @Test
+    public void canModify_nullRequester_isFalse() throws Exception {
+        assertThat(authProvider.canModify(null, requester), is(false));
+    }
+
+    @Test
     public void canModifyPassword_himself_isTrue() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, requester), is(true));
     }
@@ -64,5 +71,77 @@ public class AuthProviderImplTest {
     @Test
     public void canModifyPassword_nonRelatedOne_isFalse() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, FixtureFactory.generateCustomer()), is(false));
+    }
+
+    @Test
+    public void canModifyPassword_nullPerson_isFalse() throws Exception {
+        assertThat(authProvider.canModifyPassword(null, requester), is(false));
+    }
+
+    @Test
+    public void canModify_company_withPermissions_isTrue() throws Exception {
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canModify(supervisor, supervisor.getOwnedCompany()), is(true));
+    }
+
+    @Test
+    public void canModify_company_withNoPermissions_isFalse() throws Exception {
+        assertThat(authProvider.canModify(requester, FixtureFactory.generateCompany()), is(false));
+    }
+
+    @Test
+    public void canModify_company_withNullCompany_isFalse() throws Exception {
+        Company company = null;
+        assertThat(authProvider.canModify(requester, company), is(false));
+    }
+
+    @Test
+    public void canModify_company_nullPerson_isFalse() throws Exception {
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canModify(null, supervisor.getOwnedCompany()), is(false));
+    }
+
+    @Test
+    public void canModify_machine_withPermissions_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(true));
+    }
+
+    @Test
+    public void canModify_machine_withNoMachine_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = null;
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(false));
+    }
+
+    @Test
+    public void canModify_machine_withNoCompany_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addWorker(FixtureFactory.generateTechnician());
+
+        assertThat(authProvider.canModify(company.getOwner(), machine), is(false));
+    }
+
+    @Test
+    public void canModify_machine_withTechnician_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+
+        assertThat(authProvider.canModify(technician, machine), is(false));
+    }
+
+    @Test
+    public void canModify_machine_nullPerson_isFalse() throws Exception {
+        Machine machine = FixtureFactory.generateMachine();
+        assertThat(authProvider.canModify(null, machine), is(false));
     }
 }

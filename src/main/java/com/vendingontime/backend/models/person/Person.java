@@ -6,8 +6,11 @@ import com.vendingontime.backend.models.bodymodels.person.EditPasswordData;
 import com.vendingontime.backend.models.bodymodels.person.EditPersonData;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -55,6 +58,10 @@ public class Person extends AbstractEntity<Person> {
     @JsonIgnore
     private Company company;
 
+    @OneToMany(mappedBy = "maintainer", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Machine> maintainedMachines = new HashSet<>();
+
     public Person() {
         super();
     }
@@ -82,6 +89,9 @@ public class Person extends AbstractEntity<Person> {
         this.name = person.getName();
         this.surnames = person.getSurnames();
         this.role = person.getRole();
+        this.ownedCompany = person.getOwnedCompany();
+        this.company = person.getCompany();
+        this.maintainedMachines = person.getMaintainedMachines();
     }
 
     public void updateWith(EditPersonData editPersonData) {
@@ -173,6 +183,16 @@ public class Person extends AbstractEntity<Person> {
         return this;
     }
 
+    public Set<Machine> getMaintainedMachines() {
+        return maintainedMachines;
+    }
+
+    public Person addMaintainedMachine(Machine machine) {
+        maintainedMachines.add(machine);
+        machine.setMaintainer(this);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -215,6 +235,8 @@ public class Person extends AbstractEntity<Person> {
                 ", name='" + name + '\'' +
                 ", surnames='" + surnames + '\'' +
                 ", role=" + role +
+                ", ownedCompany=" + ownedCompany +
+                ", company=" + company +
                 "} " + super.toString();
     }
 }

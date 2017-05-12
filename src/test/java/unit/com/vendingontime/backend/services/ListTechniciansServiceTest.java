@@ -11,8 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -81,7 +83,10 @@ public class ListTechniciansServiceTest {
 
     @Test
     public void listFor_companyWithNoTechnicians_returnsEmptyList() throws Exception {
-        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(company.getWorkers()));
+        Set<Person> workersWithoutOwner = new HashSet<>(company.getWorkers());
+        workersWithoutOwner.remove(company.getOwner());
+
+        when(repository.findTechniciansByCompany(company)).thenReturn(new LinkedList<>(workersWithoutOwner));
 
         List<Person> technicians = listTechniciansService.listFor(owner);
         assertThat(technicians.size(), is(0));

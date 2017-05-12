@@ -106,7 +106,7 @@ public class EditPersonServiceTest {
 
     @Test
     public void editPerson_insufficientPermissions_throwsException() throws Exception {
-        when(authProvider.canModify(any(), any())).thenReturn(false);
+        when(authProvider.canModify(any(Person.class), any(Person.class))).thenReturn(false);
 
         try {
             editPersonService.updatePerson(editPersonData);

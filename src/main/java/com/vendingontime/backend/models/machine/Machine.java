@@ -6,6 +6,7 @@ import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.person.Person;
 
 import javax.persistence.*;
 
@@ -42,6 +43,9 @@ public class Machine extends AbstractEntity<Machine> {
     @JsonIgnore
     private Company company;
 
+    @ManyToOne
+    private Person maintainer;
+
     public Machine() {
         super();
     }
@@ -63,6 +67,8 @@ public class Machine extends AbstractEntity<Machine> {
         this.type = machine.getType();
         this.state = machine.getState();
         this.description = machine.getDescription();
+        this.company = machine.getCompany();
+        this.maintainer = machine.getMaintainer();
     }
 
     public void updateWith(EditMachineData editMachineData) {
@@ -114,6 +120,15 @@ public class Machine extends AbstractEntity<Machine> {
         return this;
     }
 
+    public Person getMaintainer() {
+        return maintainer;
+    }
+
+    public Machine setMaintainer(Person maintainer) {
+        this.maintainer = maintainer;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -147,6 +162,7 @@ public class Machine extends AbstractEntity<Machine> {
                 ", state=" + state +
                 ", description='" + description + '\'' +
                 ", company=" + company +
+                ", maintainer=" + maintainer +
                 "}" + super.toString();
     }
 }
