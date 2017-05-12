@@ -122,6 +122,7 @@ public class ConfigModule extends AbstractModule {
         bind(EditPersonService.class);
         bind(EditPasswordService.class);
         bind(ListTechniciansService.class);
+        bind(AssignMaintainerService.class);
     }
 
     private void bindMiddleware() {
