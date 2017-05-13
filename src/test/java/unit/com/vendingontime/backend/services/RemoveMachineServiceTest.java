@@ -1,5 +1,6 @@
 package unit.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.RemovalRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -14,6 +15,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
+import static com.vendingontime.backend.models.bodymodels.RemovalRequest.EMPTY_REQUESTER;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,6 +47,7 @@ public class RemoveMachineServiceTest {
 
     private Machine machine;
     private Person requester;
+    private RemovalRequest removalRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -57,6 +60,8 @@ public class RemoveMachineServiceTest {
         requester = company.getOwner();
         machine = FixtureFactory.generateMachine().setId("MACHINE_ID");
         company.addMachine(machine);
+
+        removalRequest = new RemovalRequest().setId(machine.getId()).setRequester(requester);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
@@ -74,28 +79,30 @@ public class RemoveMachineServiceTest {
 
         machine = null;
         requester = null;
+        removalRequest = null;
     }
 
     @Test
     public void removeMachine() {
-        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(this.machine.getId(), requester);
+        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(removalRequest);
 
         assertThat(possibleRemoved.isPresent(), is(true));
 
-        verify(repository, times(1)).findById(this.machine.getId());
+        verify(repository, times(1)).findById(machine.getId());
         verify(repository, times(1)).update(any());
 
-        Machine savedMachine = repository.findById(this.machine.getId()).get();
+        Machine savedMachine = repository.findById(machine.getId()).get();
         assertThat(savedMachine.isDisabled(), is(true));
     }
 
     @Test
     public void removeMachine_withInvalidRequester_throwsException() {
         try {
-            removeMachineService.removeMachine(machine.getId(), null);
+            removalRequest.setRequester(null);
+            removeMachineService.removeMachine(removalRequest);
             fail();
         } catch (BusinessLogicException ex) {
-            assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
+            assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
 
             verify(repository, never()).findById(any());
             verify(repository, never()).update(any());
@@ -105,7 +112,8 @@ public class RemoveMachineServiceTest {
     @Test
     public void removeMachine_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
-        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(unknownId, requester);
+        removalRequest.setId(unknownId);
+        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(removalRequest);
 
         assertThat(possibleRemoved.isPresent(), is(false));
 
@@ -119,7 +127,7 @@ public class RemoveMachineServiceTest {
 
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
-            removeMachineService.removeMachine(machine.getId(), requester);
+            removeMachineService.removeMachine(removalRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

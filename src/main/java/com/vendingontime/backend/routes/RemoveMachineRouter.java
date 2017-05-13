@@ -19,6 +19,7 @@ package com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
+import com.vendingontime.backend.models.bodymodels.RemovalRequest;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
@@ -54,7 +55,8 @@ public class RemoveMachineRouter extends AbstractSparkRouter {
 
     public AppRoute removeMachine(String id, Person requester) {
         try {
-            Optional<Machine> possibleRemovedMachine = service.removeMachine(id, requester);
+            RemovalRequest removalRequest = new RemovalRequest().setId(id).setRequester(requester);
+            Optional<Machine> possibleRemovedMachine = service.removeMachine(removalRequest);
             return possibleRemovedMachine.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException e) {
             return serviceResponse.badRequest(e.getCauses());

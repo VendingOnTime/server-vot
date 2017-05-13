@@ -17,6 +17,7 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.bodymodels.RemovalRequest;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
@@ -37,18 +38,19 @@ public class RemoveMachineService extends AbstractService {
         this.authProvider = authProvider;
     }
 
-    public Optional<Machine> removeMachine(String id, Person requester) throws BusinessLogicException {
-        BusinessLogicException insufficientPermissionsException =
-                new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+    public Optional<Machine> removeMachine(RemovalRequest removalRequest) throws BusinessLogicException {
+        String[] validationErrors = removalRequest.validate();
+        if (validationErrors.length != 0)
+            throw new BusinessLogicException(validationErrors);
 
-        if (requester == null) throw insufficientPermissionsException;
+        Person requester = removalRequest.getRequester();
 
-        Optional<Machine> machineById = repository.findById(id);
+        Optional<Machine> machineById = repository.findById(removalRequest.getId());
         if (!machineById.isPresent()) return machineById;
 
         Machine machine = machineById.get();
         if (!authProvider.canModify(requester, machine))
-            throw insufficientPermissionsException;
+            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         machine.setDisabled(true);
         return repository.update(machine);
