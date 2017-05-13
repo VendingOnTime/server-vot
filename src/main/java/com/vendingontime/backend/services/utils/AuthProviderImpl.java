@@ -38,8 +38,10 @@ public class AuthProviderImpl implements AuthProvider {
     @Override
     public boolean canModify(Person requester, Person person) {
         // TODO: alberto@2/5/17 Once company person hierarchy gets more complex add extra checks here
-        if (requester == null) return false;
-        return requester.equals(person);
+        if (requester == null || person == null) return false;
+        if (requester.equals(person)) return true;
+        if (person.getCompany() == null) return false;
+        return person.getCompany().equals(requester.getOwnedCompany());
     }
 
     @Override

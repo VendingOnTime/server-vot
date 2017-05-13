@@ -55,6 +55,23 @@ public class AuthProviderImplTest {
     }
 
     @Test
+    public void canModify_asAnOwnerACompanyTechnician_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+
+        assertThat(authProvider.canModify(company.getOwner(), technician), is(true));
+    }
+
+    @Test
+    public void canModify_asAnOwnerANonCompanyTechnician_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Person technician = FixtureFactory.generateTechnician();
+
+        assertThat(authProvider.canModify(company.getOwner(), technician), is(false));
+    }
+
+    @Test
     public void canModify_nonRelatedOne_isFalse() throws Exception {
         assertThat(authProvider.canModify(requester, FixtureFactory.generateCustomer()), is(false));
     }
@@ -62,6 +79,12 @@ public class AuthProviderImplTest {
     @Test
     public void canModify_nullRequester_isFalse() throws Exception {
         assertThat(authProvider.canModify(null, requester), is(false));
+    }
+
+    @Test
+    public void canModify_nullPerson_isFalse() throws Exception {
+        Person person = null;
+        assertThat(authProvider.canModify(requester, person), is(false));
     }
 
     @Test
