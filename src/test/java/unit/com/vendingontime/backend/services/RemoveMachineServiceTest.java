@@ -1,5 +1,6 @@
 package unit.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.bodymodels.RemovalRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
@@ -67,7 +68,7 @@ public class RemoveMachineServiceTest {
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
         when(repository.update(machine)).thenReturn(Optional.of(machine));
 
-        when(authProvider.canModify(any(), any(Machine.class))).thenReturn(true);
+        when(authProvider.canModify(any(), any(AbstractEntity.class))).thenReturn(true);
     }
 
     @After
@@ -84,7 +85,7 @@ public class RemoveMachineServiceTest {
 
     @Test
     public void removeMachine() {
-        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(removalRequest);
+        Optional<Machine> possibleRemoved = removeMachineService.remove(removalRequest);
 
         assertThat(possibleRemoved.isPresent(), is(true));
 
@@ -99,7 +100,7 @@ public class RemoveMachineServiceTest {
     public void removeMachine_withInvalidRequester_throwsException() {
         try {
             removalRequest.setRequester(null);
-            removeMachineService.removeMachine(removalRequest);
+            removeMachineService.remove(removalRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
@@ -113,7 +114,7 @@ public class RemoveMachineServiceTest {
     public void removeMachine_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
         removalRequest.setId(unknownId);
-        Optional<Machine> possibleRemoved = removeMachineService.removeMachine(removalRequest);
+        Optional<Machine> possibleRemoved = removeMachineService.remove(removalRequest);
 
         assertThat(possibleRemoved.isPresent(), is(false));
 
@@ -123,11 +124,11 @@ public class RemoveMachineServiceTest {
 
     @Test
     public void removeMachine_requesterNotAuthorized_throwsException() {
-        when(authProvider.canModify(requester, machine)).thenReturn(false);
+        when(authProvider.canModify(requester, (AbstractEntity) machine)).thenReturn(false);
 
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
-            removeMachineService.removeMachine(removalRequest);
+            removeMachineService.remove(removalRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

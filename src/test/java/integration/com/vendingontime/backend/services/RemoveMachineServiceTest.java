@@ -18,7 +18,6 @@ import testutils.FixtureFactory;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /*
@@ -57,7 +56,7 @@ public class RemoveMachineServiceTest extends IntegrationTest{
         Machine machine = addMachineService.createMachine(addMachineData);
 
         RemovalRequest removalRequest = new RemovalRequest().setId(machine.getId()).setRequester(requester);
-        Optional<Machine> possibleRemovedMachine = removeMachineService.removeMachine(removalRequest);
+        Optional<Machine> possibleRemovedMachine = removeMachineService.remove(removalRequest);
 
         assertThat(possibleRemovedMachine.isPresent(), is(true));
         assertThat(possibleRemovedMachine.get().isDisabled(), is(true));

@@ -17,6 +17,6 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
-public class AbstractService {
+public abstract class AbstractService {
     public static final String INSUFFICIENT_PERMISSIONS = "INSUFFICIENT_PERMISSIONS";
 }

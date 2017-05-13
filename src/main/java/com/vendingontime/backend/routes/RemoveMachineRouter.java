@@ -56,7 +56,7 @@ public class RemoveMachineRouter extends AbstractSparkRouter {
     public AppRoute removeMachine(String id, Person requester) {
         try {
             RemovalRequest removalRequest = new RemovalRequest().setId(id).setRequester(requester);
-            Optional<Machine> possibleRemovedMachine = service.removeMachine(removalRequest);
+            Optional<Machine> possibleRemovedMachine = service.remove(removalRequest);
             return possibleRemovedMachine.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException e) {
             return serviceResponse.badRequest(e.getCauses());
