@@ -49,7 +49,7 @@ public class RemoveTechnicianRouterTest extends IntegrationTest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void removeMachine() throws Exception {
+    public void removeTechnician() throws Exception {
         Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
 
