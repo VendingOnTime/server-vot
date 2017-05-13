@@ -2,9 +2,7 @@ package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.bodymodels.RemovalRequest;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
