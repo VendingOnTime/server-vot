@@ -3,7 +3,7 @@ package com.vendingontime.backend.routes;
 import com.google.inject.Inject;
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.AbstractRemoveService;
+import com.vendingontime.backend.services.RemoveTechnicianService;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,7 +27,7 @@ public class RemoveTechnicianRouter extends AbstractRemoveRouter {
     public static final String V1_REMOVE_TECHNICIAN = V1 + "/technicians/";
 
     @Inject
-    public RemoveTechnicianRouter(ServiceResponse serviceResponse, EndpointProtector protector, AbstractRemoveService service) {
+    public RemoveTechnicianRouter(ServiceResponse serviceResponse, EndpointProtector protector, RemoveTechnicianService service) {
         super(serviceResponse, protector, service, V1_REMOVE_TECHNICIAN);
     }
 }
