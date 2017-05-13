@@ -5,6 +5,7 @@ import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.services.RemoveMachineService;
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
@@ -40,14 +41,17 @@ public class RemoveMachineServiceTest {
     private MachineRepository repository;
 
     private RemoveMachineService removeMachineService;
+    private AuthProvider authProvider;
+
     private Machine machine;
     private Person requester;
 
     @Before
     public void setUp() throws Exception {
         repository = mock(MachineRepository.class);
+        authProvider = mock(AuthProvider.class);
 
-        removeMachineService = new RemoveMachineService(repository);
+        removeMachineService = new RemoveMachineService(repository, authProvider);
 
         Company company = FixtureFactory.generateCompanyWithOwner();
         requester = company.getOwner();
@@ -57,12 +61,17 @@ public class RemoveMachineServiceTest {
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
         when(repository.update(machine)).thenReturn(Optional.of(machine));
+
+        when(authProvider.canModify(any(), any(Machine.class))).thenReturn(true);
     }
 
     @After
     public void tearDown() throws Exception {
         repository = null;
+        authProvider = null;
+
         removeMachineService = null;
+
         machine = null;
         requester = null;
     }
@@ -105,7 +114,9 @@ public class RemoveMachineServiceTest {
     }
 
     @Test
-    public void removeMachine_withDifferentCompany_throwsException() {
+    public void removeMachine_requesterNotAuthorized_throwsException() {
+        when(authProvider.canModify(requester, machine)).thenReturn(false);
+
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
             removeMachineService.removeMachine(machine.getId(), requester);
