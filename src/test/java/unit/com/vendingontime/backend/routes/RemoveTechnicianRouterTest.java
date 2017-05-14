@@ -72,8 +72,7 @@ public class RemoveTechnicianRouterTest {
 
         router.remove(TECHNICIAN_ID, requester);
 
-        verify(service, times(1))
-                .remove(any());
+        verify(service, times(1)).remove(any());
         verify(serviceResponse, times(1)).ok(technician);
     }
 
