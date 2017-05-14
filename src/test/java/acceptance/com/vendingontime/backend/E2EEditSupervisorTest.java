@@ -40,7 +40,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class E2ESupervisorEditTechnicianTest extends E2ETest {
+public class E2EEditSupervisorTest extends E2ETest {
     @Inject private SignUpService signUpService;
     @Inject private LogInService loginService;
 

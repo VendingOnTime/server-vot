@@ -42,7 +42,7 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class E2EEditSupervisorDataTest extends E2ETest {
+public class E2ESupervisorEditTechnicianDataTest extends E2ETest {
 
     @Inject private SignUpService signUpService;
     @Inject private LogInService logInService;
@@ -80,7 +80,7 @@ public class E2EEditSupervisorDataTest extends E2ETest {
     }
 
     @Test
-    public void removeTechnician_differentCompanies_outOfMyProperty() throws Exception {
+    public void supervisorEditTechnician_differentCompanies_outOfMyProperty() throws Exception {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
 
