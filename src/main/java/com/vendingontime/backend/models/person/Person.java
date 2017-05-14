@@ -42,10 +42,10 @@ import java.util.Set;
                         "AND p.disabled = false")
 })
 public class Person extends AbstractEntity<Person> {
-    @Column(unique = true) private String email;
-    @Column(unique = true) private String username;
+    @Column private String email;
+    @Column private String username;
     @Column @JsonIgnore private String password;
-    @Column(unique = true) private String dni;
+    @Column private String dni;
     @Column private String name;
     @Column private String surnames;
     @Column @Enumerated private PersonRole role;

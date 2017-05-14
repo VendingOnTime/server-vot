@@ -123,6 +123,7 @@ public class ConfigModule extends AbstractModule {
         bind(EditPasswordService.class);
         bind(ListTechniciansService.class);
         bind(AssignMaintainerService.class);
+        bind(RemoveTechnicianService.class);
     }
 
     private void bindMiddleware() {
@@ -144,6 +145,7 @@ public class ConfigModule extends AbstractModule {
         routerBinder.addBinding().to(AddTechnicianRouter.class);
         routerBinder.addBinding().to(ListTechniciansRouter.class);
         routerBinder.addBinding().to(AssignMaintainerRouter.class);
+        routerBinder.addBinding().to(RemoveTechnicianRouter.class);
     }
 
     private void bindPlugins() {

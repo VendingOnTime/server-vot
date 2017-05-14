@@ -17,6 +17,7 @@ package com.vendingontime.backend.services.utils;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -24,10 +25,14 @@ import com.vendingontime.backend.models.person.Person;
 public class AuthProviderImpl implements AuthProvider {
 
     @Override
-    public boolean canModify(Person requester, Person person) {
-        // TODO: alberto@2/5/17 Once company person hierarchy gets more complex add extra checks here
-        if (requester == null) return false;
-        return requester.equals(person);
+    public boolean canModify(Person requester, AbstractEntity entity) {
+        if (requester == null || entity == null) return false;
+
+        if (entity.getClass() == Person.class) return canModify(requester, (Person) entity);
+        if (entity.getClass() == Company.class) return canModify(requester, (Company) entity);
+        if (entity.getClass() == Machine.class) return canModify(requester, (Machine) entity);
+
+        return false;
     }
 
     @Override
@@ -36,17 +41,18 @@ public class AuthProviderImpl implements AuthProvider {
         return requester.equals(person);
     }
 
-    @Override
-    public boolean canModify(Person requester, Company company) {
-        if (requester == null) return false;
-        if (company == null) return false;
+    private boolean canModify(Person requester, Person person) {
+        if (requester.equals(person)) return true;
+        if (person.getCompany() == null) return false;
+        return person.getCompany().equals(requester.getOwnedCompany());
+    }
+
+    private boolean canModify(Person requester, Company company) {
         return company.equals(requester.getOwnedCompany());
     }
 
-    @Override
-    public boolean canModify(Person requester, Machine machine) {
-        if (requester == null) return false;
-        if (machine == null || machine.getCompany() == null) return false;
+    private boolean canModify(Person requester, Machine machine) {
+        if (machine.getCompany() == null) return false;
         return machine.getCompany().equals(requester.getOwnedCompany());
     }
 }

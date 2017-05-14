@@ -17,13 +17,12 @@ package com.vendingontime.backend.services.utils;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 
 public interface AuthProvider {
-    boolean canModify(Person requester, Person person);
+    boolean canModify(Person requester, AbstractEntity entity);
     boolean canModifyPassword(Person requester, Person person);
-    boolean canModify(Person requester, Company company);
-    boolean canModify(Person requester, Machine machine);
 }

@@ -18,6 +18,8 @@ package testutils;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.RemovalRequest;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.bodymodels.person.*;
@@ -173,6 +175,14 @@ public class FixtureFactory {
         editMachineData.setType(machine.getType());
 
         return editMachineData;
+    }
+
+    // GENERIC METHODS
+
+    public static RemovalRequest generateRemovalRequestFrom(AbstractEntity entity, Person requester) {
+        return new RemovalRequest()
+                .setId(entity.getId())
+                .setRequester(requester);
     }
 
     // MACHINE LOCATION METHODS

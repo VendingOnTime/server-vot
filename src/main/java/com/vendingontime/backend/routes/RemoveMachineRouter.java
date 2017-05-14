@@ -17,47 +17,18 @@ package com.vendingontime.backend.routes;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.google.inject.Inject;
 import com.vendingontime.backend.middleware.EndpointProtector;
-import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.RemoveMachineService;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-import spark.Service;
 
-import javax.inject.Inject;
-import java.util.Optional;
-
-public class RemoveMachineRouter extends AbstractSparkRouter {
+public class RemoveMachineRouter extends AbstractRemoveRouter {
 
     public static final String V1_REMOVE_MACHINE = V1 + "/machines/";
 
-    private final RemoveMachineService service;
-    private final EndpointProtector protector;
-
     @Inject
-    public RemoveMachineRouter(ServiceResponse serviceResponse,
-                               RemoveMachineService service, EndpointProtector protector) {
-        super(serviceResponse);
-        this.service = service;
-        this.protector = protector;
-    }
-
-    @Override
-    public void configure(Service http) {
-        protector.protect(V1_REMOVE_MACHINE + ID_PARAM);
-        http.delete(V1_REMOVE_MACHINE + ID_PARAM, map((req, res) ->
-                removeMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
-    }
-
-    public AppRoute removeMachine(String id, Person requester) {
-        try {
-            Optional<Machine> possibleRemovedMachine = service.removeMachine(id, requester);
-            return possibleRemovedMachine.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
-        } catch (BusinessLogicException e) {
-            return serviceResponse.badRequest(e.getCauses());
-        }
+    public RemoveMachineRouter(ServiceResponse serviceResponse, EndpointProtector protector,
+                               RemoveMachineService service) {
+        super(serviceResponse, protector, service, V1_REMOVE_MACHINE);
     }
 }

@@ -17,39 +17,15 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
-import com.vendingontime.backend.models.company.Company;
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
+import com.vendingontime.backend.services.utils.AuthProvider;
 
-import javax.inject.Inject;
-import java.util.Optional;
-
-public class RemoveMachineService extends AbstractService {
-
-    private final MachineRepository repository;
+public class RemoveMachineService extends AbstractRemoveService<Machine> {
 
     @Inject
-    public RemoveMachineService(MachineRepository machineRepository) {
-        this.repository = machineRepository;
-    }
-
-    public Optional<Machine> removeMachine(String id, Person requester) throws BusinessLogicException {
-        BusinessLogicException insufficientPermissionsException =
-                new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
-
-        if (requester == null) throw insufficientPermissionsException;
-
-        Optional<Machine> machineById = repository.findById(id);
-        if (!machineById.isPresent()) return machineById;
-
-        Machine machine = machineById.get();
-        Company requesterCompany = requester.getOwnedCompany();
-
-        if (!machine.getCompany().equals(requesterCompany)) throw insufficientPermissionsException;
-
-        machine.setDisabled(true);
-        return repository.update(machine);
+    public RemoveMachineService(MachineRepository machineRepository, AuthProvider authProvider) {
+        super(machineRepository, authProvider);
     }
 }
