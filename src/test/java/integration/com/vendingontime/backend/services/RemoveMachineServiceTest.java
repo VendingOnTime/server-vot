@@ -55,7 +55,7 @@ public class RemoveMachineServiceTest extends IntegrationTest{
         addMachineData.setRequester(requester);
         Machine machine = addMachineService.createMachine(addMachineData);
 
-        RemovalRequest removalRequest = new RemovalRequest().setId(machine.getId()).setRequester(requester);
+        RemovalRequest removalRequest = FixtureFactory.generateRemovalRequestFrom(machine, requester);
         Optional<Machine> possibleRemovedMachine = removeMachineService.remove(removalRequest);
 
         assertThat(possibleRemovedMachine.isPresent(), is(true));

@@ -49,7 +49,7 @@ public class RemoveTechnicianServiceTest extends IntegrationTest {
         Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
 
-        RemovalRequest removalRequest = new RemovalRequest().setId(technician.getId()).setRequester(requester);
+        RemovalRequest removalRequest = FixtureFactory.generateRemovalRequestFrom(technician, requester);
         Optional<Person> possibleRemovedTechnician = removeTechnicianService.remove(removalRequest);
 
         assertThat(possibleRemovedTechnician.isPresent(), is(true));

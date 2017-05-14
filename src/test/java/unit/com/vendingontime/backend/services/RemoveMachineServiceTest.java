@@ -62,7 +62,7 @@ public class RemoveMachineServiceTest {
         machine = FixtureFactory.generateMachine().setId("MACHINE_ID");
         company.addMachine(machine);
 
-        removalRequest = new RemovalRequest().setId(machine.getId()).setRequester(requester);
+        removalRequest = FixtureFactory.generateRemovalRequestFrom(machine, requester);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));

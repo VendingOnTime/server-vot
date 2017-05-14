@@ -62,7 +62,7 @@ public class RemoveTechnicianServiceTest {
         technician = FixtureFactory.generateTechnician().setId("TECHNICIAN_ID");
         company.addWorker(technician);
 
-        removalRequest = new RemovalRequest().setId(technician.getId()).setRequester(requester);
+        removalRequest = FixtureFactory.generateRemovalRequestFrom(technician, requester);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(technician.getId())).thenReturn(Optional.of(technician));
