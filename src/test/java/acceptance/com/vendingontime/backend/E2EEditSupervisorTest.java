@@ -121,7 +121,7 @@ public class E2EEditSupervisorTest extends E2ETest {
     }
 
     @Test
-    public void editSupervisor_withUnauthorizedUser_returnsInsufficientPermissions() throws Exception {
+    public void editSupervisor_withUnauthorizedSupervisor_returnsInsufficientPermissions() throws Exception {
         Person supervisor1 = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person supervisor2 = signUpService.createSupervisor(FixtureFactory.generateSignUpData()
                 .setDni("12345678W").setEmail("another.email@example.com").setUsername("supervisor2"));
@@ -135,6 +135,29 @@ public class E2EEditSupervisorTest extends E2ETest {
                 .header("Authorization", "JWT " + token)
         .when()
                 .put(host + EditPersonRouter.V1_EDIT_PROFILE + supervisor1.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
+                .body("success", is(false))
+                .body("data", nullValue())
+                .body("error", contains(INSUFFICIENT_PERMISSIONS));
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void editSupervisor_withUnauthorizedTechnician_returnsInsufficientPermissions() throws Exception {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+        Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
+
+        String token = loginService.authorizeUser(FixtureFactory.generateLogInDataFrom(technician));
+
+        EditPersonData payload = FixtureFactory.generateEditPersonDataFrom(supervisor);
+
+        given()
+                .body(payload)
+                .header("Authorization", "JWT " + token)
+        .when()
+                .put(host + EditPersonRouter.V1_EDIT_PROFILE + supervisor.getId())
         .then()
                 .statusCode(HttpResponse.StatusCode.BAD_REQUEST)
                 .body("success", is(false))
