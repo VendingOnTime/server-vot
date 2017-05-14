@@ -26,7 +26,7 @@ public class AuthProviderImpl implements AuthProvider {
 
     @Override
     public boolean canModify(Person requester, AbstractEntity entity) {
-        if (entity == null) return false;
+        if (requester == null || entity == null) return false;
 
         if (entity.getClass() == Person.class) return canModify(requester, (Person) entity);
         if (entity.getClass() == Company.class) return canModify(requester, (Company) entity);
@@ -36,29 +36,23 @@ public class AuthProviderImpl implements AuthProvider {
     }
 
     @Override
-    public boolean canModify(Person requester, Person person) {
-        // TODO: alberto@2/5/17 Once company person hierarchy gets more complex add extra checks here
-        if (requester == null || person == null) return false;
-        if (requester.equals(person)) return true;
-        if (person.getCompany() == null) return false;
-        return person.getCompany().equals(requester.getOwnedCompany());
-    }
-
-    @Override
     public boolean canModifyPassword(Person requester, Person person) {
         if (requester == null) return false;
         return requester.equals(person);
     }
 
-    @Override
-    public boolean canModify(Person requester, Company company) {
-        if (requester == null) return false;
-        if (company == null) return false;
+    private boolean canModify(Person requester, Person person) {
+        if (requester.equals(person)) return true;
+        if (person.getCompany() == null) return false;
+        return person.getCompany().equals(requester.getOwnedCompany());
+    }
+
+    private boolean canModify(Person requester, Company company) {
+        if (requester == null || company == null) return false;
         return company.equals(requester.getOwnedCompany());
     }
 
-    @Override
-    public boolean canModify(Person requester, Machine machine) {
+    private boolean canModify(Person requester, Machine machine) {
         if (requester == null) return false;
         if (machine == null || machine.getCompany() == null) return false;
         return machine.getCompany().equals(requester.getOwnedCompany());

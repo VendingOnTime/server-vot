@@ -24,8 +24,5 @@ import com.vendingontime.backend.models.person.Person;
 
 public interface AuthProvider {
     boolean canModify(Person requester, AbstractEntity entity);
-    boolean canModify(Person requester, Person person);
     boolean canModifyPassword(Person requester, Person person);
-    boolean canModify(Person requester, Company company);
-    boolean canModify(Person requester, Machine machine);
 }
