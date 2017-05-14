@@ -48,13 +48,11 @@ public class AuthProviderImpl implements AuthProvider {
     }
 
     private boolean canModify(Person requester, Company company) {
-        if (requester == null || company == null) return false;
         return company.equals(requester.getOwnedCompany());
     }
 
     private boolean canModify(Person requester, Machine machine) {
-        if (requester == null) return false;
-        if (machine == null || machine.getCompany() == null) return false;
+        if (machine.getCompany() == null) return false;
         return machine.getCompany().equals(requester.getOwnedCompany());
     }
 }
