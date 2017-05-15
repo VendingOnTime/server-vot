@@ -7,7 +7,6 @@ import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.AbstractGetService;
-import com.vendingontime.backend.services.GetMachineService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import spark.Service;
 
@@ -36,7 +35,7 @@ public class AbstractGetRouter extends AbstractSparkRouter {
     private final String endpointPath;
 
     public AbstractGetRouter(ServiceResponse serviceResponse,
-                            GetMachineService service, EndpointProtector protector, String endpointPath) {
+                            AbstractGetService service, EndpointProtector protector, String endpointPath) {
         super(serviceResponse);
         this.service = service;
         this.protector = protector;
