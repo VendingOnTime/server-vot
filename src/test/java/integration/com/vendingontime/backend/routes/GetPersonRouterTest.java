@@ -1,13 +1,9 @@
 package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
-import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.GetMachineRouter;
 import com.vendingontime.backend.routes.GetPersonRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;

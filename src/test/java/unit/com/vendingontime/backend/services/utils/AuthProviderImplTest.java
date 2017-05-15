@@ -230,6 +230,13 @@ public class AuthProviderImplTest {
     }
 
     @Test
+    public void canSee_person_himself_isTrue() throws Exception {
+        Person customer = FixtureFactory.generateCustomer();
+
+        assertThat(authProvider.canSee(customer, customer), is(true));
+    }
+
+    @Test
     public void canSee_person_supervisorATechnician_isTrue() throws Exception {
         Company company = FixtureFactory.generateCompanyWithOwner();
         Person technician = FixtureFactory.generateTechnician();

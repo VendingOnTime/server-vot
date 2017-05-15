@@ -72,6 +72,7 @@ public class AuthProviderImpl implements AuthProvider {
     }
 
     private boolean canSee(Person requester, Person person) {
+        if (requester.equals(person)) return true;
         if (oneIsNull(requester.getCompany())) return false;
         // TODO: 15/05/2017 Decide if a technician should be able to see the profile of his supervisor
         return requester.getCompany().equals(person.getCompany());
