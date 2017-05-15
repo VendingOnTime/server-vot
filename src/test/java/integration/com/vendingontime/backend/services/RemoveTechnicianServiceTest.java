@@ -46,7 +46,7 @@ public class RemoveTechnicianServiceTest extends IntegrationTest {
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
 
         PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(technician, requester);
-        Optional<Person> possibleRemovedTechnician = removeTechnicianService.remove(personRequest);
+        Optional<Person> possibleRemovedTechnician = removeTechnicianService.removeWith(personRequest);
 
         assertThat(possibleRemovedTechnician.isPresent(), is(true));
         assertThat(possibleRemovedTechnician.get().isDisabled(), is(true));

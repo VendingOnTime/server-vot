@@ -35,7 +35,7 @@ public class GetMachineService extends AbstractService {
         this.repository = repository;
     }
 
-    public Optional<Machine> getDataFrom(PersonRequest personRequest) throws BusinessLogicException {
+    public Optional<Machine> getWith(PersonRequest personRequest) throws BusinessLogicException {
         String[] validationErrors = personRequest.validate();
         if (validationErrors.length != 0)
             throw new BusinessLogicException(validationErrors);

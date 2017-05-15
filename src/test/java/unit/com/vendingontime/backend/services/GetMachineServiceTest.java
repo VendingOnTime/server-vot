@@ -76,7 +76,7 @@ public class GetMachineServiceTest {
 
     @Test
     public void getMachineData_forValidMachineId_andAuthorizedUser() {
-        Machine foundMachine = service.getDataFrom(personRequest).get();
+        Machine foundMachine = service.getWith(personRequest).get();
 
         verify(repository, times(1)).findById(MACHINE_ID);
         assertEquals(machine, foundMachine);
@@ -85,7 +85,7 @@ public class GetMachineServiceTest {
     @Test
     public void getMachineData_forInvalidMachineId() {
         personRequest.setId("INVALID_ID");
-        Optional<Machine> foundMachine = service.getDataFrom(personRequest);
+        Optional<Machine> foundMachine = service.getWith(personRequest);
 
         verify(repository, times(1)).findById("INVALID_ID");
         assertFalse(foundMachine.isPresent());
@@ -98,7 +98,7 @@ public class GetMachineServiceTest {
 
         personRequest.setRequester(randomUser);
         try {
-            service.getDataFrom(personRequest);
+            service.getWith(personRequest);
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
             verify(repository, times(1)).findById(MACHINE_ID);
@@ -109,7 +109,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forNullPerson_throwException() {
         personRequest.setRequester(null);
         try {
-            service.getDataFrom(personRequest);
+            service.getWith(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
@@ -161,7 +161,7 @@ public class GetMachineServiceTest {
     private void invalidUserTest(Person invalidUser) {
         personRequest.setRequester(invalidUser);
         try {
-            service.getDataFrom(personRequest);
+            service.getWith(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

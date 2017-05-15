@@ -35,7 +35,7 @@ public abstract class AbstractRemoveService<MODEL extends AbstractEntity> extend
         this.authProvider = authProvider;
     }
 
-    public Optional<MODEL> remove(PersonRequest personRequest) throws BusinessLogicException {
+    public Optional<MODEL> removeWith(PersonRequest personRequest) throws BusinessLogicException {
         String[] validationErrors = personRequest.validate();
         if (validationErrors.length != 0)
             throw new BusinessLogicException(validationErrors);

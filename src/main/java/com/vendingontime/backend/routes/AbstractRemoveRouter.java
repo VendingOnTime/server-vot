@@ -52,7 +52,7 @@ public abstract class AbstractRemoveRouter extends AbstractSparkRouter {
     public AppRoute remove(String id, Person requester) {
         try {
             PersonRequest personRequest = new PersonRequest().setId(id).setRequester(requester);
-            Optional<?> possibleRemoved = service.remove(personRequest);
+            Optional<?> possibleRemoved = service.removeWith(personRequest);
             return possibleRemoved.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException e) {
             return serviceResponse.badRequest(e.getCauses());

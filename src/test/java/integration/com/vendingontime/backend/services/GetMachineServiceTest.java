@@ -54,7 +54,7 @@ public class GetMachineServiceTest extends IntegrationTest {
         companyRepository.update(company);
 
         PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(machine, savedOwner);
-        Machine foundMachine = service.getDataFrom(personRequest).get();
+        Machine foundMachine = service.getWith(personRequest).get();
         assertThat(savedMachine, equalTo(foundMachine));
 
         machineRepository.deleteAll();
