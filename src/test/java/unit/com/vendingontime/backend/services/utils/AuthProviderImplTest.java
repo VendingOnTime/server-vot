@@ -200,10 +200,24 @@ public class AuthProviderImplTest {
 
     @Test
     public void canSee_machine_nonRelatedSupervisor_isFalse() throws Exception {
-        Company company = FixtureFactory.generateCompanyWithOwner();
+        Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
         Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+        Company anotherCompany = FixtureFactory.generateCompanyWithOwner().setId("ANOTHER_COMPANY");
 
-        assertThat(authProvider.canSee(company.getOwner(), machine), is(false));
+        assertThat(authProvider.canSee(anotherCompany.getOwner(), machine), is(false));
+    }
+
+    @Test
+    public void canSee_machine_nonRelatedTechnician_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
+        Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+        Company anotherCompany = FixtureFactory.generateCompanyWithOwner().setId("ANOTHER_COMPANY");
+        Person technician = FixtureFactory.generateTechnician();
+        anotherCompany.addWorker(technician);
+
+        assertThat(authProvider.canSee(technician, machine), is(false));
     }
 
     @Test
@@ -213,5 +227,51 @@ public class AuthProviderImplTest {
         Machine machine = FixtureFactory.generateMachine();
 
         assertThat(authProvider.canSee(customer, machine), is(false));
+    }
+
+    @Test
+    public void canSee_person_supervisorATechnician_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+
+        assertThat(authProvider.canSee(company.getOwner(), technician), is(true));
+    }
+
+    @Test
+    public void canSee_person_supervisorANonCompanyTechnician_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+        Person supervisor = FixtureFactory.generateCompanyWithOwner().setId("ANOTHER_COMPANY").getOwner();
+
+        assertThat(authProvider.canSee(supervisor, technician), is(false));
+    }
+
+    @Test
+    public void canSee_person_customerATechnician_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompany().setId("COMPANY_ID");
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+        Person customer = FixtureFactory.generateCustomer();
+
+        assertThat(authProvider.canSee(customer, technician), is(false));
+    }
+
+    @Test
+    public void canSee_person_customerASupervisor_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
+        Person customer = FixtureFactory.generateCustomer();
+
+        assertThat(authProvider.canSee(customer, company.getOwner()), is(false));
+    }
+
+    @Test
+    // TODO: alberto@15/05/2017 Maybe this one should return true in a near future
+    public void canSee_person_supervisorACustomer_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
+        Person customer = FixtureFactory.generateCustomer();
+
+        assertThat(authProvider.canSee(company.getOwner(), customer), is(false));
     }
 }

@@ -41,8 +41,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * specific language governing permissions and limitations under the License.
  */
 public class E2EEditTechnicianDataTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
+    @Inject private SignUpService signUpService;
     @Inject private LogInService loginService;
 
     @Inject private PersonRepository repository;
