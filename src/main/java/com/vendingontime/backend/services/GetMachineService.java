@@ -28,28 +28,10 @@ import java.util.Optional;
  * specific language governing permissions and limitations under the License.
  */
 
-public class GetMachineService extends AbstractService {
-    private final MachineRepository repository;
-    private final AuthProvider authProvider;
+public class GetMachineService extends AbstractGetService<Machine> {
 
     @Inject
     public GetMachineService(MachineRepository repository, AuthProvider authProvider) {
-        this.repository = repository;
-        this.authProvider = authProvider;
-    }
-
-    public Optional<Machine> getBy(PersonRequest personRequest) throws BusinessLogicException {
-        String[] validationErrors = personRequest.validate();
-        if (validationErrors.length != 0)
-            throw new BusinessLogicException(validationErrors);
-
-        Optional<Machine> possibleMachine = repository.findById(personRequest.getId());
-        if (!possibleMachine.isPresent()) return Optional.empty();
-
-        Machine machine = possibleMachine.get();
-        if (!authProvider.canSee(personRequest.getRequester(), machine))
-            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
-
-        return possibleMachine;
+        super(repository, authProvider);
     }
 }
