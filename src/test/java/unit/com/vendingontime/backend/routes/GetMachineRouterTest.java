@@ -69,7 +69,7 @@ public class GetMachineRouterTest {
 
     @Test
     public void getMachine_withExistingId_returnsOk() throws Exception {
-        when(service.getDataFrom(MACHINE_ID, person)).thenReturn(Optional.of(machine));
+        when(service.getDataFrom(any())).thenReturn(Optional.of(machine));
 
         router.getMachine(MACHINE_ID, person);
 
@@ -82,7 +82,7 @@ public class GetMachineRouterTest {
 
         String[] causes = {INSUFFICIENT_PERMISSIONS};
         doThrow(new BusinessLogicException(causes))
-                .when(service).getDataFrom(MACHINE_ID, unauthorizedUser);
+                .when(service).getDataFrom(any());
 
         router.getMachine(MACHINE_ID, unauthorizedUser);
 
@@ -92,7 +92,7 @@ public class GetMachineRouterTest {
     @Test
     public void getMachine_withNotExistingId_returnsBadRequest() throws Exception {
         final String INVALID_ID = "INVALID_ID";
-        when(service.getDataFrom(INVALID_ID, person)).thenReturn(Optional.empty());
+        when(service.getDataFrom(any())).thenReturn(Optional.empty());
 
         router.getMachine(INVALID_ID, person);
 

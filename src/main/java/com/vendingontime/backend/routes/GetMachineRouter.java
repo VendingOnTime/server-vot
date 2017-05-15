@@ -20,6 +20,7 @@ package com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.middleware.TokenEndpointProtector;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.routes.utils.AppRoute;
@@ -52,10 +53,10 @@ public class GetMachineRouter extends AbstractSparkRouter {
                 getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
     }
 
-    public AppRoute getMachine(String idCandidate, Person requester) {
+    public AppRoute getMachine(String id, Person requester) {
         try {
-            Optional<Machine> machineCandidate = service.getDataFrom(idCandidate, requester);
-
+            PersonRequest personRequest = new PersonRequest().setId(id).setRequester(requester);
+            Optional<Machine> machineCandidate = service.getDataFrom(personRequest);
             return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException ex) {
             return serviceResponse.badRequest(ex.getCauses());

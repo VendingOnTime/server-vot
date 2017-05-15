@@ -1,5 +1,6 @@
 package unit.com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -14,6 +15,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
+import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_REQUESTER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -44,6 +46,7 @@ public class GetMachineServiceTest {
 
     private Machine machine;
     private Person owner;
+    private PersonRequest personRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -56,6 +59,7 @@ public class GetMachineServiceTest {
         Company company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
         owner = company.getOwner().setId(OWNER_ID);
         machine = FixtureFactory.generateMachine().setId(MACHINE_ID).setCompany(company);
+        personRequest = FixtureFactory.generatePersonRequestFrom(machine, owner);
 
         when(repository.findById(MACHINE_ID)).thenReturn(Optional.of(machine));
     }
@@ -67,11 +71,12 @@ public class GetMachineServiceTest {
 
         owner = null;
         machine = null;
+        personRequest = null;
     }
 
     @Test
     public void getMachineData_forValidMachineId_andAuthorizedUser() {
-        Machine foundMachine = service.getDataFrom(MACHINE_ID, owner).get();
+        Machine foundMachine = service.getDataFrom(personRequest).get();
 
         verify(repository, times(1)).findById(MACHINE_ID);
         assertEquals(machine, foundMachine);
@@ -79,7 +84,8 @@ public class GetMachineServiceTest {
 
     @Test
     public void getMachineData_forInvalidMachineId() {
-        Optional<Machine> foundMachine = service.getDataFrom("INVALID_ID", owner);
+        personRequest.setId("INVALID_ID");
+        Optional<Machine> foundMachine = service.getDataFrom(personRequest);
 
         verify(repository, times(1)).findById("INVALID_ID");
         assertFalse(foundMachine.isPresent());
@@ -90,8 +96,9 @@ public class GetMachineServiceTest {
         Company randomCompany = FixtureFactory.generateCompanyWithOwner().setId("RANDOM_COMPANY");
         Person randomUser = randomCompany.getOwner().setId("RANDOM_USER");
 
+        personRequest.setRequester(randomUser);
         try {
-            service.getDataFrom(MACHINE_ID, randomUser);
+            service.getDataFrom(personRequest);
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
             verify(repository, times(1)).findById(MACHINE_ID);
@@ -100,7 +107,14 @@ public class GetMachineServiceTest {
 
     @Test
     public void getMachineData_forNullPerson_throwException() {
-        invalidUserTest(null);
+        personRequest.setRequester(null);
+        try {
+            service.getDataFrom(personRequest);
+            fail();
+        } catch (BusinessLogicException ex) {
+            assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
+            verify(repository, never()).findById(MACHINE_ID);
+        }
     }
 
     @Test
@@ -145,8 +159,9 @@ public class GetMachineServiceTest {
     }
 
     private void invalidUserTest(Person invalidUser) {
+        personRequest.setRequester(invalidUser);
         try {
-            service.getDataFrom(MACHINE_ID, invalidUser);
+            service.getDataFrom(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

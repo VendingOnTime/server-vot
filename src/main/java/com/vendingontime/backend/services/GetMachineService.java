@@ -1,5 +1,6 @@
 package com.vendingontime.backend.services;
 
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
@@ -34,14 +35,19 @@ public class GetMachineService extends AbstractService {
         this.repository = repository;
     }
 
-    public Optional<Machine> getDataFrom(String machineId, Person requester) {
-        if (!isAuthorized(requester)) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+    public Optional<Machine> getDataFrom(PersonRequest personRequest) throws BusinessLogicException {
+        String[] validationErrors = personRequest.validate();
+        if (validationErrors.length != 0)
+            throw new BusinessLogicException(validationErrors);
 
-        Optional<Machine> possibleMachine = repository.findById(machineId);
+        if (!isAuthorized(personRequest.getRequester())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+
+        Optional<Machine> possibleMachine = repository.findById(personRequest.getId());
         if (!possibleMachine.isPresent()) return Optional.empty();
 
         Machine foundMachine = possibleMachine.get();
-        if (!foundMachine.getCompany().equals(requester.getOwnedCompany())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
+        if (!foundMachine.getCompany().equals(personRequest.getRequester().getOwnedCompany()))
+            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleMachine;
     }
