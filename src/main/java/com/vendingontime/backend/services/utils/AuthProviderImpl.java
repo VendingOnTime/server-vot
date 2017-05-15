@@ -57,7 +57,7 @@ public class AuthProviderImpl implements AuthProvider {
     }
 
     @Override
-    public boolean canSee(Person requester, AbstractEntity entity) {
+    public boolean canAccess(Person requester, AbstractEntity entity) {
         if (oneIsNull(requester, entity)) return false;
 
         if (equalsClass(entity, Machine.class)) return canSee(requester, (Machine) entity);

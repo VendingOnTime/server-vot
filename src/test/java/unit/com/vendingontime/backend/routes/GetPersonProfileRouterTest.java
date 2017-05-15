@@ -66,7 +66,7 @@ public class GetPersonProfileRouterTest {
     }
 
     @Test
-    public void getMachine_withExistingId_returnsOk() throws Exception {
+    public void getTechnician_withExistingId_returnsOk() throws Exception {
         when(service.getBy(any())).thenReturn(Optional.of(person));
 
         router.getWith(PERSON_ID, requester);
@@ -75,7 +75,7 @@ public class GetPersonProfileRouterTest {
     }
 
     @Test
-    public void getMachine_withExistingId_andUnauthorizedUser_returnsBadRequest() throws Exception {
+    public void getTechnician_withExistingId_andUnauthorizedUser_returnsBadRequest() throws Exception {
         Person unauthorizedUser = FixtureFactory.generateSupervisor();
 
         String[] causes = {INSUFFICIENT_PERMISSIONS};
@@ -87,7 +87,7 @@ public class GetPersonProfileRouterTest {
     }
 
     @Test
-    public void getMachine_withNotExistingId_returnsBadRequest() throws Exception {
+    public void getTechnician_withNotExistingId_returnsBadRequest() throws Exception {
         final String INVALID_ID = "INVALID_ID";
         when(service.getBy(any())).thenReturn(Optional.empty());
 

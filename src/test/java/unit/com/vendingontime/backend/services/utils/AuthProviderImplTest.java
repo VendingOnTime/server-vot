@@ -1,7 +1,6 @@
 package unit.com.vendingontime.backend.services.utils;
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -65,7 +64,7 @@ public class AuthProviderImplTest {
     }
 
     @Test
-    public void canModify_asAnOwnerANonCompanyTechnician_isTrue() throws Exception {
+    public void canModify_asAnOwnerANonCompanyTechnician_isFalse() throws Exception {
         Company company = FixtureFactory.generateCompanyWithOwner();
         Person technician = FixtureFactory.generateTechnician();
 
@@ -158,19 +157,19 @@ public class AuthProviderImplTest {
     @Test
     public void canSee_abstractEntity_nullEntity_isFalse() throws Exception {
         AbstractEntity entity = null;
-        assertThat(authProvider.canSee(requester, entity), is(false));
+        assertThat(authProvider.canAccess(requester, entity), is(false));
     }
 
     @Test
     public void canSee_abstractEntity_nullRequester_isFalse() throws Exception {
         Person requester = null;
         Person supervisor = FixtureFactory.generateSupervisorWithCompany();
-        assertThat(authProvider.canSee(requester, supervisor), is(false));
+        assertThat(authProvider.canAccess(requester, supervisor), is(false));
     }
 
     @Test
     public void canSee_abstractEntity_unMatched_isFalse() throws Exception {
-        assertThat(authProvider.canSee(requester, new AbstractEntity() {
+        assertThat(authProvider.canAccess(requester, new AbstractEntity() {
             @Override
             public void updateWith(AbstractEntity entity) {
 
@@ -184,7 +183,7 @@ public class AuthProviderImplTest {
         Machine machine = FixtureFactory.generateMachine();
         company.addMachine(machine);
 
-        assertThat(authProvider.canSee(company.getOwner(), machine), is(true));
+        assertThat(authProvider.canAccess(company.getOwner(), machine), is(true));
     }
 
     @Test
@@ -195,7 +194,7 @@ public class AuthProviderImplTest {
         Person technician = FixtureFactory.generateTechnician();
         company.addWorker(technician);
 
-        assertThat(authProvider.canSee(technician, machine), is(true));
+        assertThat(authProvider.canAccess(technician, machine), is(true));
     }
 
     @Test
@@ -205,7 +204,7 @@ public class AuthProviderImplTest {
         company.addMachine(machine);
         Company anotherCompany = FixtureFactory.generateCompanyWithOwner().setId("ANOTHER_COMPANY");
 
-        assertThat(authProvider.canSee(anotherCompany.getOwner(), machine), is(false));
+        assertThat(authProvider.canAccess(anotherCompany.getOwner(), machine), is(false));
     }
 
     @Test
@@ -217,7 +216,7 @@ public class AuthProviderImplTest {
         Person technician = FixtureFactory.generateTechnician();
         anotherCompany.addWorker(technician);
 
-        assertThat(authProvider.canSee(technician, machine), is(false));
+        assertThat(authProvider.canAccess(technician, machine), is(false));
     }
 
     @Test
@@ -226,14 +225,14 @@ public class AuthProviderImplTest {
         Person customer = FixtureFactory.generateCustomer();
         Machine machine = FixtureFactory.generateMachine();
 
-        assertThat(authProvider.canSee(customer, machine), is(false));
+        assertThat(authProvider.canAccess(customer, machine), is(false));
     }
 
     @Test
     public void canSee_person_himself_isTrue() throws Exception {
         Person customer = FixtureFactory.generateCustomer();
 
-        assertThat(authProvider.canSee(customer, customer), is(true));
+        assertThat(authProvider.canAccess(customer, customer), is(true));
     }
 
     @Test
@@ -242,7 +241,7 @@ public class AuthProviderImplTest {
         Person technician = FixtureFactory.generateTechnician();
         company.addWorker(technician);
 
-        assertThat(authProvider.canSee(company.getOwner(), technician), is(true));
+        assertThat(authProvider.canAccess(company.getOwner(), technician), is(true));
     }
 
     @Test
@@ -252,7 +251,7 @@ public class AuthProviderImplTest {
         company.addWorker(technician);
         Person supervisor = FixtureFactory.generateCompanyWithOwner().setId("ANOTHER_COMPANY").getOwner();
 
-        assertThat(authProvider.canSee(supervisor, technician), is(false));
+        assertThat(authProvider.canAccess(supervisor, technician), is(false));
     }
 
     @Test
@@ -262,7 +261,7 @@ public class AuthProviderImplTest {
         company.addWorker(technician);
         Person customer = FixtureFactory.generateCustomer();
 
-        assertThat(authProvider.canSee(customer, technician), is(false));
+        assertThat(authProvider.canAccess(customer, technician), is(false));
     }
 
     @Test
@@ -270,7 +269,7 @@ public class AuthProviderImplTest {
         Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
         Person customer = FixtureFactory.generateCustomer();
 
-        assertThat(authProvider.canSee(customer, company.getOwner()), is(false));
+        assertThat(authProvider.canAccess(customer, company.getOwner()), is(false));
     }
 
     @Test
@@ -279,6 +278,6 @@ public class AuthProviderImplTest {
         Company company = FixtureFactory.generateCompanyWithOwner().setId("COMPANY_ID");
         Person customer = FixtureFactory.generateCustomer();
 
-        assertThat(authProvider.canSee(company.getOwner(), customer), is(false));
+        assertThat(authProvider.canAccess(company.getOwner(), customer), is(false));
     }
 }

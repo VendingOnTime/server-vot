@@ -48,7 +48,7 @@ public class E2EGetTechnicianTest extends E2ETest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void getMachine_withValidId_andValidAuthorization_returnsMachineData() {
+    public void getTechnician_withValidId_andValidAuthorization_returnsTechnicianData() {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician =
                 signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
@@ -64,6 +64,7 @@ public class E2EGetTechnicianTest extends E2ETest {
                 .body("data.id", notNullValue())
                 .body("data.dni", equalTo(technician.getDni()))
                 .body("data.username", equalTo(technician.getUsername()))
+                .body("data.password", nullValue())
                 .body("data.email", equalTo(technician.getEmail()))
                 .body("data.name", equalTo(technician.getName()))
                 .body("data.surnames", equalTo(technician.getSurnames()))
@@ -75,7 +76,7 @@ public class E2EGetTechnicianTest extends E2ETest {
     }
 
     @Test
-    public void getMachine_withValidId_andInvalidAuthorization_returnsUnauthorized() {
+    public void getTechnician_withValidId_andInvalidAuthorization_returnsUnauthorized() {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician =
                 signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
@@ -93,7 +94,7 @@ public class E2EGetTechnicianTest extends E2ETest {
     }
 
     @Test
-    public void getMachine_withInvalidId_andValidAuthorization_returnsNotFound() {
+    public void getTechnician_withInvalidId_andValidAuthorization_returnsNotFound() {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician =
                 signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
@@ -111,7 +112,7 @@ public class E2EGetTechnicianTest extends E2ETest {
     }
 
     @Test
-    public void getMachine_withValidId_andValidAuthorization_butDifferentCompany_returnsUnauthorized() {
+    public void getTechnician_withValidId_andValidAuthorization_butDifferentCompany_returnsUnauthorized() {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician =
                 signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));

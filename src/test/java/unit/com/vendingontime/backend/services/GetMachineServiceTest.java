@@ -65,7 +65,7 @@ public class GetMachineServiceTest {
         personRequest = FixtureFactory.generatePersonRequestFrom(machine, owner);
 
         when(repository.findById(MACHINE_ID)).thenReturn(Optional.of(machine));
-        when(authProvider.canSee(owner, machine)).thenReturn(true);
+        when(authProvider.canAccess(owner, machine)).thenReturn(true);
     }
 
     @After
@@ -100,7 +100,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forValidMachineId_andNotAuthorizedUser_throwException() {
         Person randomUser = FixtureFactory.generateCustomer().setId("RANDOM_USER");
 
-        when(authProvider.canSee(randomUser, machine)).thenReturn(false);
+        when(authProvider.canAccess(randomUser, machine)).thenReturn(false);
         personRequest.setRequester(randomUser);
         try {
             service.getBy(personRequest);

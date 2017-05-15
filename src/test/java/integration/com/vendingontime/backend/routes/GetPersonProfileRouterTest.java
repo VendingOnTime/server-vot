@@ -45,7 +45,7 @@ public class GetPersonProfileRouterTest extends IntegrationTest {
     @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void getMachine() throws Exception {
+    public void getTechnician() throws Exception {
         Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
 

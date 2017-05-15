@@ -44,7 +44,7 @@ public abstract class AbstractGetService<MODEL extends AbstractEntity> extends A
         Person requester = personRequest.getRequester();
         MODEL entity = possibleEntity.get();
 
-        if (!authProvider.canSee(requester, entity))
+        if (!authProvider.canAccess(requester, entity))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleEntity;

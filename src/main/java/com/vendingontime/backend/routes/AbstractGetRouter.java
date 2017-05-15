@@ -29,7 +29,7 @@ import java.util.Optional;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class AbstractGetRouter extends AbstractSparkRouter {
+public abstract class AbstractGetRouter extends AbstractSparkRouter {
     private final AbstractGetService service;
     private final EndpointProtector protector;
     private final String endpointPath;
@@ -52,8 +52,8 @@ public class AbstractGetRouter extends AbstractSparkRouter {
     public AppRoute getWith(String id, Person requester) {
         try {
             PersonRequest personRequest = new PersonRequest().setId(id).setRequester(requester);
-            Optional<?> machineCandidate = service.getBy(personRequest);
-            return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
+            Optional<?> possibleRetrieved = service.getBy(personRequest);
+            return possibleRetrieved.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException ex) {
             return serviceResponse.badRequest(ex.getCauses());
         }
