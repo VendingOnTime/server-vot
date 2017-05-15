@@ -2,6 +2,7 @@ package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.AbstractEntity;
 import com.vendingontime.backend.models.bodymodels.PersonRequest;
+import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
@@ -35,15 +36,15 @@ public abstract class AbstractGetService<MODEL extends AbstractEntity> extends A
     }
 
     public Optional<MODEL> getBy(PersonRequest personRequest) throws BusinessLogicException {
-        String[] validationErrors = personRequest.validate();
-        if (validationErrors.length != 0)
-            throw new BusinessLogicException(validationErrors);
+        validateInput(personRequest);
 
         Optional<MODEL> possibleEntity = repository.findById(personRequest.getId());
         if (!possibleEntity.isPresent()) return Optional.empty();
 
+        Person requester = personRequest.getRequester();
         MODEL entity = possibleEntity.get();
-        if (!authProvider.canSee(personRequest.getRequester(), entity))
+
+        if (!authProvider.canSee(requester, entity))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleEntity;

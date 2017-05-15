@@ -1,14 +1,9 @@
 package com.vendingontime.backend.services;
 
-import com.vendingontime.backend.models.bodymodels.PersonRequest;
+import com.google.inject.Inject;
 import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.services.utils.AuthProvider;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-
-import javax.inject.Inject;
-import java.util.Optional;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

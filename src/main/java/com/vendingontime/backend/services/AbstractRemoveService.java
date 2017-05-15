@@ -36,16 +36,14 @@ public abstract class AbstractRemoveService<MODEL extends AbstractEntity> extend
     }
 
     public Optional<MODEL> removeBy(PersonRequest personRequest) throws BusinessLogicException {
-        String[] validationErrors = personRequest.validate();
-        if (validationErrors.length != 0)
-            throw new BusinessLogicException(validationErrors);
-
-        Person requester = personRequest.getRequester();
+        validateInput(personRequest);
 
         Optional<MODEL> entityById = repository.findById(personRequest.getId());
         if (!entityById.isPresent()) return entityById;
 
+        Person requester = personRequest.getRequester();
         MODEL entity = entityById.get();
+
         if (!authProvider.canModify(requester, entity))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
