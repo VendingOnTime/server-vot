@@ -2,8 +2,6 @@ package integration.com.vendingontime.backend.services;
 
 import com.google.inject.Inject;
 import com.vendingontime.backend.models.bodymodels.PersonRequest;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;

@@ -69,7 +69,7 @@ public class RemoveMachineRouterTest {
     public void removeMachine_withValidData() {
         when(service.removeBy(any())).thenReturn(Optional.ofNullable(machine));
 
-        router.remove(MACHINE_ID, requester);
+        router.removeWith(MACHINE_ID, requester);
 
         verify(service, times(1))
                 .removeBy(any());
@@ -82,7 +82,7 @@ public class RemoveMachineRouterTest {
 
         doThrow(new BusinessLogicException(expectedErrors))
                 .when(service).removeBy(any());
-        router.remove(MACHINE_ID, requester);
+        router.removeWith(MACHINE_ID, requester);
 
         verify(service, times(1)).removeBy(any());
         verify(serviceResponse, times(1)).badRequest(expectedErrors);
@@ -92,7 +92,7 @@ public class RemoveMachineRouterTest {
     public void removeMachine_withNotExistingMachine_returnsNotFound() throws Exception {
         when(service.removeBy(any())).thenReturn(Optional.empty());
 
-        router.remove(MACHINE_ID, requester);
+        router.removeWith(MACHINE_ID, requester);
 
         verify(serviceResponse, times(1)).notFound();
     }

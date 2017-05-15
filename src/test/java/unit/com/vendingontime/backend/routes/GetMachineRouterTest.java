@@ -71,7 +71,7 @@ public class GetMachineRouterTest {
     public void getMachine_withExistingId_returnsOk() throws Exception {
         when(service.getBy(any())).thenReturn(Optional.of(machine));
 
-        router.getMachine(MACHINE_ID, person);
+        router.getWith(MACHINE_ID, person);
 
         verify(serviceResponse, times(1)).ok(machine);
     }
@@ -84,7 +84,7 @@ public class GetMachineRouterTest {
         doThrow(new BusinessLogicException(causes))
                 .when(service).getBy(any());
 
-        router.getMachine(MACHINE_ID, unauthorizedUser);
+        router.getWith(MACHINE_ID, unauthorizedUser);
 
         verify(serviceResponse, times(1)).badRequest(causes);
     }
@@ -94,7 +94,7 @@ public class GetMachineRouterTest {
         final String INVALID_ID = "INVALID_ID";
         when(service.getBy(any())).thenReturn(Optional.empty());
 
-        router.getMachine(INVALID_ID, person);
+        router.getWith(INVALID_ID, person);
 
         verify(serviceResponse, times(1)).notFound();
     }

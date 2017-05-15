@@ -2,18 +2,12 @@ package integration.com.vendingontime.backend.routes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
-import com.vendingontime.backend.repositories.MachineRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.RemoveMachineRouter;
 import com.vendingontime.backend.routes.RemoveTechnicianRouter;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.RESTResult;
-import com.vendingontime.backend.services.AddMachineService;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
@@ -53,7 +47,7 @@ public class RemoveTechnicianRouterTest extends IntegrationTest {
         Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
 
-        AppRoute post = router.remove(technician.getId(), requester);
+        AppRoute post = router.removeWith(technician.getId(), requester);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();

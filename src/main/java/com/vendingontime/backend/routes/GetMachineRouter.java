@@ -32,34 +32,12 @@ import spark.Service;
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class GetMachineRouter extends AbstractSparkRouter {
+public class GetMachineRouter extends AbstractGetRouter {
     public static final String V1_MACHINES = V1 + "/machines/";
-
-    private final GetMachineService service;
-    private final EndpointProtector protector;
 
     @Inject
     public GetMachineRouter(ServiceResponse serviceResponse,
                                GetMachineService service, EndpointProtector protector) {
-        super(serviceResponse);
-        this.service = service;
-        this.protector = protector;
-    }
-
-    @Override
-    public void configure(Service http) {
-        protector.protect(V1_MACHINES + ID_PARAM);
-        http.get(V1_MACHINES + ID_PARAM, map((req, res) ->
-                getMachine(req.params(ID_PARAM), req.attribute(TokenEndpointProtector.LOGGED_IN_PERSON))));
-    }
-
-    public AppRoute getMachine(String id, Person requester) {
-        try {
-            PersonRequest personRequest = new PersonRequest().setId(id).setRequester(requester);
-            Optional<Machine> machineCandidate = service.getBy(personRequest);
-            return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
-        } catch (BusinessLogicException ex) {
-            return serviceResponse.badRequest(ex.getCauses());
-        }
+        super(serviceResponse, service, protector, V1_MACHINES);
     }
 }

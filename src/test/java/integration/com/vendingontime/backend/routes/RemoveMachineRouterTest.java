@@ -58,7 +58,7 @@ public class RemoveMachineRouterTest extends IntegrationTest {
         addMachineData.setRequester(requester);
         Machine machine = addMachineService.createMachine(addMachineData);
 
-        AppRoute post = router.remove(machine.getId(), requester);
+        AppRoute post = router.removeWith(machine.getId(), requester);
         String result = (String) post.handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();

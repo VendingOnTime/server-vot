@@ -59,7 +59,7 @@ public class GetMachineRouterTest extends IntegrationTest {
         company.addMachine(savedMachine);
         companyRepository.update(company);
 
-        String result = (String) router.getMachine(savedMachine.getId(), savedOwner)
+        String result = (String) router.getWith(savedMachine.getId(), savedOwner)
                 .handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();
