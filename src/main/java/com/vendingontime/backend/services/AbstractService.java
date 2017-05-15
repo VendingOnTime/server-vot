@@ -17,6 +17,15 @@ package com.vendingontime.backend.services;
  * specific language governing permissions and limitations under the License.
  */
 
+import com.vendingontime.backend.models.bodymodels.Validable;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+
 public abstract class AbstractService {
     public static final String INSUFFICIENT_PERMISSIONS = "INSUFFICIENT_PERMISSIONS";
+
+    protected void validateInput(Validable validable) throws BusinessLogicException {
+        String[] validationErrors = validable.validate();
+        if (validationErrors.length != 0)
+            throw new BusinessLogicException(validationErrors);
+    }
 }

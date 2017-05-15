@@ -1,7 +1,7 @@
 package unit.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -16,7 +16,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.bodymodels.RemovalRequest.EMPTY_REQUESTER;
+import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_REQUESTER;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +48,7 @@ public class RemoveTechnicianServiceTest {
 
     private Person technician;
     private Person requester;
-    private RemovalRequest removalRequest;
+    private PersonRequest personRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -62,7 +62,7 @@ public class RemoveTechnicianServiceTest {
         technician = FixtureFactory.generateTechnician().setId("TECHNICIAN_ID");
         company.addWorker(technician);
 
-        removalRequest = FixtureFactory.generateRemovalRequestFrom(technician, requester);
+        personRequest = FixtureFactory.generatePersonRequestFrom(technician, requester);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(technician.getId())).thenReturn(Optional.of(technician));
@@ -80,12 +80,12 @@ public class RemoveTechnicianServiceTest {
 
         technician = null;
         requester = null;
-        removalRequest = null;
+        personRequest = null;
     }
 
     @Test
     public void removeTechnician() {
-        Optional<Person> possibleRemoved = removeTechnicianService.remove(removalRequest);
+        Optional<Person> possibleRemoved = removeTechnicianService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(true));
 
@@ -99,8 +99,8 @@ public class RemoveTechnicianServiceTest {
     @Test
     public void removeTechnician_withInvalidRequester_throwsException() {
         try {
-            removalRequest.setRequester(null);
-            removeTechnicianService.remove(removalRequest);
+            personRequest.setRequester(null);
+            removeTechnicianService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
@@ -113,8 +113,8 @@ public class RemoveTechnicianServiceTest {
     @Test
     public void removeTechnician_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
-        removalRequest.setId(unknownId);
-        Optional<Person> possibleRemoved = removeTechnicianService.remove(removalRequest);
+        personRequest.setId(unknownId);
+        Optional<Person> possibleRemoved = removeTechnicianService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(false));
 
@@ -128,7 +128,7 @@ public class RemoveTechnicianServiceTest {
 
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
-            removeTechnicianService.remove(removalRequest);
+            removeTechnicianService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

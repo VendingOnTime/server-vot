@@ -5,15 +5,13 @@ import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.RemoveTechnicianService;
+import com.vendingontime.backend.services.GetPersonService;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
-import java.util.Optional;
-
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 /**
@@ -33,23 +31,22 @@ import static org.junit.Assert.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class RemoveTechnicianServiceTest extends IntegrationTest {
+public class GetPersonServiceTest extends IntegrationTest {
     @Inject private SignUpService signUpService;
-    @Inject private RemoveTechnicianService removeTechnicianService;
+    @Inject private GetPersonService service;
 
-    @Inject private CompanyRepository companyRepository;
     @Inject private PersonRepository personRepository;
+    @Inject private CompanyRepository companyRepository;
 
     @Test
-    public void removeTechnician() {
-        Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
-        Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
+    public void getMachineData_forValidPersonId_andAuthorizedUser() {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+        Person technician =
+                signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
 
-        PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(technician, requester);
-        Optional<Person> possibleRemovedTechnician = removeTechnicianService.removeBy(personRequest);
-
-        assertThat(possibleRemovedTechnician.isPresent(), is(true));
-        assertThat(possibleRemovedTechnician.get().isDisabled(), is(true));
+        PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(technician, supervisor);
+        Person foundTechnician = service.getBy(personRequest).get();
+        assertThat(foundTechnician, equalTo(technician));
 
         personRepository.deleteAll();
         companyRepository.deleteAll();

@@ -59,14 +59,12 @@ public class GetMachineRouterTest extends IntegrationTest {
         company.addMachine(savedMachine);
         companyRepository.update(company);
 
-        String result = (String) router.getMachine(savedMachine.getId(), savedOwner)
+        String result = (String) router.getWith(savedMachine.getId(), savedOwner)
                 .handle(mock(Request.class), mock(Response.class));
 
         ObjectMapper mapper = new ObjectMapper();
         RESTResult restResult = mapper.readValue(result, RESTResult.class);
         assertThat(restResult.getSuccess(), is(true));
-
-        //TODO Change with solution to casting problem
         assertNotNull(restResult.getData());
 
         machineRepository.deleteAll();

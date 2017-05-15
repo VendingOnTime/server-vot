@@ -24,7 +24,7 @@ import static com.vendingontime.backend.utils.StringUtils.isEmpty;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class RemovalRequest implements Validable {
+public class PersonRequest implements Validable {
     public static final String EMPTY_ID = "EMPTY_ID";
     public static final String EMPTY_REQUESTER = "EMPTY_REQUESTER";
 
@@ -45,7 +45,7 @@ public class RemovalRequest implements Validable {
         return id;
     }
 
-    public RemovalRequest setId(String id) {
+    public PersonRequest setId(String id) {
         this.id = id;
         return this;
     }
@@ -54,7 +54,7 @@ public class RemovalRequest implements Validable {
         return requester;
     }
 
-    public RemovalRequest setRequester(Person requester) {
+    public PersonRequest setRequester(Person requester) {
         this.requester = requester;
         return this;
     }
@@ -62,9 +62,9 @@ public class RemovalRequest implements Validable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RemovalRequest)) return false;
+        if (!(o instanceof PersonRequest)) return false;
 
-        RemovalRequest that = (RemovalRequest) o;
+        PersonRequest that = (PersonRequest) o;
 
         if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
         return getRequester() != null ? getRequester().equals(that.getRequester()) : that.getRequester() == null;
@@ -79,7 +79,7 @@ public class RemovalRequest implements Validable {
 
     @Override
     public String toString() {
-        return "RemovalRequest{" +
+        return "PersonRequest{" +
                 "id='" + id + '\'' +
                 ", requester=" + requester +
                 '}';

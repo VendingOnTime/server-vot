@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.INVALID_EMAIL;
 import static com.vendingontime.backend.routes.AbstractSparkRouter.MALFORMED_JSON;
-import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -41,8 +40,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * specific language governing permissions and limitations under the License.
  */
 public class E2EEditTechnicianDataTest extends E2ETest {
-    @Inject
-    private SignUpService signUpService;
+    @Inject private SignUpService signUpService;
     @Inject private LogInService loginService;
 
     @Inject private PersonRepository repository;

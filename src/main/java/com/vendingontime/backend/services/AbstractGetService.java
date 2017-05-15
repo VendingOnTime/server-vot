@@ -26,28 +26,27 @@ import java.util.Optional;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public abstract class AbstractRemoveService<MODEL extends AbstractEntity> extends AbstractService {
+public abstract class AbstractGetService<MODEL extends AbstractEntity> extends AbstractService {
     private final Repository<MODEL> repository;
     private final AuthProvider authProvider;
 
-    public AbstractRemoveService(Repository<MODEL> repository, AuthProvider authProvider) {
+    public AbstractGetService(Repository<MODEL> repository, AuthProvider authProvider) {
         this.repository = repository;
         this.authProvider = authProvider;
     }
 
-    public Optional<MODEL> removeBy(PersonRequest personRequest) throws BusinessLogicException {
+    public Optional<MODEL> getBy(PersonRequest personRequest) throws BusinessLogicException {
         validateInput(personRequest);
 
-        Optional<MODEL> entityById = repository.findById(personRequest.getId());
-        if (!entityById.isPresent()) return entityById;
+        Optional<MODEL> possibleEntity = repository.findById(personRequest.getId());
+        if (!possibleEntity.isPresent()) return Optional.empty();
 
         Person requester = personRequest.getRequester();
-        MODEL entity = entityById.get();
+        MODEL entity = possibleEntity.get();
 
-        if (!authProvider.canModify(requester, entity))
+        if (!authProvider.canAccess(requester, entity))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
-        entity.setDisabled(true);
-        return repository.update(entity);
+        return possibleEntity;
     }
 }

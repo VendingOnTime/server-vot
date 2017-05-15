@@ -1,13 +1,13 @@
 package unit.com.vendingontime.backend.models.bodymodels;
 
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import testutils.FixtureFactory;
 
-import static com.vendingontime.backend.models.bodymodels.RemovalRequest.EMPTY_ID;
-import static com.vendingontime.backend.models.bodymodels.RemovalRequest.EMPTY_REQUESTER;
+import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_ID;
+import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_REQUESTER;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -28,45 +28,45 @@ import static org.junit.Assert.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class RemovalRequestTest {
+public class PersonRequestTest {
     
     private static final String ENTITY_ID = "ENTITY_ID";
     
-    private RemovalRequest removalRequest;
+    private PersonRequest personRequest;
 
     @Before
     public void setUp() throws Exception {
-        removalRequest = new RemovalRequest()
+        personRequest = new PersonRequest()
                 .setId(ENTITY_ID)
                 .setRequester(FixtureFactory.generateSupervisor());
     }
 
     @After
     public void tearDown() throws Exception {
-        removalRequest = null;
+        personRequest = null;
     }
 
     @Test
     public void validate_withValidData_returnsEmpty() throws Exception {
-        assertThat(removalRequest.validate(), is(new String[]{}));
+        assertThat(personRequest.validate(), is(new String[]{}));
     }
 
     @Test
     public void validate_withEmptyId_returnsError() throws Exception {
-        removalRequest.setId("");
-        assertThat(removalRequest.validate(), is(new String[]{EMPTY_ID}));
+        personRequest.setId("");
+        assertThat(personRequest.validate(), is(new String[]{EMPTY_ID}));
     }
 
     @Test
     public void validate_withEmptyRequester_returnsError() throws Exception {
-        removalRequest.setRequester(null);
-        assertThat(removalRequest.validate(), is(new String[]{EMPTY_REQUESTER}));
+        personRequest.setRequester(null);
+        assertThat(personRequest.validate(), is(new String[]{EMPTY_REQUESTER}));
     }
 
     @Test
     public void validate_allInvalid_returnsErrors() throws Exception {
-        removalRequest.setId("");
-        removalRequest.setRequester(null);
-        assertThat(removalRequest.validate(), is(new String[]{EMPTY_ID, EMPTY_REQUESTER}));
+        personRequest.setId("");
+        personRequest.setRequester(null);
+        assertThat(personRequest.validate(), is(new String[]{EMPTY_ID, EMPTY_REQUESTER}));
     }
 }

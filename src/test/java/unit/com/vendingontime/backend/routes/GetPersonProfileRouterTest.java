@@ -2,9 +2,9 @@ package unit.com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.RemoveTechnicianRouter;
+import com.vendingontime.backend.routes.GetPersonProfileRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.RemoveTechnicianService;
+import com.vendingontime.backend.services.GetPersonService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
@@ -16,8 +16,6 @@ import java.util.Optional;
 import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,63 +34,64 @@ import static org.mockito.Mockito.verify;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class RemoveTechnicianRouterTest {
-    private static final String TECHNICIAN_ID = "TECHNICIAN_ID";
+public class GetPersonProfileRouterTest {
+    private final String PERSON_ID = "PERSON_ID";
 
-    private RemoveTechnicianService service;
     private ServiceResponse serviceResponse;
-    private RemoveTechnicianRouter router;
-    private Person technician;
+    private GetPersonService service;
+    private GetPersonProfileRouter router;
+
     private Person requester;
+    private Person person;
 
     @Before
     public void setUp() throws Exception {
-        service = mock(RemoveTechnicianService.class);
         serviceResponse = mock(ServiceResponse.class);
+        service = mock(GetPersonService.class);
         EndpointProtector protector = mock(EndpointProtector.class);
+        router = new GetPersonProfileRouter(serviceResponse, service, protector);
 
-        router = new RemoveTechnicianRouter(serviceResponse, protector, service);
-
-        technician = FixtureFactory.generateTechnician();
-        requester = FixtureFactory.generateSupervisorWithCompany();
+        requester = FixtureFactory.generateSupervisor();
+        person = FixtureFactory.generateTechnician().setId(PERSON_ID);
     }
 
     @After
     public void tearDown() throws Exception {
-        service = null;
         serviceResponse = null;
+        service = null;
         router = null;
-        technician = null;
+
         requester = null;
+        person = null;
     }
 
     @Test
-    public void removeTechnician_withValidData() {
-        when(service.removeBy(any())).thenReturn(Optional.ofNullable(technician));
+    public void getTechnician_withExistingId_returnsOk() throws Exception {
+        when(service.getBy(any())).thenReturn(Optional.of(person));
 
-        router.removeWith(TECHNICIAN_ID, requester);
+        router.getWith(PERSON_ID, requester);
 
-        verify(service, times(1)).removeBy(any());
-        verify(serviceResponse, times(1)).ok(technician);
+        verify(serviceResponse, times(1)).ok(person);
     }
 
     @Test
-    public void removeTechnician_withUnauthorizedUser() {
-        String[] expectedErrors = new String[]{ INSUFFICIENT_PERMISSIONS };
+    public void getTechnician_withExistingId_andUnauthorizedUser_returnsBadRequest() throws Exception {
+        Person unauthorizedUser = FixtureFactory.generateSupervisor();
 
-        doThrow(new BusinessLogicException(expectedErrors))
-                .when(service).removeBy(any());
-        router.removeWith(TECHNICIAN_ID, requester);
+        String[] causes = {INSUFFICIENT_PERMISSIONS};
+        doThrow(new BusinessLogicException(causes)).when(service).getBy(any());
 
-        verify(service, times(1)).removeBy(any());
-        verify(serviceResponse, times(1)).badRequest(expectedErrors);
+        router.getWith(PERSON_ID, unauthorizedUser);
+
+        verify(serviceResponse, times(1)).badRequest(causes);
     }
 
     @Test
-    public void removeTechnician_withNotExistingMachine_returnsNotFound() throws Exception {
-        when(service.removeBy(any())).thenReturn(Optional.empty());
+    public void getTechnician_withNotExistingId_returnsBadRequest() throws Exception {
+        final String INVALID_ID = "INVALID_ID";
+        when(service.getBy(any())).thenReturn(Optional.empty());
 
-        router.removeWith(TECHNICIAN_ID, requester);
+        router.getWith(INVALID_ID, requester);
 
         verify(serviceResponse, times(1)).notFound();
     }

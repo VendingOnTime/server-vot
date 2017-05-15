@@ -1,6 +1,7 @@
 package integration.com.vendingontime.backend.services;
 
 import com.google.inject.Inject;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -52,7 +53,8 @@ public class GetMachineServiceTest extends IntegrationTest {
         company.addMachine(savedMachine);
         companyRepository.update(company);
 
-        Machine foundMachine = service.getDataFrom(machine.getId(), savedOwner).get();
+        PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(machine, savedOwner);
+        Machine foundMachine = service.getBy(personRequest).get();
         assertThat(savedMachine, equalTo(foundMachine));
 
         machineRepository.deleteAll();

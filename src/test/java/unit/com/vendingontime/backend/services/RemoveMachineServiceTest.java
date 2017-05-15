@@ -1,7 +1,7 @@
 package unit.com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -16,7 +16,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
-import static com.vendingontime.backend.models.bodymodels.RemovalRequest.EMPTY_REQUESTER;
+import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_REQUESTER;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -48,7 +48,7 @@ public class RemoveMachineServiceTest {
 
     private Machine machine;
     private Person requester;
-    private RemovalRequest removalRequest;
+    private PersonRequest personRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -62,7 +62,7 @@ public class RemoveMachineServiceTest {
         machine = FixtureFactory.generateMachine().setId("MACHINE_ID");
         company.addMachine(machine);
 
-        removalRequest = FixtureFactory.generateRemovalRequestFrom(machine, requester);
+        personRequest = FixtureFactory.generatePersonRequestFrom(machine, requester);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.findById(machine.getId())).thenReturn(Optional.of(machine));
@@ -80,12 +80,12 @@ public class RemoveMachineServiceTest {
 
         machine = null;
         requester = null;
-        removalRequest = null;
+        personRequest = null;
     }
 
     @Test
     public void removeMachine() {
-        Optional<Machine> possibleRemoved = removeMachineService.remove(removalRequest);
+        Optional<Machine> possibleRemoved = removeMachineService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(true));
 
@@ -99,8 +99,8 @@ public class RemoveMachineServiceTest {
     @Test
     public void removeMachine_withInvalidRequester_throwsException() {
         try {
-            removalRequest.setRequester(null);
-            removeMachineService.remove(removalRequest);
+            personRequest.setRequester(null);
+            removeMachineService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
@@ -113,8 +113,8 @@ public class RemoveMachineServiceTest {
     @Test
     public void removeMachine_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
-        removalRequest.setId(unknownId);
-        Optional<Machine> possibleRemoved = removeMachineService.remove(removalRequest);
+        personRequest.setId(unknownId);
+        Optional<Machine> possibleRemoved = removeMachineService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(false));
 
@@ -128,7 +128,7 @@ public class RemoveMachineServiceTest {
 
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
-            removeMachineService.remove(removalRequest);
+            removeMachineService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());

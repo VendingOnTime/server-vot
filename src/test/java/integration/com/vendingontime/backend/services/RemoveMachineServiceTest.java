@@ -1,7 +1,7 @@
 package integration.com.vendingontime.backend.services;
 
 import com.google.inject.Inject;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
@@ -55,8 +55,8 @@ public class RemoveMachineServiceTest extends IntegrationTest{
         addMachineData.setRequester(requester);
         Machine machine = addMachineService.createMachine(addMachineData);
 
-        RemovalRequest removalRequest = FixtureFactory.generateRemovalRequestFrom(machine, requester);
-        Optional<Machine> possibleRemovedMachine = removeMachineService.remove(removalRequest);
+        PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(machine, requester);
+        Optional<Machine> possibleRemovedMachine = removeMachineService.removeBy(personRequest);
 
         assertThat(possibleRemovedMachine.isPresent(), is(true));
         assertThat(possibleRemovedMachine.get().isDisabled(), is(true));
