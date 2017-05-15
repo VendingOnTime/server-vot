@@ -47,7 +47,7 @@ public class E2EOwnUserProfileTest extends E2ETest {
     @Inject private PersonRepository repository;
 
     @Test
-    public void retrieveUserProfile_withValidToken_returnsUserData() throws Exception {
+    public void retrieveUserProfile_supervisor_withValidToken_returnsUserData() throws Exception {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
 
@@ -64,6 +64,7 @@ public class E2EOwnUserProfileTest extends E2ETest {
                 .body("data.id", notNullValue())
                 .body("data.dni", equalTo(supervisor.getDni()))
                 .body("data.username", equalTo(supervisor.getUsername()))
+                .body("data.password", nullValue())
                 .body("data.email", equalTo(supervisor.getEmail()))
                 .body("data.name", equalTo(supervisor.getName()))
                 .body("data.surnames", equalTo(supervisor.getSurnames()))
@@ -74,7 +75,7 @@ public class E2EOwnUserProfileTest extends E2ETest {
     }
 
     @Test
-    public void retrieveUserProfile_withValidTokenAndId_returnsUserData() throws Exception {
+    public void retrieveUserProfile_supervisor_withValidTokenAndId_returnsUserData() throws Exception {
         SignUpData signUpData = FixtureFactory.generateSignUpData();
         Person supervisor = signUpService.createSupervisor(signUpData);
 
@@ -91,10 +92,67 @@ public class E2EOwnUserProfileTest extends E2ETest {
                 .body("data.id", notNullValue())
                 .body("data.dni", equalTo(supervisor.getDni()))
                 .body("data.username", equalTo(supervisor.getUsername()))
+                .body("data.password", nullValue())
                 .body("data.email", equalTo(supervisor.getEmail()))
                 .body("data.name", equalTo(supervisor.getName()))
                 .body("data.surnames", equalTo(supervisor.getSurnames()))
                 .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
+                .body("error", nullValue());
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void retrieveUserProfile_technician_withValidToken_returnsUserData() throws Exception {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+        Person technician =
+                signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
+
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(technician));
+
+        given()
+                .header("Authorization", "JWT " + token)
+        .when()
+                .get(host + UserProfileRouter.V1_PROFILE)
+        .then()
+                .statusCode(HttpResponse.StatusCode.OK)
+                .body("success", is(true))
+                .body("data.id", notNullValue())
+                .body("data.dni", equalTo(technician.getDni()))
+                .body("data.username", equalTo(technician.getUsername()))
+                .body("data.password", nullValue())
+                .body("data.email", equalTo(technician.getEmail()))
+                .body("data.name", equalTo(technician.getName()))
+                .body("data.surnames", equalTo(technician.getSurnames()))
+                .body("data.role", equalTo(PersonRole.TECHNICIAN.toValue()))
+                .body("error", nullValue());
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void retrieveUserProfile_technician_withValidTokenAndId_returnsUserData() throws Exception {
+        Person supervisor = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
+        Person technician =
+                signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(supervisor));
+
+        String token = logInService.authorizeUser(FixtureFactory.generateLogInDataFrom(technician));
+
+        given()
+                .header("Authorization", "JWT " + token)
+        .when()
+                .get(host + GetPersonProfileRouter.V1_USERS_PROFILE + technician.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.OK)
+                .body("success", is(true))
+                .body("data.id", notNullValue())
+                .body("data.dni", equalTo(technician.getDni()))
+                .body("data.username", equalTo(technician.getUsername()))
+                .body("data.password", nullValue())
+                .body("data.email", equalTo(technician.getEmail()))
+                .body("data.name", equalTo(technician.getName()))
+                .body("data.surnames", equalTo(technician.getSurnames()))
+                .body("data.role", equalTo(PersonRole.TECHNICIAN.toValue()))
                 .body("error", nullValue());
 
         repository.deleteAll();
