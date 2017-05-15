@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.routes.GetPersonRouter;
+import com.vendingontime.backend.routes.GetPersonProfileRouter;
 import com.vendingontime.backend.routes.utils.RESTResult;
 import com.vendingontime.backend.services.SignUpService;
 import integration.com.vendingontime.backend.testutils.IntegrationTest;
@@ -36,10 +36,10 @@ import static org.mockito.Mockito.mock;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class GetPersonRouterTest extends IntegrationTest {
+public class GetPersonProfileRouterTest extends IntegrationTest {
 
     @Inject private SignUpService signUpService;
-    @Inject private GetPersonRouter router;
+    @Inject private GetPersonProfileRouter router;
 
     @Inject private PersonRepository personRepository;
     @Inject private CompanyRepository companyRepository;

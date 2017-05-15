@@ -6,6 +6,7 @@ import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.routes.GetPersonProfileRouter;
 import com.vendingontime.backend.routes.UserProfileRouter;
 import com.vendingontime.backend.routes.utils.HttpResponse;
 import com.vendingontime.backend.services.LogInService;
@@ -39,7 +40,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * specific language governing permissions and limitations under the License.
  */
 
-public class E2EUserProfileTest extends E2ETest {
+public class E2EOwnUserProfileTest extends E2ETest {
 
     @Inject private SignUpService signUpService;
     @Inject private LogInService logInService;
@@ -54,20 +55,47 @@ public class E2EUserProfileTest extends E2ETest {
         String token = logInService.authorizeUser(logInData);
 
         given()
-            .header("Authorization", "JWT " + token)
+                .header("Authorization", "JWT " + token)
         .when()
-            .get(host + UserProfileRouter.V1_PROFILE)
+                .get(host + UserProfileRouter.V1_PROFILE)
         .then()
-            .statusCode(HttpResponse.StatusCode.OK)
-            .body("success", is(true))
-            .body("data.id", notNullValue())
-            .body("data.dni", equalTo(supervisor.getDni()))
-            .body("data.username", equalTo(supervisor.getUsername()))
-            .body("data.email", equalTo(supervisor.getEmail()))
-            .body("data.name", equalTo(supervisor.getName()))
-            .body("data.surnames", equalTo(supervisor.getSurnames()))
-            .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
-            .body("error", nullValue());
+                .statusCode(HttpResponse.StatusCode.OK)
+                .body("success", is(true))
+                .body("data.id", notNullValue())
+                .body("data.dni", equalTo(supervisor.getDni()))
+                .body("data.username", equalTo(supervisor.getUsername()))
+                .body("data.email", equalTo(supervisor.getEmail()))
+                .body("data.name", equalTo(supervisor.getName()))
+                .body("data.surnames", equalTo(supervisor.getSurnames()))
+                .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
+                .body("error", nullValue());
+
+        repository.deleteAll();
+    }
+
+    @Test
+    public void retrieveUserProfile_withValidTokenAndId_returnsUserData() throws Exception {
+        SignUpData signUpData = FixtureFactory.generateSignUpData();
+        Person supervisor = signUpService.createSupervisor(signUpData);
+
+        LogInData logInData = FixtureFactory.generateLogInDataFrom(supervisor);
+        String token = logInService.authorizeUser(logInData);
+
+        given()
+                .header("Authorization", "JWT " + token)
+        .when()
+                .get(host + GetPersonProfileRouter.V1_USERS_PROFILE + supervisor.getId())
+        .then()
+                .statusCode(HttpResponse.StatusCode.OK)
+                .body("success", is(true))
+                .body("data.id", notNullValue())
+                .body("data.dni", equalTo(supervisor.getDni()))
+                .body("data.username", equalTo(supervisor.getUsername()))
+                .body("data.email", equalTo(supervisor.getEmail()))
+                .body("data.name", equalTo(supervisor.getName()))
+                .body("data.surnames", equalTo(supervisor.getSurnames()))
+                .body("data.role", equalTo(PersonRole.SUPERVISOR.toValue()))
+                .body("error", nullValue());
 
         repository.deleteAll();
     }

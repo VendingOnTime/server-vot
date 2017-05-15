@@ -22,13 +22,13 @@ import com.vendingontime.backend.services.GetPersonService;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class GetPersonRouter extends AbstractGetRouter {
+public class GetPersonProfileRouter extends AbstractGetRouter {
 
-    public static final String V1_USERS_PROFILE = V1 + "/users/profile";
+    public static final String V1_USERS_PROFILE = V1 + "/users/profile/";
 
     @Inject
-    public GetPersonRouter(ServiceResponse serviceResponse,
-                           GetPersonService service, EndpointProtector protector) {
+    public GetPersonProfileRouter(ServiceResponse serviceResponse,
+                                  GetPersonService service, EndpointProtector protector) {
         super(serviceResponse, service, protector, V1_USERS_PROFILE);
     }
 }

@@ -2,7 +2,7 @@ package unit.com.vendingontime.backend.routes;
 
 import com.vendingontime.backend.middleware.EndpointProtector;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.GetPersonRouter;
+import com.vendingontime.backend.routes.GetPersonProfileRouter;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.GetPersonService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
@@ -34,12 +34,12 @@ import static org.mockito.Mockito.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-public class GetPersonRouterTest {
+public class GetPersonProfileRouterTest {
     private final String PERSON_ID = "PERSON_ID";
 
     private ServiceResponse serviceResponse;
     private GetPersonService service;
-    private GetPersonRouter router;
+    private GetPersonProfileRouter router;
 
     private Person requester;
     private Person person;
@@ -49,7 +49,7 @@ public class GetPersonRouterTest {
         serviceResponse = mock(ServiceResponse.class);
         service = mock(GetPersonService.class);
         EndpointProtector protector = mock(EndpointProtector.class);
-        router = new GetPersonRouter(serviceResponse, service, protector);
+        router = new GetPersonProfileRouter(serviceResponse, service, protector);
 
         requester = FixtureFactory.generateSupervisor();
         person = FixtureFactory.generateTechnician().setId(PERSON_ID);
