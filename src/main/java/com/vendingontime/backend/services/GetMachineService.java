@@ -4,6 +4,7 @@ import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
@@ -28,11 +29,13 @@ import java.util.Optional;
  */
 
 public class GetMachineService extends AbstractService {
-    private MachineRepository repository;
+    private final MachineRepository repository;
+    private final AuthProvider authProvider;
 
     @Inject
-    public GetMachineService(MachineRepository repository) {
+    public GetMachineService(MachineRepository repository, AuthProvider authProvider) {
         this.repository = repository;
+        this.authProvider = authProvider;
     }
 
     public Optional<Machine> getWith(PersonRequest personRequest) throws BusinessLogicException {
@@ -40,24 +43,13 @@ public class GetMachineService extends AbstractService {
         if (validationErrors.length != 0)
             throw new BusinessLogicException(validationErrors);
 
-        if (!isAuthorized(personRequest.getRequester())) throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
-
         Optional<Machine> possibleMachine = repository.findById(personRequest.getId());
         if (!possibleMachine.isPresent()) return Optional.empty();
 
-        Machine foundMachine = possibleMachine.get();
-        if (!foundMachine.getCompany().equals(personRequest.getRequester().getOwnedCompany()))
+        Machine machine = possibleMachine.get();
+        if (!authProvider.canSee(personRequest.getRequester(), machine))
             throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         return possibleMachine;
-    }
-
-    private boolean isAuthorized(Person requester) {
-        if (requester == null) return false;
-        if (requester.getId() == null || requester.getId().isEmpty()) return false;
-        if (requester.getOwnedCompany() == null) return false;
-        if (requester.getOwnedCompany().getId() == null || requester.getOwnedCompany().getId().isEmpty()) return false;
-
-        return true;
     }
 }

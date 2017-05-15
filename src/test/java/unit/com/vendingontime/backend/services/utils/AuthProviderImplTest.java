@@ -1,6 +1,7 @@
 package unit.com.vendingontime.backend.services.utils;
 
 import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
@@ -77,17 +78,6 @@ public class AuthProviderImplTest {
     }
 
     @Test
-    public void canModify_nullRequester_isFalse() throws Exception {
-        assertThat(authProvider.canModify(null, requester), is(false));
-    }
-
-    @Test
-    public void canModify_nullPerson_isFalse() throws Exception {
-        Person person = null;
-        assertThat(authProvider.canModify(requester, person), is(false));
-    }
-
-    @Test
     public void canModifyPassword_himself_isTrue() throws Exception {
         assertThat(authProvider.canModifyPassword(requester, requester), is(true));
     }
@@ -114,18 +104,6 @@ public class AuthProviderImplTest {
     }
 
     @Test
-    public void canModify_company_withNullCompany_isFalse() throws Exception {
-        Company company = null;
-        assertThat(authProvider.canModify(requester, company), is(false));
-    }
-
-    @Test
-    public void canModify_company_nullPerson_isFalse() throws Exception {
-        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
-        assertThat(authProvider.canModify(null, supervisor.getOwnedCompany()), is(false));
-    }
-
-    @Test
     public void canModify_machine_withPermissions_isTrue() throws Exception {
         Company company = FixtureFactory.generateCompanyWithOwner();
         Machine machine = FixtureFactory.generateMachine();
@@ -133,15 +111,6 @@ public class AuthProviderImplTest {
         company.addWorker(FixtureFactory.generateTechnician());
 
         assertThat(authProvider.canModify(company.getOwner(), machine), is(true));
-    }
-
-    @Test
-    public void canModify_machine_withNoMachine_isFalse() throws Exception {
-        Company company = FixtureFactory.generateCompanyWithOwner();
-        Machine machine = null;
-        company.addWorker(FixtureFactory.generateTechnician());
-
-        assertThat(authProvider.canModify(company.getOwner(), machine), is(false));
     }
 
     @Test
@@ -164,36 +133,16 @@ public class AuthProviderImplTest {
     }
 
     @Test
-    public void canModify_machine_nullPerson_isFalse() throws Exception {
-        Machine machine = FixtureFactory.generateMachine();
-        assertThat(authProvider.canModify(null, machine), is(false));
-    }
-
-    @Test
-    public void canModify_abstractEntity_person_isTrue() throws Exception {
-        assertThat(authProvider.canModify(requester, (AbstractEntity) requester), is(true));
-    }
-
-    @Test
-    public void canModify_abstractEntity_company_isTrue() throws Exception {
-        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
-        assertThat(authProvider.canModify(supervisor, (AbstractEntity) supervisor.getOwnedCompany()), is(true));
-    }
-
-    @Test
-    public void canModify_abstractEntity_machine_isTrue() throws Exception {
-        Company company = FixtureFactory.generateCompanyWithOwner();
-        Machine machine = FixtureFactory.generateMachine();
-        company.addMachine(machine);
-        company.addWorker(FixtureFactory.generateTechnician());
-
-        assertThat(authProvider.canModify(company.getOwner(), (AbstractEntity) machine), is(true));
-    }
-
-    @Test
     public void canModify_abstractEntity_nullEntity_isFalse() throws Exception {
         AbstractEntity entity = null;
         assertThat(authProvider.canModify(requester, entity), is(false));
+    }
+
+    @Test
+    public void canModify_abstractEntity_nullRequester_isFalse() throws Exception {
+        Person requester = null;
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canModify(requester, supervisor), is(false));
     }
 
     @Test
@@ -204,5 +153,65 @@ public class AuthProviderImplTest {
 
             }
         }), is(false));
+    }
+
+    @Test
+    public void canSee_abstractEntity_nullEntity_isFalse() throws Exception {
+        AbstractEntity entity = null;
+        assertThat(authProvider.canSee(requester, entity), is(false));
+    }
+
+    @Test
+    public void canSee_abstractEntity_nullRequester_isFalse() throws Exception {
+        Person requester = null;
+        Person supervisor = FixtureFactory.generateSupervisorWithCompany();
+        assertThat(authProvider.canSee(requester, supervisor), is(false));
+    }
+
+    @Test
+    public void canSee_abstractEntity_unMatched_isFalse() throws Exception {
+        assertThat(authProvider.canSee(requester, new AbstractEntity() {
+            @Override
+            public void updateWith(AbstractEntity entity) {
+
+            }
+        }), is(false));
+    }
+
+    @Test
+    public void canSee_machine_supervisor_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+
+        assertThat(authProvider.canSee(company.getOwner(), machine), is(true));
+    }
+
+    @Test
+    public void canSee_machine_technician_isTrue() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+        company.addMachine(machine);
+        Person technician = FixtureFactory.generateTechnician();
+        company.addWorker(technician);
+
+        assertThat(authProvider.canSee(technician, machine), is(true));
+    }
+
+    @Test
+    public void canSee_machine_nonRelatedSupervisor_isFalse() throws Exception {
+        Company company = FixtureFactory.generateCompanyWithOwner();
+        Machine machine = FixtureFactory.generateMachine();
+
+        assertThat(authProvider.canSee(company.getOwner(), machine), is(false));
+    }
+
+    @Test
+    // TODO: alberto@15/05/2017 Maybe this one should return true in a near future
+    public void canSee_machine_personWithNoCompany_isFalse() throws Exception {
+        Person customer = FixtureFactory.generateCustomer();
+        Machine machine = FixtureFactory.generateMachine();
+
+        assertThat(authProvider.canSee(customer, machine), is(false));
     }
 }

@@ -26,24 +26,24 @@ public class AuthProviderImpl implements AuthProvider {
 
     @Override
     public boolean canModify(Person requester, AbstractEntity entity) {
-        if (requester == null || entity == null) return false;
+        if (oneIsNull(requester, entity)) return false;
 
-        if (entity.getClass() == Person.class) return canModify(requester, (Person) entity);
-        if (entity.getClass() == Company.class) return canModify(requester, (Company) entity);
-        if (entity.getClass() == Machine.class) return canModify(requester, (Machine) entity);
+        if (equalsClass(entity, Person.class)) return canModify(requester, (Person) entity);
+        if (equalsClass(entity, Company.class)) return canModify(requester, (Company) entity);
+        if (equalsClass(entity, Machine.class)) return canModify(requester, (Machine) entity);
 
         return false;
     }
 
     @Override
     public boolean canModifyPassword(Person requester, Person person) {
-        if (requester == null) return false;
+        if (oneIsNull(requester)) return false;
         return requester.equals(person);
     }
 
     private boolean canModify(Person requester, Person person) {
         if (requester.equals(person)) return true;
-        if (person.getCompany() == null) return false;
+        if (oneIsNull(person.getCompany())) return false;
         return person.getCompany().equals(requester.getOwnedCompany());
     }
 
@@ -52,7 +52,34 @@ public class AuthProviderImpl implements AuthProvider {
     }
 
     private boolean canModify(Person requester, Machine machine) {
-        if (machine.getCompany() == null) return false;
+        if (oneIsNull(machine.getCompany())) return false;
         return machine.getCompany().equals(requester.getOwnedCompany());
+    }
+
+    @Override
+    public boolean canSee(Person requester, AbstractEntity entity) {
+        if (oneIsNull(requester, entity)) return false;
+
+        if (equalsClass(entity, Machine.class)) return canSee(requester, (Machine) entity);
+
+        return false;
+    }
+
+    private boolean canSee(Person requester, Machine machine) {
+        if (oneIsNull(requester.getCompany())) return false;
+        return requester.getCompany().equals(machine.getCompany());
+    }
+
+    // Utility methods
+
+    private boolean oneIsNull(Object ...objects) {
+        for (Object object : objects) {
+            if (object == null) return true;
+        }
+        return false;
+    }
+
+    private boolean equalsClass(Object object, Class aClass) {
+        return object.getClass().equals(aClass);
     }
 }

@@ -5,8 +5,8 @@ import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.machine.Machine;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.MachineRepository;
-import com.vendingontime.backend.services.AbstractService;
 import com.vendingontime.backend.services.GetMachineService;
+import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +16,7 @@ import testutils.FixtureFactory;
 import java.util.Optional;
 
 import static com.vendingontime.backend.models.bodymodels.PersonRequest.EMPTY_REQUESTER;
+import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -42,6 +43,7 @@ public class GetMachineServiceTest {
     private final String MACHINE_ID = "MACHINE_ID";
 
     private MachineRepository repository;
+    private AuthProvider authProvider;
     private GetMachineService service;
 
     private Machine machine;
@@ -54,7 +56,8 @@ public class GetMachineServiceTest {
         final String OWNER_ID = "OWNER_ID";
 
         repository = mock(MachineRepository.class);
-        service = new GetMachineService(repository);
+        authProvider = mock(AuthProvider.class);
+        service = new GetMachineService(repository, authProvider);
 
         Company company = FixtureFactory.generateCompanyWithOwner().setId(COMPANY_ID);
         owner = company.getOwner().setId(OWNER_ID);
@@ -62,6 +65,7 @@ public class GetMachineServiceTest {
         personRequest = FixtureFactory.generatePersonRequestFrom(machine, owner);
 
         when(repository.findById(MACHINE_ID)).thenReturn(Optional.of(machine));
+        when(authProvider.canSee(owner, machine)).thenReturn(true);
     }
 
     @After
@@ -96,11 +100,12 @@ public class GetMachineServiceTest {
         Company randomCompany = FixtureFactory.generateCompanyWithOwner().setId("RANDOM_COMPANY");
         Person randomUser = randomCompany.getOwner().setId("RANDOM_USER");
 
+        when(authProvider.canSee(randomUser, randomCompany)).thenReturn(false);
         personRequest.setRequester(randomUser);
         try {
             service.getWith(personRequest);
         } catch (BusinessLogicException ex) {
-            assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
+            assertArrayEquals(new String[]{INSUFFICIENT_PERMISSIONS}, ex.getCauses());
             verify(repository, times(1)).findById(MACHINE_ID);
         }
     }
@@ -113,58 +118,6 @@ public class GetMachineServiceTest {
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
-            verify(repository, never()).findById(MACHINE_ID);
-        }
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullId_throwException() {
-        Person invalidUser = FixtureFactory.generateSupervisor().setId(null);
-
-        invalidUserTest(invalidUser);
-    }
-
-    @Test
-    public void getMachineData_forPersonWithEmptyId_throwException() {
-        Person invalidUser = FixtureFactory.generateSupervisor().setId("");
-
-        invalidUserTest(invalidUser);
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullCompany_throwException() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setOwnedCompany(null);
-
-        invalidUserTest(invalidUser);
-    }
-
-    @Test
-    public void getMachineData_forPersonWithNullCompanyId_throwException() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setOwnedCompany(FixtureFactory.generateCompany().setId(null));
-
-        invalidUserTest(invalidUser);
-    }
-
-    @Test
-    public void getMachineData_forPersonWithEmptyCompanyId_throwException() {
-        Person invalidUser = FixtureFactory.generateSupervisor()
-                .setId("INVALID_USER")
-                .setOwnedCompany(FixtureFactory.generateCompany().setId(""));
-
-        invalidUserTest(invalidUser);
-    }
-
-    private void invalidUserTest(Person invalidUser) {
-        personRequest.setRequester(invalidUser);
-        try {
-            service.getWith(personRequest);
-            fail();
-        } catch (BusinessLogicException ex) {
-            assertArrayEquals(new String[]{AbstractService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
             verify(repository, never()).findById(MACHINE_ID);
         }
     }
