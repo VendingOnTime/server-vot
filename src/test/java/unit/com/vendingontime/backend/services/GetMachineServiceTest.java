@@ -80,7 +80,7 @@ public class GetMachineServiceTest {
 
     @Test
     public void getMachineData_forValidMachineId_andAuthorizedUser() {
-        Machine foundMachine = service.getWith(personRequest).get();
+        Machine foundMachine = service.getBy(personRequest).get();
 
         verify(repository, times(1)).findById(MACHINE_ID);
         assertEquals(machine, foundMachine);
@@ -89,7 +89,7 @@ public class GetMachineServiceTest {
     @Test
     public void getMachineData_forInvalidMachineId() {
         personRequest.setId("INVALID_ID");
-        Optional<Machine> foundMachine = service.getWith(personRequest);
+        Optional<Machine> foundMachine = service.getBy(personRequest);
 
         verify(repository, times(1)).findById("INVALID_ID");
         assertFalse(foundMachine.isPresent());
@@ -103,7 +103,7 @@ public class GetMachineServiceTest {
         when(authProvider.canSee(randomUser, randomCompany)).thenReturn(false);
         personRequest.setRequester(randomUser);
         try {
-            service.getWith(personRequest);
+            service.getBy(personRequest);
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{INSUFFICIENT_PERMISSIONS}, ex.getCauses());
             verify(repository, times(1)).findById(MACHINE_ID);
@@ -114,7 +114,7 @@ public class GetMachineServiceTest {
     public void getMachineData_forNullPerson_throwException() {
         personRequest.setRequester(null);
         try {
-            service.getWith(personRequest);
+            service.getBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());

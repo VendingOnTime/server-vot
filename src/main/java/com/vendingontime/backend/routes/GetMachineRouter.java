@@ -56,7 +56,7 @@ public class GetMachineRouter extends AbstractSparkRouter {
     public AppRoute getMachine(String id, Person requester) {
         try {
             PersonRequest personRequest = new PersonRequest().setId(id).setRequester(requester);
-            Optional<Machine> machineCandidate = service.getWith(personRequest);
+            Optional<Machine> machineCandidate = service.getBy(personRequest);
             return machineCandidate.map(serviceResponse::ok).orElseGet(serviceResponse::notFound);
         } catch (BusinessLogicException ex) {
             return serviceResponse.badRequest(ex.getCauses());

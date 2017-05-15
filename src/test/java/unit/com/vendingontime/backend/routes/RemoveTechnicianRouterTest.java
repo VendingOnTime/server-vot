@@ -68,11 +68,11 @@ public class RemoveTechnicianRouterTest {
 
     @Test
     public void removeTechnician_withValidData() {
-        when(service.removeWith(any())).thenReturn(Optional.ofNullable(technician));
+        when(service.removeBy(any())).thenReturn(Optional.ofNullable(technician));
 
         router.remove(TECHNICIAN_ID, requester);
 
-        verify(service, times(1)).removeWith(any());
+        verify(service, times(1)).removeBy(any());
         verify(serviceResponse, times(1)).ok(technician);
     }
 
@@ -81,16 +81,16 @@ public class RemoveTechnicianRouterTest {
         String[] expectedErrors = new String[]{ INSUFFICIENT_PERMISSIONS };
 
         doThrow(new BusinessLogicException(expectedErrors))
-                .when(service).removeWith(any());
+                .when(service).removeBy(any());
         router.remove(TECHNICIAN_ID, requester);
 
-        verify(service, times(1)).removeWith(any());
+        verify(service, times(1)).removeBy(any());
         verify(serviceResponse, times(1)).badRequest(expectedErrors);
     }
 
     @Test
     public void removeTechnician_withNotExistingMachine_returnsNotFound() throws Exception {
-        when(service.removeWith(any())).thenReturn(Optional.empty());
+        when(service.removeBy(any())).thenReturn(Optional.empty());
 
         router.remove(TECHNICIAN_ID, requester);
 

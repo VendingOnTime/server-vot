@@ -85,7 +85,7 @@ public class RemoveMachineServiceTest {
 
     @Test
     public void removeMachine() {
-        Optional<Machine> possibleRemoved = removeMachineService.removeWith(personRequest);
+        Optional<Machine> possibleRemoved = removeMachineService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(true));
 
@@ -100,7 +100,7 @@ public class RemoveMachineServiceTest {
     public void removeMachine_withInvalidRequester_throwsException() {
         try {
             personRequest.setRequester(null);
-            removeMachineService.removeWith(personRequest);
+            removeMachineService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{EMPTY_REQUESTER}, ex.getCauses());
@@ -114,7 +114,7 @@ public class RemoveMachineServiceTest {
     public void removeMachine_withUnknownId_returnsEmpty() throws Exception {
         String unknownId = "UNKNOWN_ID";
         personRequest.setId(unknownId);
-        Optional<Machine> possibleRemoved = removeMachineService.removeWith(personRequest);
+        Optional<Machine> possibleRemoved = removeMachineService.removeBy(personRequest);
 
         assertThat(possibleRemoved.isPresent(), is(false));
 
@@ -128,7 +128,7 @@ public class RemoveMachineServiceTest {
 
         try {
             requester.setOwnedCompany(FixtureFactory.generateCompany().setId("ANOTHER_COMPANY_ID"));
-            removeMachineService.removeWith(personRequest);
+            removeMachineService.removeBy(personRequest);
             fail();
         } catch (BusinessLogicException ex) {
             assertArrayEquals(new String[]{RemoveMachineService.INSUFFICIENT_PERMISSIONS}, ex.getCauses());
