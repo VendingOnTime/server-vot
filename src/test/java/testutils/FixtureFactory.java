@@ -19,7 +19,7 @@ package testutils;
  */
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.bodymodels.person.*;
@@ -179,8 +179,8 @@ public class FixtureFactory {
 
     // GENERIC METHODS
 
-    public static RemovalRequest generateRemovalRequestFrom(AbstractEntity entity, Person requester) {
-        return new RemovalRequest()
+    public static PersonRequest generatePersonRequestFrom(AbstractEntity entity, Person requester) {
+        return new PersonRequest()
                 .setId(entity.getId())
                 .setRequester(requester);
     }

@@ -1,11 +1,7 @@
 package integration.com.vendingontime.backend.services;
 
 import com.google.inject.Inject;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.CompanyRepository;
 import com.vendingontime.backend.repositories.PersonRepository;
@@ -49,8 +45,8 @@ public class RemoveTechnicianServiceTest extends IntegrationTest {
         Person requester = signUpService.createSupervisor(FixtureFactory.generateSignUpData());
         Person technician = signUpService.createTechnician(FixtureFactory.generateAddTechnicianData().setRequester(requester));
 
-        RemovalRequest removalRequest = FixtureFactory.generateRemovalRequestFrom(technician, requester);
-        Optional<Person> possibleRemovedTechnician = removeTechnicianService.remove(removalRequest);
+        PersonRequest personRequest = FixtureFactory.generatePersonRequestFrom(technician, requester);
+        Optional<Person> possibleRemovedTechnician = removeTechnicianService.remove(personRequest);
 
         assertThat(possibleRemovedTechnician.isPresent(), is(true));
         assertThat(possibleRemovedTechnician.get().isDisabled(), is(true));

@@ -1,7 +1,7 @@
 package com.vendingontime.backend.services;
 
 import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.RemovalRequest;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
 import com.vendingontime.backend.models.person.Person;
 import com.vendingontime.backend.repositories.Repository;
 import com.vendingontime.backend.services.utils.AuthProvider;
@@ -35,14 +35,14 @@ public abstract class AbstractRemoveService<MODEL extends AbstractEntity> extend
         this.authProvider = authProvider;
     }
 
-    public Optional<MODEL> remove(RemovalRequest removalRequest) throws BusinessLogicException {
-        String[] validationErrors = removalRequest.validate();
+    public Optional<MODEL> remove(PersonRequest personRequest) throws BusinessLogicException {
+        String[] validationErrors = personRequest.validate();
         if (validationErrors.length != 0)
             throw new BusinessLogicException(validationErrors);
 
-        Person requester = removalRequest.getRequester();
+        Person requester = personRequest.getRequester();
 
-        Optional<MODEL> entityById = repository.findById(removalRequest.getId());
+        Optional<MODEL> entityById = repository.findById(personRequest.getId());
         if (!entityById.isPresent()) return entityById;
 
         MODEL entity = entityById.get();
