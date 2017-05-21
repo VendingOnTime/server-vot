@@ -67,8 +67,8 @@ public class Machine extends AbstractEntity<Machine> {
         this.type = machine.getType();
         this.state = machine.getState();
         this.description = machine.getDescription();
-        this.company = machine.getCompany();
-        this.maintainer = machine.getMaintainer();
+//        this.company = machine.getCompany();
+//        this.maintainer = machine.getMaintainer();
     }
 
     public void updateWith(EditMachineData editMachineData) {
