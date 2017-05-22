@@ -1,5 +1,14 @@
 package com.vendingontime.backend.models.company;
-/*
+
+import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.person.Person;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +25,6 @@ package com.vendingontime.backend.models.company;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Company.findById", query = "SELECT c FROM Company c WHERE c.id = :id AND c.disabled = false")

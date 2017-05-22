@@ -1,5 +1,18 @@
 package com.vendingontime.backend.services;
-/*
+
+import com.google.inject.Inject;
+import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.repositories.PersonRepository;
+import com.vendingontime.backend.services.utils.AuthProvider;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+
+
+import java.util.Optional;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,19 +29,6 @@ package com.vendingontime.backend.services;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.google.inject.Inject;
-import com.vendingontime.backend.models.bodymodels.machine.AssignMaintainerData;
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.repositories.MachineRepository;
-import com.vendingontime.backend.repositories.PersonRepository;
-import com.vendingontime.backend.services.utils.AuthProvider;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-
-
-import java.util.Optional;
-
 public class AssignMaintainerService extends AbstractService {
 
     private final PersonRepository personRepository;

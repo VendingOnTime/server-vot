@@ -1,5 +1,11 @@
 package com.vendingontime.backend.repositories;
-/*
+
+import com.vendingontime.backend.models.company.Company;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,12 +22,6 @@ package com.vendingontime.backend.repositories;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.company.Company;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
 public class JPACompanyRepository extends JPARepository<Company> implements CompanyRepository {
 
     @Inject

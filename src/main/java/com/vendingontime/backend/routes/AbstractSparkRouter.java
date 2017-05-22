@@ -1,5 +1,13 @@
 package com.vendingontime.backend.routes;
-/*
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,14 +24,6 @@ package com.vendingontime.backend.routes;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.ServiceResponse;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-
 public abstract class AbstractSparkRouter implements SparkRouter {
     public final static String MALFORMED_JSON = "MALFORMED_JSON";
 

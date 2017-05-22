@@ -32,7 +32,7 @@ import com.vendingontime.backend.routes.SparkRouter;
 import com.vendingontime.backend.services.utils.*;
 import spark.ResponseTransformer;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

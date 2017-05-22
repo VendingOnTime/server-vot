@@ -1,5 +1,9 @@
 package com.vendingontime.backend.services;
-/*
+
+import com.vendingontime.backend.models.bodymodels.Validable;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,10 +20,6 @@ package com.vendingontime.backend.services;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.bodymodels.Validable;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-
 public abstract class AbstractService {
     public static final String INSUFFICIENT_PERMISSIONS = "INSUFFICIENT_PERMISSIONS";
 

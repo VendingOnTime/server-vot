@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import static com.vendingontime.backend.utils.StringUtils.isEmpty;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -24,7 +24,6 @@ import static com.vendingontime.backend.utils.StringUtils.isEmpty;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 // FIXME: 11/05/2017 All these bodymodels should be refactored, some of them share common fields that could be abstracted
 public class AssignMaintainerData implements Validable {
 

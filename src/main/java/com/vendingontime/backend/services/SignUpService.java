@@ -13,7 +13,7 @@ import com.vendingontime.backend.services.utils.BusinessLogicException;
 
 import javax.inject.Inject;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -30,7 +30,6 @@ import javax.inject.Inject;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 // FIXME: 11/05/2017 Is hard to find this class, it should be splitted in two
 public class SignUpService extends AbstractService {
 

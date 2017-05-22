@@ -1,5 +1,12 @@
 package com.vendingontime.backend.initializers;
-/*
+
+import com.vendingontime.backend.RESTContext;
+import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
+
+import javax.inject.Inject;
+import java.util.Set;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,13 +23,6 @@ package com.vendingontime.backend.initializers;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.RESTContext;
-import com.vendingontime.backend.initializers.sparkplugins.SparkPlugin;
-
-import javax.inject.Inject;
-import java.util.Set;
-
 public class SparkPluginInitializer {
     private final RESTContext context;
     private final Set<SparkPlugin> sparkPlugins;

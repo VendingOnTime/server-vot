@@ -1,5 +1,12 @@
 package com.vendingontime.backend.models.bodymodels.person;
-/*
+
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.utils.StringUtils;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,13 +23,6 @@ package com.vendingontime.backend.models.bodymodels.person;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.utils.StringUtils;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-
 public class EditPersonData extends SignUpData {
     public static final String EMPTY_PERSON_ID = "EMPTY_PERSON_ID";
     public static final String EMPTY_REQUESTER = "EMPTY_REQUESTER";
