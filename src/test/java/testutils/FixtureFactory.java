@@ -1,6 +1,19 @@
 package testutils;
 
-/*
+import com.vendingontime.backend.models.AbstractEntity;
+import com.vendingontime.backend.models.bodymodels.PersonRequest;
+import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
+import com.vendingontime.backend.models.bodymodels.person.*;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.location.MachineLocation;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.models.machine.MachineState;
+import com.vendingontime.backend.models.machine.MachineType;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.models.person.PersonRole;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -17,20 +30,6 @@ package testutils;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.AbstractEntity;
-import com.vendingontime.backend.models.bodymodels.PersonRequest;
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
-import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
-import com.vendingontime.backend.models.bodymodels.person.*;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.location.MachineLocation;
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.models.machine.MachineState;
-import com.vendingontime.backend.models.machine.MachineType;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
-
 public class FixtureFactory {
     private static final FixtureFactory instance = new FixtureFactory();
 

@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.vendingontime.backend.config.inject.ConfigModule;
 import org.junit.Before;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

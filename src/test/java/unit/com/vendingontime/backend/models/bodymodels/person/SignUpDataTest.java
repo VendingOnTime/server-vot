@@ -11,7 +11,7 @@ import testutils.FixtureFactory;
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.*;
 import static org.junit.Assert.*;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

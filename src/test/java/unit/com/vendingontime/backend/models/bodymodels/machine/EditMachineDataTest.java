@@ -1,11 +1,9 @@
 package unit.com.vendingontime.backend.models.bodymodels.machine;
 
-import com.vendingontime.backend.models.bodymodels.machine.AddMachineData;
 import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
 import com.vendingontime.backend.models.company.Company;
 import com.vendingontime.backend.models.location.MachineLocation;
 import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.models.person.PersonRole;
 import com.vendingontime.backend.utils.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +14,7 @@ import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData
 import static com.vendingontime.backend.models.bodymodels.machine.EditMachineData.EMPTY_MACHINE_ID;
 import static org.junit.Assert.*;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -33,7 +31,6 @@ import static org.junit.Assert.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 public class EditMachineDataTest {
     private final static String COMPANY_ID = "COMPANY_ID";
     private final static String PERSON_ID = "PERSON_ID";
