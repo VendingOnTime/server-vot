@@ -38,21 +38,22 @@ public class EditPersonService extends AbstractService {
     }
 
     public Optional<Person> updatePerson(EditPersonData editPersonData) throws BusinessLogicException {
-        String[] validationErrors = editPersonData.validate();
-        if(validationErrors.length != 0) throw new BusinessLogicException(validationErrors);
-
         Optional<Person> personById = repository.findById(editPersonData.getId());
         if (!personById.isPresent()) return personById;
 
-        Person requester = editPersonData.getRequester();
         Person person = personById.get();
-
-        if (!authProvider.canModify(requester, person))
-            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         editPersonData
                 .setPassword(person.getPassword())
                 .setRole(person.getRole());
+
+        String[] validationErrors = editPersonData.validate();
+        if(validationErrors.length != 0) throw new BusinessLogicException(validationErrors);
+
+        Person requester = editPersonData.getRequester();
+
+        if (!authProvider.canModify(requester, person))
+            throw new BusinessLogicException(new String[]{INSUFFICIENT_PERMISSIONS});
 
         person.updateWith(editPersonData);
 
