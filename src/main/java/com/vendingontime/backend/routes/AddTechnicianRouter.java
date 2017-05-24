@@ -1,5 +1,19 @@
 package com.vendingontime.backend.routes;
-/*
+
+import com.vendingontime.backend.middleware.EndpointProtector;
+import com.vendingontime.backend.middleware.TokenEndpointProtector;
+import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
+import com.vendingontime.backend.services.SignUpService;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+import spark.Service;
+
+import javax.inject.Inject;
+import java.io.IOException;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,20 +30,6 @@ package com.vendingontime.backend.routes;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.middleware.EndpointProtector;
-import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.models.bodymodels.person.AddTechnicianData;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.SignUpService;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-import spark.Service;
-
-import javax.inject.Inject;
-import java.io.IOException;
-
 public class AddTechnicianRouter extends AbstractSparkRouter {
 
     public static final String V1_ADD_TECHNICIAN = V1 + "/technicians";

@@ -1,5 +1,16 @@
 package com.vendingontime.backend.routes;
-/*
+
+import com.google.inject.Inject;
+import com.vendingontime.backend.middleware.EndpointProtector;
+import com.vendingontime.backend.middleware.TokenEndpointProtector;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.routes.utils.AppRoute;
+import com.vendingontime.backend.routes.utils.ServiceResponse;
+import com.vendingontime.backend.services.ListTechniciansService;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+import spark.Service;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,17 +27,6 @@ package com.vendingontime.backend.routes;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.google.inject.Inject;
-import com.vendingontime.backend.middleware.EndpointProtector;
-import com.vendingontime.backend.middleware.TokenEndpointProtector;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.utils.AppRoute;
-import com.vendingontime.backend.routes.utils.ServiceResponse;
-import com.vendingontime.backend.services.ListTechniciansService;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-import spark.Service;
-
 public class ListTechniciansRouter extends AbstractSparkRouter {
     public static final String V1_TECHNICIANS = V1 + "/technicians";
 

@@ -15,7 +15,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData.*;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -32,7 +32,6 @@ import static com.vendingontime.backend.models.bodymodels.machine.AddMachineData
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 public class AddMachineDataTest {
     private final static String COMPANY_ID = "COMPANY_ID";
     private final static String PERSON_ID = "PERSON_ID";

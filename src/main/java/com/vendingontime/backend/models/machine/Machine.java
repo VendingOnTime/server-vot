@@ -10,7 +10,7 @@ import com.vendingontime.backend.models.person.Person;
 
 import javax.persistence.*;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -27,7 +27,6 @@ import javax.persistence.*;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Machine.findById", query = "SELECT m FROM Machine m WHERE m.id = :id AND m.disabled = false"),
@@ -67,8 +66,6 @@ public class Machine extends AbstractEntity<Machine> {
         this.type = machine.getType();
         this.state = machine.getState();
         this.description = machine.getDescription();
-//        this.company = machine.getCompany();
-//        this.maintainer = machine.getMaintainer();
     }
 
     public void updateWith(EditMachineData editMachineData) {

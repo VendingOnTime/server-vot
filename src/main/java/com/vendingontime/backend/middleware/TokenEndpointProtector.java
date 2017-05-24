@@ -1,5 +1,19 @@
 package com.vendingontime.backend.middleware;
-/*
+
+import com.vendingontime.backend.RESTContext;
+import com.vendingontime.backend.config.inject.ConfigModule;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.routes.utils.HttpResponse;
+import com.vendingontime.backend.services.utils.TokenGenerator;
+import com.vendingontime.backend.utils.StringUtils;
+import spark.Request;
+import spark.Service;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Optional;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,20 +30,6 @@ package com.vendingontime.backend.middleware;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.RESTContext;
-import com.vendingontime.backend.config.inject.ConfigModule;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.routes.utils.HttpResponse;
-import com.vendingontime.backend.services.utils.TokenGenerator;
-import com.vendingontime.backend.utils.StringUtils;
-import spark.Request;
-import spark.Service;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Optional;
-
 public class TokenEndpointProtector implements EndpointProtector, SparkMiddleware {
 
     public static final String AUTHORIZATION = "Authorization";

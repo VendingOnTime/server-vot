@@ -3,7 +3,7 @@ package com.vendingontime.backend.initializers;
 import com.google.inject.Inject;
 import com.google.inject.persist.PersistService;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

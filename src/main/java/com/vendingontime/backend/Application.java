@@ -6,7 +6,7 @@ import com.vendingontime.backend.config.inject.ConfigModule;
 import com.vendingontime.backend.initializers.RouteInitializer;
 import com.vendingontime.backend.initializers.SparkPluginInitializer;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

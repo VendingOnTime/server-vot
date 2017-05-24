@@ -2,7 +2,7 @@ package com.vendingontime.backend.middleware;
 
 import spark.Service;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +19,6 @@ import spark.Service;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 public interface SparkMiddleware {
     void configure(Service service);
 }

@@ -6,7 +6,7 @@ import com.vendingontime.backend.models.person.Person;
 import java.util.List;
 import java.util.Optional;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

@@ -1,5 +1,17 @@
 package com.vendingontime.backend.models.bodymodels.person;
-/*
+
+import com.vendingontime.backend.models.bodymodels.Validable;
+import com.vendingontime.backend.models.person.Person;
+import com.vendingontime.backend.utils.StringUtils;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.vendingontime.backend.models.bodymodels.person.SignUpData.MIN_PASSWORD_LENGTH;
+import static com.vendingontime.backend.utils.StringUtils.*;
+import static com.vendingontime.backend.utils.StringUtils.isEmpty;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,18 +28,6 @@ package com.vendingontime.backend.models.bodymodels.person;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.bodymodels.Validable;
-import com.vendingontime.backend.models.person.Person;
-import com.vendingontime.backend.utils.StringUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static com.vendingontime.backend.models.bodymodels.person.SignUpData.MIN_PASSWORD_LENGTH;
-import static com.vendingontime.backend.utils.StringUtils.*;
-import static com.vendingontime.backend.utils.StringUtils.isEmpty;
-
 public class EditPasswordData implements Validable {
 
     public static final String EMPTY_PERSON_ID = "EMPTY_PERSON_ID";

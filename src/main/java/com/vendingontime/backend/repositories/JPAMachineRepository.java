@@ -1,4 +1,14 @@
-package com.vendingontime.backend.repositories;/*
+package com.vendingontime.backend.repositories;
+
+import com.google.inject.Inject;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
+
+import javax.persistence.EntityManager;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -15,15 +25,6 @@ package com.vendingontime.backend.repositories;/*
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.google.inject.Inject;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
-
-import javax.persistence.EntityManager;
-import java.util.LinkedList;
-import java.util.List;
-
 public class JPAMachineRepository extends JPARepository<Machine> implements MachineRepository {
 
     @Inject

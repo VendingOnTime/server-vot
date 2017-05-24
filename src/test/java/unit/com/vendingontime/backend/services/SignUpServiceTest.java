@@ -14,7 +14,6 @@ import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.AuthProvider;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
 
-import static com.vendingontime.backend.models.bodymodels.person.AddTechnicianData.EMPTY_REQUESTER;
 import static com.vendingontime.backend.models.bodymodels.person.SignUpData.EMPTY_EMAIL;
 import static com.vendingontime.backend.models.person.PersonCollisionException.*;
 import static com.vendingontime.backend.services.AbstractService.INSUFFICIENT_PERMISSIONS;
@@ -31,7 +30,7 @@ import testutils.FixtureFactory;
 
 import java.util.Optional;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information

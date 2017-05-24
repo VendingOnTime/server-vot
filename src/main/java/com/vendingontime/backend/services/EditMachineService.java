@@ -1,5 +1,15 @@
 package com.vendingontime.backend.services;
-/*
+
+import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
+import com.vendingontime.backend.models.company.Company;
+import com.vendingontime.backend.models.machine.Machine;
+import com.vendingontime.backend.repositories.MachineRepository;
+import com.vendingontime.backend.services.utils.BusinessLogicException;
+
+import javax.inject.Inject;
+import java.util.Optional;
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -16,16 +26,6 @@ package com.vendingontime.backend.services;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
-import com.vendingontime.backend.models.bodymodels.machine.EditMachineData;
-import com.vendingontime.backend.models.company.Company;
-import com.vendingontime.backend.models.machine.Machine;
-import com.vendingontime.backend.repositories.MachineRepository;
-import com.vendingontime.backend.services.utils.BusinessLogicException;
-
-import javax.inject.Inject;
-import java.util.Optional;
-
 public class EditMachineService extends AbstractService {
     private MachineRepository repository;
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -29,7 +29,6 @@ import java.util.Set;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id AND p.disabled = false"),
@@ -89,9 +88,7 @@ public class Person extends AbstractEntity<Person> {
         this.name = person.getName();
         this.surnames = person.getSurnames();
         this.role = person.getRole();
-//        this.ownedCompany = person.getOwnedCompany();
-//        this.company = person.getCompany();
-//        this.maintainedMachines = person.getMaintainedMachines();
+        this.maintainedMachines = person.getMaintainedMachines();
     }
 
     public void updateWith(EditPersonData editPersonData) {

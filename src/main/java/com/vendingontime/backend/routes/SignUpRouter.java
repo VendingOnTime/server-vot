@@ -1,20 +1,16 @@
 package com.vendingontime.backend.routes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vendingontime.backend.models.bodymodels.person.SignUpData;
 import com.vendingontime.backend.routes.utils.AppRoute;
 import com.vendingontime.backend.routes.utils.ServiceResponse;
 import com.vendingontime.backend.services.SignUpService;
 import com.vendingontime.backend.services.utils.BusinessLogicException;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 import spark.Service;
 
 import javax.inject.Inject;
 import java.io.IOException;
 
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
